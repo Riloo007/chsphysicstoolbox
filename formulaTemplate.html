@@ -22,6 +22,7 @@
     }
     h1 {margin: 0px;}
     .flex-container {
+      box-shadow: inset 0 0 1000px 100px black;
       display: flex;
       image-rendering: auto;
     }
@@ -30,6 +31,11 @@
         flex: 1;
         display: grid;
         place-items: center;
+    }
+
+    .Formula * {
+      font-size: 90px;
+      text-align: center;
     }
 
     @media (min-width: 768px) {
@@ -55,14 +61,14 @@
   <main>
     <div class="flex-container">
       <div id="FormulaContainer">
-        <div>
+        <div id="Formula">
             <!--https://www.codecogs.com/eqnedit.php-->
             <img style="height: 90px;" src="https://latex.codecogs.com/svg.image?{\color{White}&space;E=mc^{2}&space;}" title="https://latex.codecogs.com/svg.image?{\color{White} E=mc^{2} }" />        </div>
         <div>
             Energy is equivalent to mass times the speed of light squared.
         </div>
       </div>
-      <div class="red-div">
+      <div id="VariableContainer">
         <img src="cube.gif" height="300px">
         <br>
         <h2>
@@ -82,33 +88,67 @@
 </body>
 </html>
 
-
 <script>
-  function generateHTML(equation) {
-  // Wrap the equation in a container element
-  var container = document.createElement("div");
-
-  // Replace caret (^) with "sup" tag for exponents
-  equation = equation.replace(/\^\(([^\)]+)\)/g, "<sup>$1</sup>");
-
-  // Replace fractions with "fraction" class and "top" and "bottom" divs
-  equation = equation.replace(/\[([^\]]+)\]\/\[([^\]]+)\]/g,
-    "<span class='fraction'><div class='top'>$1</div><div class='bottom'>$2</div></span>");
-  // Replace square roots with "sqrt" class and "radicand" div
-  equation = equation.replace(/sqrt\(([^\)]+)\)/g,
-    "<span class='sqrt'><span class='radicand'>$1</span></span>");
   
-  // Append the updated equation to the container element
-  container.innerHTML = equation;
-  
-  // Return the container element
-  return container;
+function generateMathHtml(equation) {
+    var finalString = "";
+    // Split string into a table for... easier access?
+    var tokens = equation.split("");
+    console.log(tokens);
+    finalString += "<table class='Formula'><tbody><tr><td>"
+    for (var i = 0; i < tokens.length; i++) {
+        var token = tokens[i];
+        console.log(token, i);
+
+        if (token == "[") {
+          finalString += "</td>"
+          // Bracket found, take over
+          fractionIsntFinished = true;
+          finalString += "<td><div><table><tbody><tr>"
+          while(fractionIsntFinished) {
+
+            i++;
+            token = tokens[i];
+            console.log("[Fraction]: " + token);
+            
+            if(token == "]" && tokens[i+1] == "/" && tokens[i+2] == "[") {
+              
+              // Numerator done
+              i += 2;
+              finalString += "</tr><tr><td><div style='border-top: 10px solid #FFFFFF;'></div></td></tr><tr>";
+              console.log("[Fraction]: FINISHED NUMERATOR");
+
+              token = tokens[i];
+            } else if (token == "]") {
+              // Fraction Done
+              finalString += "</td></tr></tbody></table></div></td>"
+              fractionIsntFinished = false;
+
+              i += 1;
+            } else {
+              // Fraction Contents
+              //console.log("[FractionContent]: " + token);
+              finalString += "<td>" + token + "</td>";
+            }
+          }
+          i-=1;
+
+          finalString += "<td>"
+
+        } else {
+            // print anything else
+            console.log("Append var" + token);
+            finalString += token;
+        }
+      
+
+    } 
+    finalString += "</tr></tbody></table>";
+    console.log(finalString);
+    
+    //finalString.replace(" ", "");
+    return finalString;
 }
 
-console.log(generateHTML("E=mc^(2)"));
-// Output: "E=mc<sup>2</sup>"
-console.log(generateHTML("x=[5]/[3]"));
-// Output: "x=<span class='fraction'><div class='top'>5</div><div class='bottom'>3</div></span>"
-console.log(generateHTML("y=sqrt(x)"));
-// Output: "y=<span class='sqrt'><span class='radicand'>x</span></span>"
+document.getElementById("Formula").innerHTML = (generateMathHtml("[-di]/[do]=[hi]/[ho]"));
 </script>
