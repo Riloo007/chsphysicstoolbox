@@ -1,66 +1,21 @@
 <html>
 <head>
   <title>CHS Physics Toolbox</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap');
-    body {
-        font-family: 'Quicksand', sans-serif;
+  <!--
+    // These scripts are modular and don't work in Chrome Version 103.0.5060.134 (Official Build) (64-bit)
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"></script>
 
-        background-color: black;
-        color: white;
-        margin: 0px;
-      background-image: url(blueprint.png);
-      image-rendering: pixelated;
-    }
-    sup {
-      font-size: 60px;
-    }
-    header, footer {
-        background-color: rgb(13, 48, 107);
-        width: 100%;
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 10px;
-        height: 25px;
-        padding: 5px;
-    }
-    h1 {margin: 0px;}
-    .flex-container {
-      box-shadow: inset 0 0 1000px 100px black;
-      display: flex;
-      image-rendering: auto;
-      text-align: center;
-    }
+    Copyright 2023 Glitch
+  -->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
 
-    .flex-container > div {
-        flex: 1;
-        display: grid;
-        place-items: center;
-    }
-
-    .Formula * :not(sup) {
-      font-size: 90px;
-      text-align: center;
-    }
-    .Formula text {
-      cursor: pointer;
-    }
-
-    @media (min-width: 768px) {
-  .flex-container {
-    flex-direction: row; /* items will be arranged horizontally */
-  }
-}
-
-@media (max-width: 767px) {
-  .flex-container {
-    flex-direction: column; /* items will be arranged vertically */
-  }
-}
-
-  </style>
+  <script src="pageTools.js"></script>
+  <link rel="stylesheet" href="style.css"></style>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
-  
 </head>
+
 <body>
   <header>
     <h1>CHS Physics Toolbox</h1>
@@ -68,12 +23,8 @@
   <main>
     <div class="flex-container">
       <div id="FormulaContainer">
-        <div id="Formula">
-            <!--https://www.codecogs.com/eqnedit.php-->
-            <img style="height: 90px;" src="https://latex.codecogs.com/svg.image?{\color{White}&space;E=mc^{2}&space;}" title="https://latex.codecogs.com/svg.image?{\color{White} E=mc^{2} }" />        </div>
-        <div>
-            Magnification equals the negative distance to the image over the distance to the object which equals the height of the image over the height of the object
-        </div>
+        <div id="Formula"></div>
+        <div id="WordFormula"></div>
       </div>
       <div id="VariableContainer">
         <img src="cube.gif" height="300px">
@@ -96,77 +47,43 @@
 </html>
 
 <script>
-  
-function generateMathHtml(equation) {
-    var finalString = "";
-    // Split string into a table for... easier access?
-    var tokens = equation.split("");
-    console.log(tokens);
-    finalString += "<table class='Formula'><tbody><tr><td>";
-    var inExponent = 0;
-    for (var i = 0; i < tokens.length; i++) {
-        var token = tokens[i];
-        console.log(token, i);
+  // Firebase Setup
 
-        if (token == "^" && tokens[i+1] == "(") {
-          finalString += "<sup>"
-          inExponent += 1;
-          i+=1;
-          console.log("Enter Sup " + inExponent);
-        }
-        else if (token == ")" && inExponent > 0) {
-          console.log("Exit Sup");
-          inExponent--;
-          finalString += "</sup>";
-          i+=1;
-        }
-        else if (token == "[") {
-          finalString += "</td>"
-          // Bracket found, take over
-          fractionIsntFinished = true;
-          finalString += "<td><div><table><tbody><tr><td>"
-          while(fractionIsntFinished) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyBD8TGQSt2Oit3A0Ow4vqUbi9iSarjAhng",
+    authDomain: "chsphysicstoolbox.firebaseapp.com",
+    projectId: "chsphysicstoolbox",
+    storageBucket: "chsphysicstoolbox.appspot.com",
+    messagingSenderId: "1013873625231",
+    appId: "1:1013873625231:web:9e179abf423b8891f2c8fa",
+    measurementId: "G-7Z6SQHBGPV"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
 
-            i++;
-            token = tokens[i];
-            console.log("[Fraction]: " + token);
-            
-            if(token == "]" && tokens[i+1] == "/" && tokens[i+2] == "[") {
-              
-              // Numerator done
-              i += 2;
-              finalString += "</td></tr><tr><td><div style='border-top: 10px solid #FFFFFF;'></div></td></tr><tr><td>";
-              console.log("[Fraction]: FINISHED NUMERATOR");
+  // Firebase read test
+  const ref = database.ref('new');
+  ref.on('value', function(snapshot){
+    const keys = Object.keys(snapshot.val());
+    var values = [];
+    for(let i = 0; i < keys.length; i++) {
+      values.push(snapshot.val()[keys[i]]);
+      console.log(keys[i]);
+      console.log(snapshot.val()[keys[i]]);
+    }
+    console.log(
+      keys,
+      values
+    );
+  })
 
-              token = tokens[i];
-            } else if (token == "]") {
-              // Fraction Done
-              finalString += "</td></tr></tbody></table></div></td><td>"
-              fractionIsntFinished = false;
+</script>
 
-              i += 1;
-            } else {
-              // Fraction Contents
-              //console.log("[FractionContent]: " + token);
-              finalString += token;
-            }
-          }
-          i-=1;
+<script>
 
-        } else {
-            // print anything else
-            console.log("[Add]: " + token);
-            finalString += token;
-        }
-      
-
-    } 
-    finalString += "</td></tr></tbody></table>";
-    console.log(finalString);
-    
-    //finalString.replace(" ", "");
-    return finalString;
-}
-
-document.getElementById("Formula").innerHTML = (generateMathHtml("m=[-di]/[do]=[hi]/[ho]"));
+// "m=[-di]/[do]=[hi]/[ho]"
+// "E=mc^(2)"
+wordFormula = "Magnification equals the negative distance to the image over the distance to the object which equals the height of the image over the height of the object"
+document.getElementById("Formula").innerHTML = (generateMathHtml("[1]/[f]=[1]/[di]+[1]/[do]"));
+document.getElementById("WordFormula").innerHTML = (wordFormula);
 </script>
