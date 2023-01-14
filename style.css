@@ -8,6 +8,11 @@
         margin: 0px;
       background-image: url(blueprint.png);
       image-rendering: pixelated;
+
+      width: 100%;
+    }
+    html {
+      width: 100%;
     }
     sup {
       font-size: 60px;
