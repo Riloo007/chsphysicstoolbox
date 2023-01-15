@@ -1,0 +1,117 @@
+<html>
+<head>
+  <title>CHS Physics Toolbox</title>
+  <!--
+    // These scripts are modular and don't work in Chrome Version 103.0.5060.134 (Official Build) (64-bit)
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"></script>
+
+    Copyright 2023 Glitch
+  -->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+
+  <script src="pageTools.js"></script>
+  <link rel="stylesheet" href="style.css"></style>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <main>
+    <div class="vin"  style="background-image: url(1818431.jpg);">
+        <div style="background: linear-gradient(#00000000, #00000000 80%, #000000FF); width: 100%; height: 100vh;">
+            <div class="TitleDiv">
+                <div style="height: calc(100vh - 200px); align-items: center; display: grid;">
+                    <h1 style="font-size: 130px;">CHS Physics Toolbox</h1>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+    <div style="background-color: black;">
+        <h2>Start by choosing a catagory below:</h2>
+        <div class="flex-container">
+            <div onclick="// Goto Formulas Page">
+                <h4>
+                    Equations and Formula Sheets
+                </h4>
+            </div>
+        </div>
+    </div>
+  </main>
+  <footer>
+    <h1>Footer</h1>
+  </footer>
+</body>
+<div style="display: none;" id="Template">
+
+  <header>
+    <h1>CHS Physics Toolbox</h1>
+  </header>
+  <main>
+    <div class="flex-container">
+      <div id="FormulaContainer">
+        <div id="Formula"></div>
+        <div id="WordFormula"></div>
+      </div>
+      <div id="VariableContainer">
+        <img src="cube.gif" height="300px">
+        <br>
+        <h2>
+            Energy
+        </h2>
+        <br>
+        <p>
+            Energy, measured in Joules.
+        </p>
+        <br>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <h1>Footer</h1>
+  </footer>
+</div>
+</html>
+
+<script>
+  // Firebase Setup
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBD8TGQSt2Oit3A0Ow4vqUbi9iSarjAhng",
+    authDomain: "chsphysicstoolbox.firebaseapp.com",
+    projectId: "chsphysicstoolbox",
+    storageBucket: "chsphysicstoolbox.appspot.com",
+    messagingSenderId: "1013873625231",
+    appId: "1:1013873625231:web:9e179abf423b8891f2c8fa",
+    measurementId: "G-7Z6SQHBGPV"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  // Firebase read test
+  const ref = database.ref('new');
+  ref.on('value', function(snapshot){
+    const keys = Object.keys(snapshot.val());
+    var values = [];
+    for(let i = 0; i < keys.length; i++) {
+      values.push(snapshot.val()[keys[i]]);
+      console.log(keys[i]);
+      console.log(snapshot.val()[keys[i]]);
+    }
+    console.log(
+      keys,
+      values
+    );
+  })
+
+</script>
+
+<script>
+
+// "m=[-di]/[do]=[hi]/[ho]"
+// "E=mc^(2)"
+wordFormula = "Magnification equals the negative distance to the image over the distance to the object which equals the height of the image over the height of the object"
+document.getElementById("Formula").innerHTML = (generateMathHtml("[1]/[f]=[1]/[di]+[1]/[do]"));
+document.getElementById("WordFormula").innerHTML = (wordFormula);
+</script>

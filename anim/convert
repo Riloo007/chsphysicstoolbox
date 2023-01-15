@@ -1,0 +1,1 @@
+convert -dispose 2 -delay 5 -loop 0 *.png anim.gif

@@ -1,0 +1,151 @@
+<html>
+<head>
+  <title>CHS Physics Toolbox</title>
+  <!--
+    // These scripts are modular and don't work in Chrome Version 103.0.5060.134 (Official Build) (64-bit)
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"></script>
+
+    Copyright 2023 Glitch
+  -->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+
+  <script src="pageTools.js"></script>
+  <link rel="stylesheet" href="style.css"></style>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="contentWrapper">
+        <h3 id="message">Select your physics level:</h3>
+        <div class="menu-flex-container" id="menu-flex">
+            <div onclick="loadFormulaList('10')">
+                Physics 10
+            </div>
+            <div onclick="loadFormulaList('20')">
+                Physics 20
+            </div>
+            <div onclick="loadFormulaList('30')">
+                Physics 30
+            </div>
+        </div>
+    </div>
+</body>
+
+<div style="display: none;" id="Template">
+
+    <header>
+      <h1>CHS Physics Toolbox</h1>
+    </header>
+    <main>
+      <div class="flex-container">
+        <div id="FormulaContainer">
+          <div id="Formula"></div>
+          <div id="WordFormula"></div>
+        </div>
+        <div id="VariableContainer">
+          <img src="cube.gif" height="300px">
+          <br>
+          <h2>
+              Energy
+          </h2>
+          <br>
+          <p>
+              Energy, measured in Joules.
+          </p>
+          <br>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <h1>Footer</h1>
+    </footer>
+  </div>
+
+<script>
+    // Firebase Setup
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyBD8TGQSt2Oit3A0Ow4vqUbi9iSarjAhng",
+      authDomain: "chsphysicstoolbox.firebaseapp.com",
+      projectId: "chsphysicstoolbox",
+      storageBucket: "chsphysicstoolbox.appspot.com",
+      messagingSenderId: "1013873625231",
+      appId: "1:1013873625231:web:9e179abf423b8891f2c8fa",
+      measurementId: "G-7Z6SQHBGPV"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+  
+    // Firebase read test 
+    /*
+    const ref = database.ref('new');
+    ref.on('value', function(snapshot){
+      const keys = Object.keys(snapshot.val());
+      var values = [];
+      for(let i = 0; i < keys.length; i++) {
+        values.push(snapshot.val()[keys[i]]);
+        console.log(keys[i]);
+        console.log(snapshot.val()[keys[i]]);
+      }
+      console.log(
+        keys,
+        values
+      );
+    }) */
+  
+    var physicsLevel;
+
+    // Firebase Load List
+    function loadFormulaList(i) {
+        physicsLevel = i;
+
+        document.getElementById('message').innerHTML = "Loading... Please wait"
+        document.getElementById('menu-flex').innerHTML = "";
+        var HTMLList = "";
+
+        const listRef = database.ref('Formulas/' + i + "/list");
+        listRef.on('value', function(snapshot){
+            list = snapshot.val();
+            listLen = Object.keys(snapshot.val()).length;
+            for(i=0; i<listLen; i++) {
+                console.log(list[pad(i+1)]);
+                HTMLList += "<div onclick='loadEquationData(" + (i+1) + ")' style='width: 500px; height:auto;'>" + generateMathHtml(list[pad(i+1)]) + "</div>";
+                console.log("[LIST]: ", HTMLList);
+            }
+            document.getElementById('menu-flex').innerHTML = HTMLList;
+            document.getElementById('message').innerHTML = "Choose a formula to view:"
+        })
+
+    }
+
+    function loadEquationData(i) {
+        document.getElementById('message').innerHTML = "Loading... Please wait"
+        document.getElementById('menu-flex').innerHTML = "";
+        var HTMLList = "";
+        
+        const listRef = database.ref('Formulas/' + physicsLevel + "/longList/" + pad(i));
+        listRef.on('value', function(snapshot){
+            info = snapshot.val();
+            console.log(info);
+            console.log(info["Formulas"]);
+            actuallyLoadEquationData(info);
+        })
+    }
+
+    function actuallyLoadEquationData(info) {
+        activeFormula = info["Formulas"]["01"];
+
+        document.getElementsByTagName("body")[0].innerHTML = document.getElementById("Template").innerHTML;
+        document.getElementById("Formula").innerHTML = (generateMathHtml(activeFormula));
+        //document.getElementById("WordFormula").innerHTML = (wordFormula);
+    }
+
+    function pad(num) {
+        num = num.toString();
+        while (num.length < 2) num = "0" + num;
+        return num;
+    }
+
+  </script>
