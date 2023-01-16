@@ -17,6 +17,31 @@
 </head>
 
 <body>
+  <div style="height: 20px;"></div>
+    <header id="header"></header>
+    <div class="contentWrapper">
+      <div class="messageContainer">
+        <h1>Equations and Formula Sheets</h1>
+        <div>
+          <p>Select your physics level</p>
+          <div class="menu-flex-container" id="menu-flex">
+            <div onclick="loadFormulaList('10')">
+              Physics 10
+            </div>
+            <div onclick="loadFormulaList('20')">
+              Physics 20
+            </div>
+            <div onclick="loadFormulaList('30')">
+              Physics 30
+            </div>
+          </div>
+          <div class="menu-flex-container-button" onclick="loadFormulaList('40')">
+            View All >
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="contentWrapper">
         <h3 id="message">Select your physics level:</h3>
         <div class="menu-flex-container" id="menu-flex">
@@ -31,6 +56,7 @@
             </div>
         </div>
     </div>
+    <footer id="footer"></footer>
 </body>
 
 <div style="display: none;" id="Template">
@@ -64,37 +90,6 @@
   </div>
 
 <script>
-    // Firebase Setup
-  
-    const firebaseConfig = {
-      apiKey: "AIzaSyBD8TGQSt2Oit3A0Ow4vqUbi9iSarjAhng",
-      authDomain: "chsphysicstoolbox.firebaseapp.com",
-      projectId: "chsphysicstoolbox",
-      storageBucket: "chsphysicstoolbox.appspot.com",
-      messagingSenderId: "1013873625231",
-      appId: "1:1013873625231:web:9e179abf423b8891f2c8fa",
-      measurementId: "G-7Z6SQHBGPV"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-  
-    // Firebase read test 
-    /*
-    const ref = database.ref('new');
-    ref.on('value', function(snapshot){
-      const keys = Object.keys(snapshot.val());
-      var values = [];
-      for(let i = 0; i < keys.length; i++) {
-        values.push(snapshot.val()[keys[i]]);
-        console.log(keys[i]);
-        console.log(snapshot.val()[keys[i]]);
-      }
-      console.log(
-        keys,
-        values
-      );
-    }) */
-  
     var physicsLevel;
 
     // Firebase Load List
@@ -143,10 +138,6 @@
         //document.getElementById("WordFormula").innerHTML = (wordFormula);
     }
 
-    function pad(num) {
-        num = num.toString();
-        while (num.length < 2) num = "0" + num;
-        return num;
-    }
+    
 
   </script>
