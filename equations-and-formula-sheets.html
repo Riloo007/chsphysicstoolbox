@@ -108,6 +108,7 @@
         const listRef = database.ref('Formulas/' + i + "/list");
         listRef.on('value', function(snapshot){
             list = snapshot.val();
+            console.log(list);
             listLen = Object.keys(snapshot.val()).length;
             for(i=0; i<listLen; i++) {
                 console.log(list[pad(i+1)]);

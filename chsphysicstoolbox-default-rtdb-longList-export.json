@@ -1,0 +1,38 @@
+{
+  "02": {
+    "Definitions": {
+      "01": {
+        "def": "Energy",
+        "img": "energy.gif",
+        "longDef": "Measured in joules."
+      }
+    },
+    "Formulas": {
+      "01": "E=mc^(2)",
+      "02": "m=[E]/[c^(2)]",
+      "03": "c=sqrt([E]/[m]"
+    }
+  },
+  "01": {
+    "Definitions": {
+      "01": {
+        "def": "Energy",
+        "img": "cube.gif",
+        "longDef": "Measured in Joules. Represents the energy equivalant of the mass."
+      },
+      "02": {
+        "def": "Distance",
+        "img": "distance.gif",
+        "longDef": "The change in distance"
+      },
+      "03": {
+        "def": "Time",
+        "img": "time.gif",
+        "longDef": "The change in time"
+      }
+    },
+    "Formulas": {
+      "01": "E=mc^(2)"
+    }
+  }
+}
