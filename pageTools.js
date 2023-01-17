@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function(){
   // Header and Footer
   header = `
     <p style="font-size: 20px; margin: 3px;">
-      chsphysicstoolbox
+      <a href="index2.html">chsphysicstoolbox</a>
     </p>
   `;
 

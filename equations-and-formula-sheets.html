@@ -18,45 +18,30 @@
 
 <body>
   <div style="height: 20px;"></div>
-    <header id="header"></header>
-    <div class="contentWrapper">
-      <div class="messageContainer">
-        <h1>Equations and Formula Sheets</h1>
-        <div>
-          <p>Select your physics level</p>
-          <div class="menu-flex-container" id="menu-flex">
-            <div onclick="loadFormulaList('10')">
-              Physics 10
-            </div>
-            <div onclick="loadFormulaList('20')">
-              Physics 20
-            </div>
-            <div onclick="loadFormulaList('30')">
-              Physics 30
-            </div>
+  <header id="header"></header>
+  <div class="contentWrapper">
+    <div class="messageContainer">
+      <h1>Equations and Formula Sheets</h1>
+      <div>
+        <p>Select your physics level</p>
+        <div class="menu-flex-container" id="menu-flex">
+          <div onclick="loadFormulaList('10')">
+            Physics 10
           </div>
-          <div class="menu-flex-container-button" onclick="loadFormulaList('40')">
-            View All >
+          <div onclick="loadFormulaList('20')">
+            Physics 20
           </div>
+          <div onclick="loadFormulaList('30')">
+            Physics 30
+          </div>
+        </div>
+        <div class="menu-flex-container-button" onclick="loadFormulaList('40')">
+          View All >
         </div>
       </div>
     </div>
-    
-    <div class="contentWrapper">
-        <h3 id="message">Select your physics level:</h3>
-        <div class="menu-flex-container" id="menu-flex">
-            <div onclick="loadFormulaList('10')">
-                Physics 10
-            </div>
-            <div onclick="loadFormulaList('20')">
-                Physics 20
-            </div>
-            <div onclick="loadFormulaList('30')">
-                Physics 30
-            </div>
-        </div>
-    </div>
-    <footer id="footer"></footer>
+  </div>
+  <footer id="footer"></footer>
 </body>
 
 <div style="display: none;" id="Template">
@@ -91,6 +76,8 @@
 
 <script>
     var physicsLevel;
+    var NetHTMLList;
+    var readyToPush = 3;
 
     // Firebase Load List
     function loadFormulaList(i) {
@@ -100,6 +87,13 @@
         document.getElementById('menu-flex').innerHTML = "";
         var HTMLList = "";
 
+        if(physicsLevel = 40) {
+          loadFormulaList(10);
+          loadFormulaList(20);
+          loadFormulaList(30);
+        } else {
+          readyToPush = 1
+        }
         const listRef = database.ref('Formulas/' + i + "/list");
         listRef.on('value', function(snapshot){
             list = snapshot.val();
@@ -110,8 +104,15 @@
                 HTMLList += "<div onclick='loadEquationData(" + (i+1) + ")' style='width: 500px; height:auto;'>" + generateMathHtml(list[pad(i+1)]) + "</div>";
                 console.log("[LIST]: ", HTMLList);
             }
-            document.getElementById('menu-flex').innerHTML = HTMLList;
-            document.getElementById('message').innerHTML = "Choose a formula to view:"
+            NetHTMLList += HTMLList;
+            readyToPush -= 1;
+
+            if(!readyToPush) {
+              // Push list to HTML
+              document.getElementById('menu-flex').innerHTML = NetHTMLList;
+            }
+            //document.getElementById('menu-flex').innerHTML = HTMLList;
+            //document.getElementById('message').innerHTML = "Choose a formula to view:"
         })
 
     }
