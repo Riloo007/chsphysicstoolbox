@@ -17,6 +17,26 @@ body {
   width: 100%;
 }
 html {width: 100%;}
+a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+menu {
+  overflow: hidden;
+  margin: 0px;
+  margin-left: 30px;
+  padding: 0px;
+  height: 0vh;
+  font-size: 40%;
+  transition-duration: .3s;
+}
+
+.locationIndex {
+  background-color: #b6c6eb55;
+  height: 30px;
+  border-radius: 15px;
+  font-size: 23px;
+}
 
 sup, sub {font-size: 60px;}
 .messageContainer {text-align: left; font-size: 200%;}

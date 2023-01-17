@@ -17,62 +17,55 @@
 </head>
 
 <body>
-  <div style="height: 20px;"></div>
+  <div style="height: 40px;"></div>
   <header id="header"></header>
-  <div class="contentWrapper">
+  <div class="contentWrapper" id="contentWrapper">
+    <div class="locationIndex" id="locationIndex">Formulas</div>
     <div class="messageContainer">
-      <h1>Equations and Formula Sheets</h1>
-      <div>
+      <h1 id="Heading">Equations and Formula Sheets</h1>
+      <div class="" id="Content">
         <p>Select your physics level</p>
         <div class="menu-flex-container" id="menu-flex">
-          <div onclick="loadFormulaList('10')">
+          <div onclick="loadList(10)">
             Physics 10
           </div>
-          <div onclick="loadFormulaList('20')">
+          <div onclick="loadList(20)">
             Physics 20
           </div>
-          <div onclick="loadFormulaList('30')">
+          <div onclick="loadList(30)">
             Physics 30
           </div>
         </div>
-        <div class="menu-flex-container-button" onclick="loadFormulaList('40')">
+        <div class="menu-flex-container-button" onclick="loadList(40)">
           View All >
         </div>
       </div>
     </div>
   </div>
+  
   <footer id="footer"></footer>
 </body>
 
 <div style="display: none;" id="Template">
-
-    <header>
-      <h1>CHS Physics Toolbox</h1>
-    </header>
-    <main>
-      <div class="flex-container">
-        <div id="FormulaContainer">
-          <div id="Formula"></div>
-          <div id="WordFormula"></div>
-        </div>
-        <div id="VariableContainer">
-          <img src="cube.gif" height="300px">
-          <br>
-          <h2>
-              Energy
-          </h2>
-          <br>
-          <p>
-              Energy, measured in Joules.
-          </p>
-          <br>
-        </div>
-      </div>
-    </main>
-    <footer>
-      <h1>Footer</h1>
-    </footer>
+  <div class="flex-container">
+    <div id="FormulaContainer">
+      <div id="Formula"></div>
+      <div id="WordFormula"></div>
+    </div>
+    <div id="VariableContainer">
+      <!--<img src="cube.gif" height="300px">
+      <br>
+      <h2>
+          Energy
+      </h2>
+      <br>
+      <p>
+          Energy, measured in Joules.
+      </p>
+      <br>-->
+    </div>
   </div>
+</div>
 
 <script>
     var physicsLevel;
@@ -80,36 +73,43 @@
     var readyToPush = 3;
 
     // Firebase Load List
+    function loadList(i) {
+      NetHTMLList = "";
+      if(i == 40){
+        document.getElementById("locationIndex").innerHTML += " > All";
+        document.getElementById("Heading").innerHTML = "All Formulas";
+        readyToPush = 3;
+        loadFormulaList(10);
+        loadFormulaList(20);
+        loadFormulaList(30);
+      } else {
+        readyToPush = 1;
+        loadFormulaList(i);
+      }
+    }
     function loadFormulaList(i) {
         physicsLevel = i;
 
-        document.getElementById('message').innerHTML = "Loading... Please wait"
-        document.getElementById('menu-flex').innerHTML = "";
+        //document.getElementById('message').innerHTML = "Loading... Please wait"
+        //document.getElementById('menu-flex').innerHTML = "";
         var HTMLList = "";
-
-        if(physicsLevel = 40) {
-          loadFormulaList(10);
-          loadFormulaList(20);
-          loadFormulaList(30);
-        } else {
-          readyToPush = 1
-        }
-        const listRef = database.ref('Formulas/' + i + "/list");
+        const listRef = database.ref('Formulas/' + pad(i) + "/list");
         listRef.on('value', function(snapshot){
             list = snapshot.val();
             console.log(list);
             listLen = Object.keys(snapshot.val()).length;
             for(i=0; i<listLen; i++) {
                 console.log(list[pad(i+1)]);
-                HTMLList += "<div onclick='loadEquationData(" + (i+1) + ")' style='width: 500px; height:auto;'>" + generateMathHtml(list[pad(i+1)]) + "</div>";
+                HTMLList += "<div onclick='loadEquationData(" + (i+1) + ")'>" + generateMathHtml(list[pad(i+1)]) + "</div>";
                 console.log("[LIST]: ", HTMLList);
             }
             NetHTMLList += HTMLList;
             readyToPush -= 1;
 
-            if(!readyToPush) {
+            if(readyToPush == 0) {
               // Push list to HTML
-              document.getElementById('menu-flex').innerHTML = NetHTMLList;
+              document.getElementById('Content').innerHTML = NetHTMLList;
+              document.getElementById('Content').classList += "menu-flex-container";
             }
             //document.getElementById('menu-flex').innerHTML = HTMLList;
             //document.getElementById('message').innerHTML = "Choose a formula to view:"
@@ -139,6 +139,9 @@
         //document.getElementById("WordFormula").innerHTML = (wordFormula);
     }
 
+    function selectVariable(i) {
+
+    }
     
 
   </script>

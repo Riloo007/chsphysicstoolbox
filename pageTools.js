@@ -83,9 +83,18 @@ function setupFirebase() {
 document.addEventListener('DOMContentLoaded', function(){
   // Header and Footer
   header = `
-    <p style="font-size: 20px; margin: 3px;">
-      <a href="index2.html">chsphysicstoolbox</a>
-    </p>
+    <table style="font-size: 20px; padding: 3px; margin-right: 15px;">
+      <td style="width: 100%;"><a href="index2.html">chsphysicstoolbox</a></td>
+      <td>
+        <img style="width: 25px; height: 25px; cursor: pointer;" src="menu-icon.svg" onclick="toggleMenu();"> 
+      </td>
+    </table>
+    <menu id="menu">
+      <div class="messageContainer">
+        <h2>Menu</h2>
+        <p>Nothing here right now :)</p>
+      </div>
+    </menu>
   `;
 
   footer = `
@@ -109,6 +118,17 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 
+menuOpen = false;
+function toggleMenu() {
+  menu = document.getElementById("menu");
+  if(menuOpen) {
+    menu.style.height = "0vh";
+    menuOpen = false;
+  } else {
+    menu.style.height = "50vh";
+    menuOpen = true;
+  }
+}
 
 
 /*
