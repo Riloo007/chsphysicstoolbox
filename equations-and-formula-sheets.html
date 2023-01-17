@@ -83,6 +83,8 @@
         loadFormulaList(20);
         loadFormulaList(30);
       } else {
+        document.getElementById("locationIndex").innerHTML += " > " + i;
+        document.getElementById("Heading").innerHTML = "Physics " + i;
         readyToPush = 1;
         loadFormulaList(i);
       }
@@ -95,12 +97,16 @@
         var HTMLList = "";
         const listRef = database.ref('Formulas/' + pad(i) + "/list");
         listRef.on('value', function(snapshot){
+            console.log("[KEY]: ", snapshot.ref.toString());
+            console.log("[GRADE]: ", snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2));
+            idad = snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2);
+
             list = snapshot.val();
             console.log(list);
             listLen = Object.keys(snapshot.val()).length;
             for(i=0; i<listLen; i++) {
                 console.log(list[pad(i+1)]);
-                HTMLList += "<div onclick='loadEquationData(" + (i+1) + ")'>" + generateMathHtml(list[pad(i+1)]) + "</div>";
+                HTMLList += "<div onclick='loadEquationData(" + idad + "," + (i+1) + ")'>" + generateMathHtml(list[pad(i+1)]) + "</div>";
                 console.log("[LIST]: ", HTMLList);
             }
             NetHTMLList += HTMLList;
@@ -117,12 +123,13 @@
 
     }
 
-    function loadEquationData(i) {
-        document.getElementById('message').innerHTML = "Loading... Please wait"
-        document.getElementById('menu-flex').innerHTML = "";
+    function loadEquationData(level, i) {
+        //document.getElementById('message').innerHTML = "Loading... Please wait"
+        //document.getElementById('menu-flex').innerHTML = "";
         var HTMLList = "";
         
-        const listRef = database.ref('Formulas/' + physicsLevel + "/longList/" + pad(i));
+        console.log("[READ]: ", ('Formulas/' + level + "/longList/" + pad(i)))
+        const listRef = database.ref('Formulas/' + level + "/longList/" + pad(i));
         listRef.on('value', function(snapshot){
             info = snapshot.val();
             console.log(info);
