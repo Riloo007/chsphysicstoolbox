@@ -1,0 +1,82 @@
+{
+  "Formulas": {
+    "10": {
+      "list": {
+        "01": "F=ma"
+      }
+    },
+    "20": {
+      "list": {
+        "01": "Ek=[1]/[2]mv^(2)"
+      }
+    },
+    "30": {
+      "list": {
+        "01Kinematics": {
+          "01": "vec(v)sub(ave)=[Δvec(d)]/[Δt]"
+        },
+        "02Dynamics": {
+          "01": "vec(a)=[vec(F)sub(net)]/[m]"
+        },
+        "03Momentum and Energy": {
+          "01": "vec(p)=mvec(v)"
+        }
+      },
+      "longList": {
+        "01Kinematics": {
+          "01": {
+            "Definitions": {
+              "01": {
+                "def": "Velocity",
+                "img": "velocity.gif",
+                "longDef": "Measured in meters per second"
+              },
+              "02": {
+                "def": "Distance",
+                "img": "distance.gif",
+                "longDef": "The change in distance"
+              },
+              "03": {
+                "def": "Time",
+                "img": "time.gif",
+                "longDef": "The change in time"
+              }
+            },
+            "Formulas": {
+              "01": "vec(v)sub(ave)=[Δvec(d)]/[Δt]",
+              "02": "Δvec(d)=vec(v)sub(ave)Δt",
+              "03": "Δt=[Δvec(d)]/[vec(v)sub(ave)]"
+            },
+            "WordFormulas": {
+              "01": "Average velocity is equal to the change in distance over the change in time.",
+              "02": "The change in distance is equal to the average velocity multiplied by the change in time.",
+              "03": "The change in time is equal to the change in distance over the average velocity."
+            }
+          }
+        },
+        "02Dynamics": {
+          "01": {
+            "Definitions": {
+              "01": "...",
+              "02": "..."
+            },
+            "Formulas": {
+              "01": "...",
+              "02": "..."
+            },
+            "WordFormulas": {
+              "01":"...",
+              "02":"...",
+              "03":"..."
+            }
+          }
+        }
+      }
+    }
+  },
+  "messages": {
+    "01": "Don't forget sig-digs!",
+    "02": "Why can't you trust an atom? They make up everything. :)",
+    "03": "Be like 'Broglie!"
+  }
+}
