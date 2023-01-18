@@ -68,75 +68,75 @@
 </div>
 
 <script>
-    var physicsLevel;
-    var NetHTMLList;
-    var readyToPush = 3;
+var NetHTMLList;
+var readyToPush = 3;
 
-    // Firebase Load List
-    function loadList(i) {
-      NetHTMLList = "";
-      if(i == 40){
-        document.getElementById("locationIndex").innerHTML += " > All";
-        document.getElementById("Heading").innerHTML = "All Formulas";
-        readyToPush = 3;
-        loadFormulaList(10);
-        loadFormulaList(20);
-        loadFormulaList(30);
-      } else {
-        document.getElementById("locationIndex").innerHTML += " > " + i;
-        document.getElementById("Heading").innerHTML = "Physics " + i;
-        readyToPush = 1;
-        loadFormulaList(i);
+// Firebase Load List
+function loadList(i) {
+  NetHTMLList = "";
+  if(i == 40){
+    document.getElementById("locationIndex").innerHTML += " > All";
+    document.getElementById("Heading").innerHTML = "All Formulas";
+    readyToPush = 3;
+    loadFormulaList(10);
+    loadFormulaList(20);
+    loadFormulaList(30);
+  } else {
+    document.getElementById("locationIndex").innerHTML += " > " + i;
+    document.getElementById("Heading").innerHTML = "Physics " + i;
+    readyToPush = 1;
+    loadFormulaList(i);
+  }
+}
+
+function loadFormulaList(i) {
+  //document.getElementById('message').innerHTML = "Loading... Please wait"
+  //document.getElementById('menu-flex').innerHTML = "";
+  
+  const listRef = database.ref('Formulas/' + pad(i) + "/list");
+  listRef.on('value', function(snapshot){
+      //console.log("[KEY]: ", snapshot.ref.toString());
+      //console.log("[GRADE]: ", snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2));
+      idad = snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2); // Grade
+      Catagories = snapshot.val();                                                      // List of Catagories
+      keys = Object.keys(Catagories);                                                   // Catagories
+      var HTMLList = "";
+
+      for(i=0; i < keys.length; i++) {
+        HTMLList += "<p>" + keys[i].substr(2) + "</p>";
+        for(j=0; j < Object.keys(Catagories[keys[i]]).length; j++) {
+          console.log("[TAKING INDEX]: ", j+1);
+          HTMLList += "<div onclick='loadEquationData(" + idad + ",`" + keys[i] + "`," + (i+1) + ")'>" + generateMathHtml(Catagories[keys[i]][pad(j+1)]) + "</div>";
+        }
       }
-    }
-    function loadFormulaList(i) {
-        physicsLevel = i;
 
-        //document.getElementById('message').innerHTML = "Loading... Please wait"
-        //document.getElementById('menu-flex').innerHTML = "";
-        var HTMLList = "";
-        const listRef = database.ref('Formulas/' + pad(i) + "/list");
-        listRef.on('value', function(snapshot){
-            console.log("[KEY]: ", snapshot.ref.toString());
-            console.log("[GRADE]: ", snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2));
-            idad = snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2);
+      NetHTMLList += HTMLList;
+      readyToPush -= 1;
+      if(readyToPush == 0) {
+        // Push list to HTML
+        document.getElementById('Content').innerHTML = NetHTMLList;
+        document.getElementById('Content').classList += "menu-flex-container";
+        document.getElementById('Content').style.display = "block";
 
-            list = snapshot.val();
-            console.log(list);
-            listLen = Object.keys(snapshot.val()).length;
-            for(i=0; i<listLen; i++) {
-                console.log(list[pad(i+1)]);
-                HTMLList += "<div onclick='loadEquationData(" + idad + "," + (i+1) + ")'>" + generateMathHtml(list[pad(i+1)]) + "</div>";
-                console.log("[LIST]: ", HTMLList);
-            }
-            NetHTMLList += HTMLList;
-            readyToPush -= 1;
+      }
+      return "Success!";
+  })
+}
 
-            if(readyToPush == 0) {
-              // Push list to HTML
-              document.getElementById('Content').innerHTML = NetHTMLList;
-              document.getElementById('Content').classList += "menu-flex-container";
-            }
-            //document.getElementById('menu-flex').innerHTML = HTMLList;
-            //document.getElementById('message').innerHTML = "Choose a formula to view:"
-        })
-
-    }
-
-    function loadEquationData(level, i) {
-        //document.getElementById('message').innerHTML = "Loading... Please wait"
-        //document.getElementById('menu-flex').innerHTML = "";
-        var HTMLList = "";
-        
-        console.log("[READ]: ", ('Formulas/' + level + "/longList/" + pad(i)))
-        const listRef = database.ref('Formulas/' + level + "/longList/" + pad(i));
-        listRef.on('value', function(snapshot){
-            info = snapshot.val();
-            console.log(info);
-            console.log(info["Formulas"]);
-            actuallyLoadEquationData(info);
-        })
-    }
+function loadEquationData(level, cat, i) {
+    //document.getElementById('message').innerHTML = "Loading... Please wait"
+    //document.getElementById('menu-flex').innerHTML = "";
+    var HTMLList = "";
+    
+    console.log("[READ]: ", ('Formulas/' + level + "/longList/" + cat + "/" + pad(i)))
+    const listRef = database.ref(("Formulas/" + level + "/longList/" + cat + "/" + pad(i)));
+    listRef.on('value', function(snapshot){
+        info = snapshot.val();
+        console.log(info);
+        console.log(info["Formulas"]);
+        actuallyLoadEquationData(info);
+    })
+}
 
     function actuallyLoadEquationData(info) {
         activeFormula = info["Formulas"]["01"];
