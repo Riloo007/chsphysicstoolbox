@@ -120,6 +120,7 @@ function setupFirebase() {
 document.addEventListener('DOMContentLoaded', function(){
   // Header and Footer
   header = `
+    <meta name="viewport" content="width=device-width, initial-scale=.8">
     <table style="font-size: 20px; padding: 3px; margin-right: 15px;">
       <td style="width: 100%;"><a href="index2.html">chsphysicstoolbox</a></td>
       <td>
