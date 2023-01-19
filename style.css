@@ -30,6 +30,7 @@ menu {
   height: 0vh;
   font-size: 40%;
   transition-duration: .3s;
+  z-index: 10;
 }
 .vec {
   background-image: url(vec.svg);
@@ -130,7 +131,9 @@ h1 {margin: 0px;}
 
 }
 .flex-container {
-  box-shadow: inset 0 0 1000px 100px black;
+  /*box-shadow: inset 0 0 1000px 100px black;*/
+  background-color: #000000b4;
+  border-radius: 20px;
   text-align: center;
   image-rendering: auto;
   display: flex;
@@ -142,6 +145,9 @@ h1 {margin: 0px;}
     place-items: center;
 }
 
+.Formula {
+  margin: auto;
+}
 .Formula * :not(sup, sub) {
   font-size: 40px;
   text-align: center;
@@ -152,7 +158,9 @@ h1 {margin: 0px;}
 
 #FormulaContainer{
     padding: 10px;
+    scale: 1;
 }
+
 
 @media (min-width: 768px) {
 .flex-container {

@@ -157,12 +157,14 @@ function actuallyLoadEquationData() {
     var WFloc = document.getElementById('WordFormulas');
     var Dloc = document.getElementById('Definitions');
     var temp = document.getElementById('Template');
-    //var len = Object.keys(formulaInfo["Formulas"]).length;
+    var len = Object.keys(formulaInfo["Formulas"]).length;
     var HTMLList = "";
 
+    var disp = 'block';
     for(let i of Object.keys(formulaInfo["Formulas"])) {
         console.log(i);
-        HTMLList += "<div id='" + i + "'>" + generateMathHtml(formulaInfo['Formulas'][i]) + "</div>";
+        HTMLList += "<div id='F" + i + "' style='display:" + disp + ";'>" + generateMathHtml(formulaInfo['Formulas'][i]) + "<p>" + formulaInfo['WordFormulas'][i] + "</p></div>";
+        disp = 'none';
     }
     Floc.innerHTML = HTMLList;
     HTMLList = "";
@@ -171,24 +173,28 @@ function actuallyLoadEquationData() {
         HTMLList += "<div id='" + i + "'>" + (formulaInfo['Definitions'][i]) + "</div>";
     }
     Dloc.innerHTML = HTMLList;
+    /*
     HTMLList = "";
     for(let i of Object.keys(formulaInfo["WordFormulas"])) {
         console.log(i);
         HTMLList += "<div id='" + i + "'>" + (formulaInfo['WordFormulas'][i]) + "</div>";
-    }
+    }*/
     loc.innerHTML = temp.innerHTML;
     
     
 
-    activeFormula = info["Formulas"]["01"];
+    activeFormula = 1;
+    formulaCount = len;
 
-    document.getElementsByTagName("body")[0].innerHTML = document.getElementById("Template").innerHTML;
-    document.getElementById("Formula").innerHTML = (generateMathHtml(activeFormula));
+    //document.getElementsByTagName("body")[0].innerHTML = document.getElementById("Template").innerHTML;
+    //document.getElementById("Formula").innerHTML = (generateMathHtml(activeFormula));
     //document.getElementById("WordFormula").innerHTML = (wordFormula);
 }
 
 function selectVariable(i) {
-
+  document.getElementById("F" + pad(activeFormula)).style.display = 'none';
+  document.getElementById("F" + pad(i)).style.display = 'block';
+  activeFormula = i;
 }
     
 
