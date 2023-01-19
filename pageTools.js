@@ -1,39 +1,52 @@
 function generateMathHtml(equation) {
     var finalString = "";
+    console.log(equation);
     var tokens = equation.split("");
     finalString += "<table class='Formula'><tbody><tr><td>";
     var inExponent = 0;
     var inSub = 0;
+    var inVec = 0;
+    var varIndex = 0;
     // Cycle through each character
     for (var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
 
-        // Exponents
-        if (token == "^" && tokens[i+1] == "(") {
+        // Vector Quantities
+        if (token == "v" && tokens[i+1] == "e" && tokens[i+2] == "c" && tokens[i+3] == "(") {
+          finalString += "<span class='vec'>";
+          i+=3;
+          inVec += 1;
+        }
+        // Superscript
+        else if (token == "^" && tokens[i+1] == "(") {
           finalString += "<sup>"
           inExponent++;
           i+=1;
         }
-        else if (token == "v" && tokens[i+1] == "e" && tokens[i+2] == "c" && tokens[i+3] == "(") {
-          finalString += "<span class='vec'>" + tokens[i+4] + "</span>";
-          i+=5;
-        }
+        // Subscript
         else if (token == "s" && tokens[i+1] == "u" && tokens[i+2] == "b" && tokens[i+3] == "(") {
           finalString += "<sub>";
-          inSub++;
+          inSub += 1;
           i+=3;
+          console.log("[ENTERING SUB]", inSub, " [NEXT UP]: ", tokens[i + 1]);
         }
+        // Close Super/Subscript
         else if (token == ")") {
-          if(inExponent > 0) {
+          if (inVec > 0) {
+            inVec--;
+            finalString += "</div></span>"
+            //i++;
+          }
+          else if (inExponent > 0) {
             inExponent--;
             finalString += "</sup>";
             i+=1;
           } else if (inSub > 0) {
             inSub--;
-            finalString += "</sub>";
+            finalString += "</div></sub>";
+            console.log("[EXIT SUB]", inSub, " [NEXT UP]: ", tokens[i + 1]);
           }
         }
-
         // Fractions
         else if (token == "[") {
           var off = 0;
@@ -80,15 +93,21 @@ function generateMathHtml(equation) {
             }
           } */
         }
-        
-        // Add anything else
-        else {
-          finalString += token;
+        // Anything else
+        else if (inExponent == 0 && inSub == 0 && token != "=") {
+          varIndex++;
+          finalString += "<div class='varBtn' onclick='selectVariable(" + (varIndex+1) + ")'>" + token;
+          //finalString += "<div class='varBtn'>" + token + "</div>";
         }
+        else {
+          console.log("Lost [" + token + "]!")
+          finalString += "</div>" + token;
+        }
+      
     } 
 
     // Close table
-    finalString += "</td></tr></tbody></table>";
+    finalString += "</div></td></tr></tbody></table>";
     return finalString;
 }
 

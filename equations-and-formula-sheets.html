@@ -86,9 +86,11 @@ var formulaInfo;
 
 // Firebase Load List
 function loadList(i) {
+  window.location.hash = '';
   NetHTMLList = "";
   if(i == 40){
     document.getElementById("locationIndex").innerHTML += " > All";
+  window.location.hash += "all"
     document.getElementById("Heading").innerHTML = "All Formulas";
     readyToPush = 3;
     loadFormulaList(10);
@@ -96,6 +98,7 @@ function loadList(i) {
     loadFormulaList(30);
   } else {
     document.getElementById("locationIndex").innerHTML += " > " + i;
+  window.location.hash += i;
     document.getElementById("Heading").innerHTML = "Physics " + i;
     readyToPush = 1;
     loadFormulaList(i);
@@ -110,7 +113,7 @@ function loadFormulaList(i) {
   listRef.on('value', function(snapshot){
       //console.log("[KEY]: ", snapshot.ref.toString());
       //console.log("[GRADE]: ", snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2));
-      idad = snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2); // Grade
+      idad = snapshot.ref.toString().substr(snapshot.ref.toString().length-7, 2);       // Grade
       Catagories = snapshot.val();                                                      // List of Catagories
       keys = Object.keys(Catagories);                                                   // Catagories
       var HTMLList = "";
@@ -130,7 +133,6 @@ function loadFormulaList(i) {
         document.getElementById('Content').innerHTML = NetHTMLList;
         document.getElementById('Content').classList += "menu-flex-container";
         document.getElementById('Content').style.display = "block";
-
       }
       return "Success!";
   })
@@ -140,6 +142,8 @@ function loadEquationData(level, cat, i) {
     //document.getElementById('message').innerHTML = "Loading... Please wait"
     //document.getElementById('menu-flex').innerHTML = "";
     var HTMLList = "";
+    
+    window.location.hash += "/" + cat + "/" + pad(i);
     
     console.log("[READ]: ", ('Formulas/' + level + "/longList/" + cat + "/" + pad(i)))
     const listRef = database.ref(("Formulas/" + level + "/longList/" + cat + "/" + pad(i)));
@@ -167,6 +171,7 @@ function actuallyLoadEquationData() {
         disp = 'none';
     }
     Floc.innerHTML = HTMLList;
+    console.log(HTMLList);
     HTMLList = "";
     for(let i of Object.keys(formulaInfo["Definitions"])) {
         console.log(i);
@@ -196,6 +201,30 @@ function selectVariable(i) {
   document.getElementById("F" + pad(i)).style.display = 'block';
   activeFormula = i;
 }
-    
+
+
+document.addEventListener('DOMContentLoaded', function(){
+  // Process Hash
+  var toDolen;
+  toDo = window.location.hash;
+  toDo = toDo.substr(1).split("/");
+  //toDolen = toDo.length;
+  //console.log(toDo)
+  //console.log(toDo.length);
+  if(toDo.length == 1) {
+    console.log("LOADING LIST " + toDo[0]);
+    loadList(toDo[0])}
+  else if(toDo.length > 0) {
+    console.log("LOADING EQ " + toDo[0], toDo[1], toDo[2]);
+    window.location.hash = toDo[0];
+    loadEquationData(toDo[0], toDo[1], toDo[2]);
+  }
+  //toDo.shift();
+  //console.log(toDo);
+});
+
+function Do() {
+
+}
 
 </script>
