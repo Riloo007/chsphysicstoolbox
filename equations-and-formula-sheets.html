@@ -17,8 +17,8 @@
 </head>
 
 <body>
-  <div style="height: 40px;"></div>
   <header id="header"></header>
+  <div style="height: 55px;"></div>
   <div class="contentWrapper" id="contentWrapper">
     <div class="locationIndex" id="locationIndex">Formulas</div>
     <div class="messageContainer">
@@ -47,29 +47,42 @@
 </body>
 
 <div style="display: none;" id="Template">
-  <div class="flex-container">
-    <div id="FormulaContainer">
-      <div id="Formula"></div>
-      <div id="WordFormula"></div>
-    </div>
-    <div id="VariableContainer">
-      <!--<img src="cube.gif" height="300px">
-      <br>
-      <h2>
-          Energy
-      </h2>
-      <br>
-      <p>
-          Energy, measured in Joules.
-      </p>
-      <br>-->
-    </div>
-  </div>
+    <div class="flex-container">
+        <div id="FormulaContainer">
+          <div id="Formulas">
+            <!--
+              <div id='01'>
+                generateMathHtml(formula[1])
+              </div>
+              <div id='02'> ...
+            -->
+          </div>
+          <div id="WordFormulas">
+            <!--
+              <div id='01'>
+                wordformula[1]
+              </div>
+              <div id='02'> ...
+            -->
+          </div>
+        </div>
+        <div id="Definitions">
+          <!--
+            <div id='01'>
+              <img src="" height="300px"><br> // img
+              <h2></h2>                       // def
+              <p></p>                         // longDef
+            </div>
+            <div id='02'> ...
+          -->
+        </div>
+      </div>
 </div>
 
 <script>
 var NetHTMLList;
 var readyToPush = 3;
+var formulaInfo;
 
 // Firebase Load List
 function loadList(i) {
@@ -131,24 +144,52 @@ function loadEquationData(level, cat, i) {
     console.log("[READ]: ", ('Formulas/' + level + "/longList/" + cat + "/" + pad(i)))
     const listRef = database.ref(("Formulas/" + level + "/longList/" + cat + "/" + pad(i)));
     listRef.on('value', function(snapshot){
-        info = snapshot.val();
-        console.log(info);
-        console.log(info["Formulas"]);
-        actuallyLoadEquationData(info);
+        formulaInfo = snapshot.val();
+        console.log(formulaInfo);
+        //console.log(formulaInfo["Formulas"]);
+        actuallyLoadEquationData();
     })
 }
 
-    function actuallyLoadEquationData(info) {
-        activeFormula = info["Formulas"]["01"];
+function actuallyLoadEquationData() {
+    var loc = document.getElementById('contentWrapper');
+    var Floc = document.getElementById('Formulas');
+    var WFloc = document.getElementById('WordFormulas');
+    var Dloc = document.getElementById('Definitions');
+    var temp = document.getElementById('Template');
+    //var len = Object.keys(formulaInfo["Formulas"]).length;
+    var HTMLList = "";
 
-        document.getElementsByTagName("body")[0].innerHTML = document.getElementById("Template").innerHTML;
-        document.getElementById("Formula").innerHTML = (generateMathHtml(activeFormula));
-        //document.getElementById("WordFormula").innerHTML = (wordFormula);
+    for(let i of Object.keys(formulaInfo["Formulas"])) {
+        console.log(i);
+        HTMLList += "<div id='" + i + "'>" + generateMathHtml(formulaInfo['Formulas'][i]) + "</div>";
     }
-
-    function selectVariable(i) {
-
+    Floc.innerHTML = HTMLList;
+    HTMLList = "";
+    for(let i of Object.keys(formulaInfo["Definitions"])) {
+        console.log(i);
+        HTMLList += "<div id='" + i + "'>" + (formulaInfo['Definitions'][i]) + "</div>";
     }
+    Dloc.innerHTML = HTMLList;
+    HTMLList = "";
+    for(let i of Object.keys(formulaInfo["WordFormulas"])) {
+        console.log(i);
+        HTMLList += "<div id='" + i + "'>" + (formulaInfo['WordFormulas'][i]) + "</div>";
+    }
+    loc.innerHTML = temp.innerHTML;
+    
     
 
-  </script>
+    activeFormula = info["Formulas"]["01"];
+
+    document.getElementsByTagName("body")[0].innerHTML = document.getElementById("Template").innerHTML;
+    document.getElementById("Formula").innerHTML = (generateMathHtml(activeFormula));
+    //document.getElementById("WordFormula").innerHTML = (wordFormula);
+}
+
+function selectVariable(i) {
+
+}
+    
+
+</script>

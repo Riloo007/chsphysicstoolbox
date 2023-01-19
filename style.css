@@ -31,6 +31,11 @@ menu {
   font-size: 40%;
   transition-duration: .3s;
 }
+.vec {
+  background-image: url(vec.svg);
+  background-size: 25px;
+  background-repeat: no-repeat;
+}
 
 .locationIndex {
   background-color: #b6c6eb55;
@@ -39,7 +44,7 @@ menu {
   font-size: 23px;
 }
 
-sup, sub {font-size: 60px;}
+sup, sub {font-size: 20px;}
 .messageContainer {text-align: left; font-size: 200%;}
 .messageContainer > h2 {margin-bottom: 0px;}
 .messageContainer > p, .messageContainer > div {border-left: solid 5px #FFFFFF; padding-left: 10px; margin-top: 10px;}
@@ -137,7 +142,7 @@ h1 {margin: 0px;}
     place-items: center;
 }
 
-.Formula * :not(sup) {
+.Formula * :not(sup, sub) {
   font-size: 40px;
   text-align: center;
 }
