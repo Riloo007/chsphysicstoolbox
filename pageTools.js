@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function(){
   header = `
     <meta name="viewport" content="width=device-width, initial-scale=.8">
     <table style="font-size: 20px; padding: 3px; margin-right: 15px;">
-      <td style="width: 100%;"><a href="index2.html">chsphysicstoolbox</a></td>
+      <td style="width: 100%;"><a href="index.html">chsphysicstoolbox</a></td>
       <td>
         <img style="width: 25px; height: 25px; cursor: pointer;" src="menu-icon.svg" onclick="toggleMenu();"> 
       </td>
