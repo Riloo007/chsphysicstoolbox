@@ -122,7 +122,7 @@ function loadFormulaList(i) {
         HTMLList += "<p>" + keys[i].substr(2) + "</p>";
         for(j=0; j < Object.keys(Catagories[keys[i]]).length; j++) {
           console.log("[TAKING INDEX]: ", j+1);
-          HTMLList += "<div onclick='loadEquationData(" + idad + ",`" + keys[i] + "`," + (i+1) + ")'>" + generateMathHtml(Catagories[keys[i]][pad(j+1)]) + "</div>";
+          HTMLList += "<div onclick='loadEquationData(" + idad + ",`" + keys[i] + "`," + (i+1) + ")'>" + generateMathHtml(Catagories[keys[i]][pad(j+1)], 0)[0] + "</div>";
         }
       }
 
@@ -167,7 +167,7 @@ function actuallyLoadEquationData() {
     var disp = 'block';
     for(let i of Object.keys(formulaInfo["Formulas"])) {
         console.log(i);
-        HTMLList += "<div id='F" + i + "' style='display:" + disp + ";'>" + generateMathHtml(formulaInfo['Formulas'][i]) + "<p>" + formulaInfo['WordFormulas'][i] + "</p></div>";
+        HTMLList += "<div id='F" + i + "' style='display:" + disp + ";'>" + generateMathHtml(formulaInfo['Formulas'][i], 0)[0] + "<p>" + formulaInfo['WordFormulas'][i] + "</p></div>";
         disp = 'none';
     }
     Floc.innerHTML = HTMLList;

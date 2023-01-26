@@ -1,4 +1,10 @@
-function generateMathHtml(equation) {
+
+function generateMathHtml(equation, varIndex) {
+  console.log("STARTING SUBROUTINE AT VARINDEX ", varIndex);
+    if (varIndex == 'undefined') {
+      var varIndex = 0;
+      console.log('CAUGHT VAR INDEX')
+    }
     var finalString = "";
     console.log(equation);
     var tokens = equation.split("");
@@ -6,46 +12,42 @@ function generateMathHtml(equation) {
     var inExponent = 0;
     var inSub = 0;
     var inVec = 0;
-    var varIndex = 0;
+    var inESV = "*";
+    var inBTN = false;
     // Cycle through each character
     for (var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
+        console.log('STAT: ', inESV, '\nTOKEN: ', token);
 
         // Vector Quantities
         if (token == "v" && tokens[i+1] == "e" && tokens[i+2] == "c" && tokens[i+3] == "(") {
           finalString += "<span class='vec'>";
           i+=3;
-          inVec += 1;
+          console.log('VEC');
+          inESV += 'V';
         }
         // Superscript
         else if (token == "^" && tokens[i+1] == "(") {
           finalString += "<sup>"
-          inExponent++;
+          console.log('SUP');
           i+=1;
+          inESV += 'E';
         }
         // Subscript
         else if (token == "s" && tokens[i+1] == "u" && tokens[i+2] == "b" && tokens[i+3] == "(") {
           finalString += "<sub>";
-          inSub += 1;
+          console.log('SUB');
           i+=3;
-          console.log("[ENTERING SUB]", inSub, " [NEXT UP]: ", tokens[i + 1]);
+          inESV += 'S';
         }
         // Close Super/Subscript
         else if (token == ")") {
-          if (inVec > 0) {
-            inVec--;
-            finalString += "</div></span>"
-            //i++;
-          }
-          else if (inExponent > 0) {
-            inExponent--;
-            finalString += "</sup>";
-            i+=1;
-          } else if (inSub > 0) {
-            inSub--;
-            finalString += "</div></sub>";
-            console.log("[EXIT SUB]", inSub, " [NEXT UP]: ", tokens[i + 1]);
-          }
+          if (inESV.charAt(inESV.length-1) == 'E') {finalString += "</sup>";} else
+          if (inESV.charAt(inESV.length-1) == 'S') {finalString += "</div></sub>";} else
+          if (inESV.charAt(inESV.length-1) == 'V') {finalString += "</div></span>";} else 
+          {console.log("ERR: ", inESV.charAt(inESV.length-1));}
+          inESV = inESV.substring(0,inESV.length-1);
+          console.log('OUT');
         }
         // Fractions
         else if (token == "[") {
@@ -55,7 +57,9 @@ function generateMathHtml(equation) {
           }
           console.log(off, "[SPACES UNTIL FRACTION SPLITS]");
           console.log("[RESULTING STRING]: ", equation.substr(i+1, off-1));
-          finalString += "</td><td><div><table><tbody><tr><td>" + generateMathHtml(equation.substr(i+1, off-1));
+          var fetch = generateMathHtml(equation.substr(i+1, off-1), varIndex);
+          varIndex = fetch[1];
+          finalString += "</td><td><div><table><tbody><tr><td>" + fetch[0];
           finalString += "</td></tr><tr><td><div style='border-top: 10px solid #FFFFFF;'></div></td></tr><tr><td>";
           off += 3;
           var offp = off;
@@ -64,7 +68,9 @@ function generateMathHtml(equation) {
           }
           console.log(offp - off, "[SPACES UNTIL FRACTION ENDS]");
           console.log("[RESULTING STRING]: ", equation.substr(i + off, offp - off));
-          finalString += generateMathHtml(equation.substr(i + off, offp - off)) + "</td></tr></tbody></table></div></td><td>";
+          var fetch = generateMathHtml(equation.substr(i + off, offp - off), varIndex);
+          varIndex = fetch[1];
+          finalString += fetch[0] + "</td></tr></tbody></table></div></td><td>";
           i += offp;
           /*return "ERR";
 
@@ -94,21 +100,37 @@ function generateMathHtml(equation) {
           } */
         }
         // Anything else
-        else if (inExponent == 0 && inSub == 0 && token != "=") {
-          varIndex++;
-          finalString += "<div class='varBtn' onclick='selectVariable(" + (varIndex+1) + ")'>" + token;
-          //finalString += "<div class='varBtn'>" + token + "</div>";
+        else if (inESV.charAt(inESV.length-1) != 'E' && inESV.charAt(inESV.length-1) != 'S' && token != "=" && !inBTN) {
+            varIndex++;
+            console.log('VARINDEX = ', varIndex);
+            finalString += "<div class='varBtn' onclick='selectVariable(" + (varIndex) + ")'>" + token;
+            inBTN = true;
         }
+        // Likely unnessecary:
         else {
-          console.log("Lost [" + token + "]!")
-          finalString += "</div>" + token;
+          if(token == '=') {
+            if(inBTN) {finalString+='</div>'; inBTN = false;}
+            finalString += '=';
+          }
+          else if(token == 'Δ') {finalString+='Δ'+tokens[i+1]}
+          else {finalString += token;}
+          //console.log('*null stat*');
+          //if(token == 'Δ') {
+          //  finalString += "<div class='varBtn' onclick='selectVariable(" + (varIndex) + ")'>Δ" + tokens[i+1] + "</div>";
+          //  i+=1;
+          //} else {
+          //if(token == '=' || token == 'Δ') {finalString += '</div>' + token} else {
+          //  finalString += "<div class='varBtn' onclick='selectVariable(" + (varIndex) + ")'>" + token;
+          //}
+            
+          //}
+          console.log("[" + token + "]!")
         }
-      
     } 
 
     // Close table
     finalString += "</div></td></tr></tbody></table>";
-    return finalString;
+    return [finalString, varIndex];
 }
 
 function rInt(i) {
