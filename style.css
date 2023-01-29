@@ -52,11 +52,16 @@ menu {
   cursor: pointer;
   color: rgb(153, 48, 6);
 }
+#MessageContainer {
+  color: rgb(153, 48, 6);
+  font-size: 20px;
+  min-height: 25px;
+}
 
 sup, sub {font-size: 20px;}
 .messageContainer {text-align: left; font-size: 200%;}
 .messageContainer > h2 {margin-bottom: 0px;}
-.messageContainer > p, .messageContainer > div {border-left: solid 5px #FFFFFF; padding-left: 10px; margin-top: 10px; width: min-content; max-width: calc(100vw - 45px);}
+.messageContainer > p, .messageContainer > div {border-left: solid 5px #FFFFFF; padding-left: 10px; margin-top: 10px; width: max-content; max-width: calc(100vw - 45px);}
 .Start > div {
   display: block;
   background-color: black;
@@ -95,6 +100,7 @@ h1 {margin: 0px;}
 .contentWrapper {
   padding: 30px;
   text-align: center;
+  min-height: calc(100vh - 200px);
 }
 .menu-flex-container {
   display: flex;
@@ -150,6 +156,8 @@ h1 {margin: 0px;}
   text-align: center;
   image-rendering: auto;
   display: flex;
+  min-height: calc(100vh - 200px);
+  height: fit-content;
 }
 
 .flex-container > div {
@@ -162,7 +170,7 @@ h1 {margin: 0px;}
   margin: auto;
 }
 .Formula * :not(sup, sub) {
-  font-size: 40px;
+  font-size: 60px;
   text-align: center;
 }
 .Formula text {
@@ -172,17 +180,54 @@ h1 {margin: 0px;}
 #FormulaContainer{
     padding: 10px;
     scale: 1;
+    font-size: 30px;
+}
+
+#formulaDivider{
+  width: 10px;
+  max-width: 10px;
+  background-color: #FFFFFF;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  margin-left: 0%;
+  border-radius: 5px;
+}
+
+#Definitions {
+  padding: 10px;
+}
+#Definitions > div > img {
+  max-width: 300px;
+}
+#Definitions p {
+  font-size: 30px;
+  margin-top: 0px;
+}
+#Definitions h2 {
+  font-size: 45px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 
 @media (min-width: 768px) {
-.flex-container {
-flex-direction: row; /* items will be arranged horizontally */
-}
+  .flex-container {
+    flex-direction: row; /* items will be arranged horizontally */
+  }
 }
 
 @media (max-width: 767px) {
-.flex-container {
-flex-direction: column; /* items will be arranged vertically */
-}
+  .flex-container {
+    flex-direction: column; /* items will be arranged vertically */
+  }
+  #formulaDivider{
+    width: 80%;
+    max-width: 80%;
+    background-color: #FFFFFF;
+    height: 10px;
+    margin: auto;
+    max-height: 10px;
+    min-height: 10px;
+    margin-top: 0%;
+  }
 }
