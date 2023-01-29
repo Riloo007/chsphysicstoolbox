@@ -15,6 +15,7 @@ body {
   image-rendering: pixelated;
 
   width: 100%;
+  user-select: none;
 }
 html {width: 100%;
   overflow-x: hidden;}
