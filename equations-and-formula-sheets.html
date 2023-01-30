@@ -82,6 +82,7 @@ var formulaInfo;
 function loadList(i) {
   window.location.hash = '';
   NetHTMLList = "";
+  document.getElementById('Content').innerHTML = "<p class='msgcontainer'>Loading... Please wait</p>"
   if(i == 40){
     document.getElementById("locationIndex").innerHTML += " > All";
   window.location.hash += "all"
@@ -92,11 +93,12 @@ function loadList(i) {
     loadFormulaList(30);
   } else {
     document.getElementById("locationIndex").innerHTML += " > " + i;
-  window.location.hash += i;
+    window.location.hash += i;
     document.getElementById("Heading").innerHTML = "Physics " + i;
     readyToPush = 1;
     loadFormulaList(i);
   }
+  console.log("List loading started!");
 }
 
 function loadFormulaList(i) {
@@ -115,18 +117,20 @@ function loadFormulaList(i) {
       for(i=0; i < keys.length; i++) {
         HTMLList += "<p>" + keys[i].substr(2) + "</p>";
         for(j=0; j < Object.keys(Catagories[keys[i]]).length; j++) {
-          console.log("[TAKING INDEX]: ", j+1);
-          HTMLList += "<div onclick='loadEquationData(" + idad + ",`" + keys[i] + "`," + (i+1) + ")'>" + generateMathHtml(Catagories[keys[i]][pad(j+1)], 0, true)[0] + "</div>";
+          //console.log("[TAKING INDEX]: ", j+1);
+          HTMLList += "<div onclick='loadEquationData(" + idad + ",`" + keys[i] + "`," + (j+1) + ")'>" + generateMathHtml(Catagories[keys[i]][pad(j+1)], 0, true)[0] + "</div>";
         }
       }
 
       NetHTMLList += HTMLList;
       readyToPush -= 1;
+      console.log("Tasks left: ", readyToPush);
       if(readyToPush == 0) {
         // Push list to HTML
         document.getElementById('Content').innerHTML = NetHTMLList;
         document.getElementById('Content').classList += "menu-flex-container";
-        document.getElementById('Content').style.display = "block";
+        //document.getElementById('Content').style.display = "block";
+        console.log("Complete!");
       }
       return "Success!";
   })
@@ -143,7 +147,7 @@ function loadEquationData(level, cat, i) {
     const listRef = database.ref(("Formulas/" + level + "/longList/" + cat + "/" + pad(i)));
     listRef.on('value', function(snapshot){
         formulaInfo = snapshot.val();
-        console.log(formulaInfo);
+        //console.log(formulaInfo);
         //console.log(formulaInfo["Formulas"]);
         actuallyLoadEquationData();
     })
@@ -171,10 +175,10 @@ function actuallyLoadEquationData() {
       disp = 'none';    
     }
     Floc.innerHTML = HTMLList;
-    console.log(HTMLList);
+    //console.log(HTMLList);
     HTMLList = "";
     for(let i of Object.keys(formulaInfo["Definitions"])) {
-        console.log(i);
+        //console.log(i);
         HTMLList += "<div id='V" + i + "'>"
           + "<img src='"
           + formulaInfo['Definitions'][i]['img']
@@ -229,9 +233,11 @@ document.addEventListener('DOMContentLoaded', function(){
   //toDolen = toDo.length;
   //console.log(toDo)
   //console.log(toDo.length);
-  if(toDo.length == 1) {
+  if(window.location.hash == "") {return}
+  else if(toDo.length == 1) {
     console.log("LOADING LIST " + toDo[0]);
-    loadList(toDo[0])}
+    loadList(toDo[0]);
+  }
   else if(toDo.length > 0) {
     console.log("LOADING EQ " + toDo[0], toDo[1], toDo[2]);
     window.location.hash = toDo[0];
@@ -240,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function(){
   //toDo.shift();
   //console.log(toDo);
 });
+
 
 function Do() {
 

@@ -3,13 +3,13 @@ var activeFormula;        // The selected/solved variable
 var noOfVars;             // The number of variables in the string
 
 function generateMathHtml(equation, varIndex, genTypeSimple) {
-  console.log("STARTING SUBROUTINE AT VARINDEX ", varIndex);
+  //console.log("STARTING SUBROUTINE AT VARINDEX ", varIndex);
     if (varIndex == 'undefined') {
       var varIndex = 0;
       console.log('CAUGHT VAR INDEX')
     }
     var finalString = "";
-    console.log(equation);
+    //console.log(equation);
     var tokens = equation.split("");
     finalString += "<table class='Formula'><tbody><tr><td>";
     var inExponent = 0;
@@ -20,10 +20,19 @@ function generateMathHtml(equation, varIndex, genTypeSimple) {
     // Cycle through each character
     for (var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
-        ///console.log('STAT: ', inESV, '\nTOKEN: ', token);
+        //console.log('STAT: ', inBTN, inESV, '\nTOKEN: ', token);
 
+        // Take care of Escaped Characters
+        if (token == "~") {
+          finalString += tokens[i+1];
+          i++;
+        }
+        else if (token == "\u0394") {
+          finalString += "&Delta;";
+          //console.log("GOTCHA");
+        }
         // Vector Quantities
-        if (token == "v" && tokens[i+1] == "e" && tokens[i+2] == "c" && tokens[i+3] == "(") {
+        else if (token == "v" && tokens[i+1] == "e" && tokens[i+2] == "c" && tokens[i+3] == "(") {
           finalString += "<span class='vec'>";
           i+=3;
           ///console.log('VEC');
@@ -76,27 +85,49 @@ function generateMathHtml(equation, varIndex, genTypeSimple) {
           finalString += fetch[0] + "</td></tr></tbody></table></div></td><td>";
           i += offp;
         }
+        // Delta
+        // Nothing Special
+        else if(genTypeSimple || "0123456789+-=±√".includes(token)) {
+          if(inBTN && inESV.charAt(inESV.length-1) != 'E' && inESV.charAt(inESV.length-1) != 'S') {finalString += "</div>"; inBTN = false;}
+          finalString += token;
+        }
+        // Must be a variable (So long as it isn't in an exponent or subscript)
+        else if(inESV.charAt(inESV.length-1) != 'E' && inESV.charAt(inESV.length-1) != 'S') {
+            if(inBTN) {finalString += "</div>";}
+            var vi = variableSortString.charAt(activeFormula * noOfVars + varIndex);
+            finalString += "<div class='varBtn' onclick='selectVariable(" + vi + ")' onmouseover='showDefinition(" + vi + ")' onmouseout='setMessage(``)'>" + token;
+            inBTN = true;
+            varIndex++;
+        }
+        // Anything left in subscripts/superscripts
+        else {
+          finalString += token;
+        }
+        // Problem?
+
+        
         // Anything else
-        else if (inESV.charAt(inESV.length-1) != 'E' && inESV.charAt(inESV.length-1) != 'S' && token != "=" && !inBTN) {
-          if(genTypeSimple) {
+        /*
+        else if (inESV.charAt(inESV.length-1) != 'E' && inESV.charAt(inESV.length-1) != 'S') {
+          if(genTypeSimple || "0123456789+-=±√".includes(token)) {
             finalString += token;
-          } else {
-            var vi = variableSortString.toString().charAt(activeFormula * noOfVars + varIndex);
+          } else if(!inBTN) {
+            var vi = variableSortString.charAt(activeFormula * noOfVars + varIndex);
             finalString += "<div class='varBtn' onclick='selectVariable(" + vi + ")' onmouseover='showDefinition(" + vi + ")' onmouseout='setMessage(``)'>" + token;
             inBTN = true;
             varIndex++;
           }
-        }
+        } 
         // Likely unnessecary:
         else {
-          if(token == '=') {
-            if(inBTN) {finalString+='</div>'; inBTN = false;}
-            finalString += '=';
+          if("=±√-".includes(token)) {
+            if(inBTN) {finalString+='</div>' + token; inBTN = false;}
+            //finalString += '=';
           }
           else if(token == 'Δ') {finalString+='Δ'+tokens[i+1]}
           else {finalString += token;}
           console.log("[" + token + "]!")
-        }
+        }*/
     } 
 
     // Close table
@@ -133,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function(){
   // Header and Footer
   header = `
     <meta name="viewport" content="width=device-width, initial-scale=.8">
-    <table style="font-size: 20px; padding: 3px; margin-right: 15px;">
+    <table style="font-size: 20px; margin: 10px; width: calc(100% - 20px);">
       <td style="width: 100%;"><a href="index.html">chsphysicstoolbox</a></td>
       <td>
         <img style="width: 25px; height: 25px; cursor: pointer;" src="menu-icon.svg" onclick="toggleMenu();"> 
@@ -141,8 +172,17 @@ document.addEventListener('DOMContentLoaded', function(){
     </table>
     <menu id="menu">
       <div class="messageContainer">
+        <p class="msgcontainer" >This website is in HEAVY development! Please be patient and note that some functions may be broken or simply not work at all.</p>
         <h2>Menu</h2>
-        <p>Nothing here right now :)</p>
+        <p>Formula Lists
+        <ul>
+          <li><a onclick="window.location.href = 'equations-and-formula-sheets.html#10'; location.reload();">&emsp;Physics 10</a></li>
+          <li><a onclick="window.location.href = 'equations-and-formula-sheets.html#20'; location.reload();">&emsp;Physics 20</a><br></li>
+          <li><a onclick="window.location.href = 'equations-and-formula-sheets.html#30'; location.reload();">&emsp;Physics 30</a><br></li>
+        </ul></p>
+        <p>Other stuff
+        &emsp;Yeah
+        </p>
       </div>
     </menu>
   `;
