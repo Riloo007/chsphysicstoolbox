@@ -2,7 +2,7 @@ var variableSortString;   // Cloud stored string that sorts the variables for th
 var activeFormula;        // The selected/solved variable
 var noOfVars;             // The number of variables in the string
 
-function generateMathHtml(equation, varIndex, genTypeSimple) {
+function generateMathHtml(equation, varIndex, genTypeSimple, noColor) {
   //console.log("STARTING SUBROUTINE AT VARINDEX ", varIndex);
     if (varIndex == 'undefined') {
       var varIndex = 0;
@@ -12,6 +12,7 @@ function generateMathHtml(equation, varIndex, genTypeSimple) {
     //console.log(equation);
     var tokens = equation.split("");
     finalString += "<table class='Formula'><tbody><tr><td>";
+    if(!genTypeSimple && !noColor) {finalString+="<div class='activeVar'>";}
     var inExponent = 0;
     var inSub = 0;
     var inVec = 0;
@@ -20,12 +21,16 @@ function generateMathHtml(equation, varIndex, genTypeSimple) {
     // Cycle through each character
     for (var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
-        //console.log('STAT: ', inBTN, inESV, '\nTOKEN: ', token);
+        console.log('STAT: ', inBTN, inESV, '\nTOKEN: ', token);
 
         // Take care of Escaped Characters
         if (token == "~") {
           finalString += tokens[i+1];
           i++;
+        }
+        // Split to show active variable
+        else if (token == "=") {
+          finalString += "</div> = ";
         }
         else if (token == "\u0394") {
           finalString += "&Delta;";
@@ -69,7 +74,7 @@ function generateMathHtml(equation, varIndex, genTypeSimple) {
           }
           ///console.log(off, "[SPACES UNTIL FRACTION SPLITS]");
           ///console.log("[RESULTING STRING]: ", equation.substr(i+1, off-1));
-          var fetch = generateMathHtml(equation.substr(i+1, off-1), varIndex, genTypeSimple);
+          var fetch = generateMathHtml(equation.substr(i+1, off-1), varIndex, genTypeSimple, true);
           varIndex = fetch[1];
           finalString += "</td><td><div><table><tbody><tr><td>" + fetch[0];
           finalString += "</td></tr><tr><td><div style='border-top: 10px solid #FFFFFF;'></div></td></tr><tr><td>";
@@ -80,14 +85,14 @@ function generateMathHtml(equation, varIndex, genTypeSimple) {
           }
           ///console.log(offp - off, "[SPACES UNTIL FRACTION ENDS]");
           ///console.log("[RESULTING STRING]: ", equation.substr(i + off, offp - off));
-          var fetch = generateMathHtml(equation.substr(i + off, offp - off), varIndex, genTypeSimple);
+          var fetch = generateMathHtml(equation.substr(i + off, offp - off), varIndex, genTypeSimple, true);
           varIndex = fetch[1];
           finalString += fetch[0] + "</td></tr></tbody></table></div></td><td>";
           i += offp;
         }
         // Delta
         // Nothing Special
-        else if(genTypeSimple || "0123456789+-=±√".includes(token)) {
+        else if(genTypeSimple || "0123456789+-±√".includes(token)) {
           if(inBTN && inESV.charAt(inESV.length-1) != 'E' && inESV.charAt(inESV.length-1) != 'S') {finalString += "</div>"; inBTN = false;}
           finalString += token;
         }
@@ -95,7 +100,7 @@ function generateMathHtml(equation, varIndex, genTypeSimple) {
         else if(inESV.charAt(inESV.length-1) != 'E' && inESV.charAt(inESV.length-1) != 'S') {
             if(inBTN) {finalString += "</div>";}
             var vi = variableSortString.charAt(activeFormula * noOfVars + varIndex);
-            finalString += "<div class='varBtn' onclick='selectVariable(" + vi + ")' onmouseover='showDefinition(" + vi + ")' onmouseout='setMessage(``)'>" + token;
+            finalString += "<div class='varBtn' onclick='selectVariable(" + vi + ")' onmouseover='showDefinition(" + vi + ")' onmouseout='showDefinition(activeFormula);'>" + token;
             inBTN = true;
             varIndex++;
         }

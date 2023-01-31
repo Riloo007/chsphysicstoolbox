@@ -212,14 +212,22 @@ function selectVariable(i) {
 }
 
 function showDefinition(i) {
-  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {}
-  else {
-    setMessage("Click to solve...");
+  if(i == activeFormula) {
+    setMessage('');
+  } else {
+    setMessage("Click to Solve");
   }
+  
+
+  //if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {}
+  //else {
+  //  setMessage("Click to solve...");
+  //}
   
   for(j=0; j<noOfVars; j++) {
     document.getElementById("V" + pad(j+1)).style.display = 'none';
   } document.getElementById("V" + pad(i)).style.display = 'block';
+
 }
 function setMessage(i) {
   document.getElementById("MessageContainer").innerHTML = i;

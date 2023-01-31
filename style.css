@@ -60,6 +60,10 @@ menu {
   min-height: 25px;
   max-width: calc(100vw - 100px);
 }
+.activeVar {
+  display: inline-block;
+  color: #4293fc;
+}
 
 sup, sub {font-size: 20px;}
 .messageContainer {text-align: left; font-size: 200%;}
