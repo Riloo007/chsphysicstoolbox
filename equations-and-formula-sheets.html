@@ -118,7 +118,7 @@ function loadFormulaList(i) {
         HTMLList += "<p>" + keys[i].substr(2) + "</p>";
         for(j=0; j < Object.keys(Catagories[keys[i]]).length; j++) {
           //console.log("[TAKING INDEX]: ", j+1);
-          HTMLList += "<div onclick='loadEquationData(" + idad + ",`" + keys[i] + "`," + (j+1) + ")'>" + generateMathHtml(Catagories[keys[i]][pad(j+1)], 0, true)[0] + "</div>";
+          HTMLList += "<div onclick='loadEquationData(" + idad + ",`" + keys[i] + "`," + (j+1) + ")'>" + generateMathHtml(Catagories[keys[i]][pad(j+1)], 0, true, false)[0] + "</div>";
         }
       }
 

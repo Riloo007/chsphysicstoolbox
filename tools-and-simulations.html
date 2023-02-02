@@ -1,0 +1,50 @@
+<html>
+<head>
+  <title>CHS Physics Toolbox</title>
+  <!--
+    // These scripts are modular and don't work in Chrome Version 103.0.5060.134 (Official Build) (64-bit)
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"></script>
+
+    Copyright 2023 Glitch
+  -->
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+
+  <script src="pageTools.js"></script>
+  <link rel="stylesheet" href="style.css"></style>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header id="header" style="position: fixed; top: 0;"></header>
+    <div class="contentWrapper">
+        <div style="height: 30px;"></div>
+        <div class="menu-flex-container-wrap">
+            <h2>Simulations</h2>
+            <div class="kinematics-container">
+                <h1>Kinematics</h1>
+                <p>The science of pure motion</p>
+            </div>
+            <div class="dynamics-container">
+                <h1>Dynamics</h1>
+                <p>Use the force</p>
+            </div>
+            <div class="energy-container">
+                <h1>Energy</h1>
+                <p>The capacity to do work</p>
+            </div>
+            <div class="waves-container">
+                <h1>Waves</h1>
+                <p>Transfering energy independant of matter</p>
+                <div>
+                    <p>
+                        Learn how waves act and interfere by exploring three different interactives.
+                    </p>
+                    <div id="MessageContainer">Click to view</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer id="footer"></footer>
+</body>

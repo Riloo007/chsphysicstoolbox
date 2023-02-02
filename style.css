@@ -115,10 +115,12 @@ h1 {margin: 0px;}
   align-items: center;
   padding: 0px;
 }
+
 .menu-flex-container > p {
   width: 100%;
 }
-.menu-flex-container > div, .menu-flex-container-button {
+
+.menu-flex-container > div, .menu-flex-container-button, .menu-flex-container-wrap > div {
   width: 240px;
   min-width: max-content;
   /*width: max-content;*/
@@ -132,8 +134,11 @@ h1 {margin: 0px;}
   cursor: pointer;
   text-align: center;
 }
+.menu-flex-container-wrap > div {
+  width: calc(100% - 30px);
+}
 .menu-flex-container-button {width: calc(100% - 30px);}
-.menu-flex-container > div:hover, .menu-flex-container-button:hover {
+.menu-flex-container > div:hover, .menu-flex-container-wrap > div:hover, .menu-flex-container-button:hover {
   border: 2px solid white;
   padding: 3px;
 }
