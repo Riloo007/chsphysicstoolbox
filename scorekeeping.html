@@ -1,0 +1,169 @@
+<html>
+<head>
+  <title>Team Management</title>
+</head>
+<body>
+  <h1 id="team1Header">Team 1</h1>
+  <h1 id="team2Header">Team 2</h1>
+  <div id="team1">
+    <ul id="team1List">
+    </ul>
+    <button onclick="addplayer(2)">Add Player</button>
+  </div>
+  <div id="team2">
+    <ul id="team2List">
+    </ul>
+  </div>
+  <div id="team1Score">
+    <p>Team 1 Goals: <span id="team1Goals"></span></p>
+    <p>Team 1 Fouls: <span id="team1Fouls"></span></p>
+  </div>
+  <div id="team2Score">
+    <p>Team 2 Goals: <span id="team2Goals"></span></p>
+    <p>Team 2 Fouls: <span id="team2Fouls"></span></p>
+  </div>
+  <button id="editBtn">Edit Mode</button>
+</body>
+</html>
+
+<style>
+
+#team1Header, #team2Header {
+  display: inline-block;
+  width: 49%;
+  text-align: center;
+}
+
+#team1, #team2 {
+  display: inline-block;
+  width: 49%;
+  vertical-align: top;
+}
+
+#team1List, #team2List {
+  list-style-type: none;
+  padding: 0;
+}
+
+#team1Score, #team2Score {
+  display: inline-block;
+  width: 49%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+</style>
+
+<script>
+const team1Header = document.getElementById("team1Header");
+const team2Header = document.getElementById("team2Header");
+const team1List = document.getElementById("team1List");
+const team2List = document.getElementById("team2List");
+const team1Goals = document.getElementById("team1Goals");
+const team1Fouls = document.getElementById("team1Fouls");
+const team2Goals = document.getElementById("team2Goals");
+const team2Fouls = document.getElementById("team2Fouls");
+const editBtn = document.getElementById("editBtn");
+
+let editMode = false;
+
+function addplayer(i) {
+    if(i == 1) {
+        
+    }
+}
+
+const updateScores = () => {
+  let team1GoalsCount = 0;
+  let team1FoulsCount = 0;
+  let team2GoalsCount = 0;
+  let team2FoulsCount = 0;
+
+  for (let i = 0; i < team1List.children.length; i++) {
+    team1GoalsCount += parseInt(team1List.children[i].children[1].innerText);
+    team1FoulsCount += parseInt(team1List.children[i].children[2].innerText);
+  }
+
+  for (let i = 0; i < team2List.children.length; i++) {
+    team2GoalsCount += parseInt(team2List.children[i].children[1].innerText);
+    team2FoulsCount += parseInt(team2List.children[i].children[2].innerText);
+  }
+
+  team1Goals.innerText = team1GoalsCount;
+  team1Fouls.innerText = team1FoulsCount;
+  team2Goals.innerText = team2GoalsCount;
+  team2Fouls.innerText = team2FoulsCount;
+};
+
+const toggleEditMode = () => {
+  editMode = !editMode;
+
+  if (editMode) {
+    editBtn.innerText = "Use Mode";
+    team1Header.contentEditable = true;
+    team2Header.contentEditable = true;
+  } else {
+    editBtn.innerText = "Edit Mode";
+    team1Header.contentEditable = false;
+    team2Header.contentEditable = false;
+  }
+
+  for (let i = 0; i < team1List.children.length; i++) {
+    let player = team1List.children[i];
+    let goals = player.children[1];
+    let fouls = player.children[2];
+
+    player.children[0].contentEditable = editMode;
+    goals.contentEditable = editMode;
+    fouls.contentEditable = editMode;
+
+    if (editMode) {
+      goals.style.backgroundColor = "lightgray";
+      fouls.style.backgroundColor = "lightgray";
+    } else {
+      goals.style.backgroundColor = "transparent";
+      fouls.style.backgroundColor = "transparent";
+      goals.onclick = function() {
+        goals.innerText = parseInt(goals.innerText) + 1;
+        updateScores();
+      };
+      fouls.onclick = function() {
+        fouls.innerText = parseInt(fouls.innerText) + 1;
+        updateScores();
+      };
+    }
+  }
+
+  for (let i = 0; i < team2List.children.length; i++) {
+    let player = team2List.children[i];
+    let goals = player.children[1];
+    let fouls = player.children[2];
+
+    player.children[0].contentEditable = editMode;
+    goals.contentEditable = editMode;
+    fouls.contentEditable = editMode;
+
+    if (editMode) {
+      goals.style.backgroundColor = "lightgray";
+      fouls.style.backgroundColor = "lightgray";
+    } else {
+      goals.style.backgroundColor = "transparent";
+      fouls.style.backgroundColor = "transparent";
+      goals.onclick = function() {
+        goals.innerText = parseInt(goals.innerText) + 1;
+        updateScores();
+      };
+      fouls.onclick = function() {
+        fouls.innerText = parseInt(fouls.innerText) + 1;
+        updateScores();
+      };
+    }
+  }
+};
+
+editBtn.onclick = toggleEditMode;
+toggleEditMode();
+
+
+</script>
