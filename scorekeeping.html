@@ -3,53 +3,46 @@
   <title>Team Management</title>
 </head>
 <body>
-  <h1 id="team1Header">Team 1</h1>
-  <h1 id="team2Header">Team 2</h1>
-  <div id="team1">
-    <ul id="team1List">
-    </ul>
-    <button onclick="addplayer(2)">Add Player</button>
-  </div>
-  <div id="team2">
-    <ul id="team2List">
-    </ul>
-  </div>
-  <div id="team1Score">
-    <p>Team 1 Goals: <span id="team1Goals"></span></p>
-    <p>Team 1 Fouls: <span id="team1Fouls"></span></p>
-  </div>
-  <div id="team2Score">
-    <p>Team 2 Goals: <span id="team2Goals"></span></p>
-    <p>Team 2 Fouls: <span id="team2Fouls"></span></p>
-  </div>
+  <table>
+    <tbody id="Lists">
+      <tr>
+        <td><h1 id="team1Header">Team 1</h1></td>
+        <td><h1 id="team2Header">Team 2</h1></td>
+      </tr>
+      <tr>
+        <td>
+          <table><tbody><tr><td>Player</td><td>Goals</td><td>Fouls</td></tr></tbody></table>
+        </td>
+        <td>
+          <table><tbody><tr><td>Player</td><td>Goals</td><td>Fouls</td></tr></tbody></table>
+        </td>
+      </tr>
+      <tr>
+        <td><ul id="team1List"></ul></td>
+        <td><ul id="team2List"></ul></td>
+      </tr>
+      <tr id="addPlayerButtons">
+        <td><button onclick="addplayer(1)">Add Player</button></td>
+        <td><button onclick="addplayer(2)">Add Player</button></td>
+      </tr>
+    </tbody>
+  </table>
   <button id="editBtn">Edit Mode</button>
 </body>
 </html>
 
 <style>
-
-#team1Header, #team2Header {
-  display: inline-block;
-  width: 49%;
+#Lists > tr > td > table {
+  width: 100%;
   text-align: center;
 }
-
-#team1, #team2 {
-  display: inline-block;
-  width: 49%;
-  vertical-align: top;
+#Lists {
+  text-align: center;
 }
 
 #team1List, #team2List {
   list-style-type: none;
   padding: 0;
-}
-
-#team1Score, #team2Score {
-  display: inline-block;
-  width: 49%;
-  text-align: center;
-  margin-top: 10px;
 }
 
 
@@ -60,53 +53,33 @@ const team1Header = document.getElementById("team1Header");
 const team2Header = document.getElementById("team2Header");
 const team1List = document.getElementById("team1List");
 const team2List = document.getElementById("team2List");
-const team1Goals = document.getElementById("team1Goals");
-const team1Fouls = document.getElementById("team1Fouls");
-const team2Goals = document.getElementById("team2Goals");
-const team2Fouls = document.getElementById("team2Fouls");
 const editBtn = document.getElementById("editBtn");
+const addPlayerButtons = document.getElementById("addPlayerButtons");
+const newplayer = "<li><input type='value'><input type='value'><input type='value'></li>";
 
 let editMode = false;
 
 function addplayer(i) {
     if(i == 1) {
-        
+      team1List.innerHTML += newplayer;
+    } else {
+      team2List.innerHTML += newplayer;
     }
 }
-
-const updateScores = () => {
-  let team1GoalsCount = 0;
-  let team1FoulsCount = 0;
-  let team2GoalsCount = 0;
-  let team2FoulsCount = 0;
-
-  for (let i = 0; i < team1List.children.length; i++) {
-    team1GoalsCount += parseInt(team1List.children[i].children[1].innerText);
-    team1FoulsCount += parseInt(team1List.children[i].children[2].innerText);
-  }
-
-  for (let i = 0; i < team2List.children.length; i++) {
-    team2GoalsCount += parseInt(team2List.children[i].children[1].innerText);
-    team2FoulsCount += parseInt(team2List.children[i].children[2].innerText);
-  }
-
-  team1Goals.innerText = team1GoalsCount;
-  team1Fouls.innerText = team1FoulsCount;
-  team2Goals.innerText = team2GoalsCount;
-  team2Fouls.innerText = team2FoulsCount;
-};
 
 const toggleEditMode = () => {
   editMode = !editMode;
 
   if (editMode) {
-    editBtn.innerText = "Use Mode";
+    editBtn.innerText = "EDIT MODE";
     team1Header.contentEditable = true;
     team2Header.contentEditable = true;
+    addPlayerButtons.style.display = 'table-row';
   } else {
-    editBtn.innerText = "Edit Mode";
+    editBtn.innerText = "USE MODE";
     team1Header.contentEditable = false;
     team2Header.contentEditable = false;
+    addPlayerButtons.style.display = 'none';
   }
 
   for (let i = 0; i < team1List.children.length; i++) {
@@ -164,6 +137,10 @@ const toggleEditMode = () => {
 
 editBtn.onclick = toggleEditMode;
 toggleEditMode();
+for(x=1;x<15;x++) {
+  addplayer(1);
+  addplayer(2);
+}
 
 
 </script>
