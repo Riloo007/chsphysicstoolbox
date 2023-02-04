@@ -1,6 +1,29 @@
 <html>
 <head>
   <title>Team Management</title>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+  <!--
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB54arIWiHODagJUmcMVa4olpSMGNUIxII",
+      authDomain: "scorekeeping-c6efa.firebaseapp.com",
+      databaseURL: "https://scorekeeping-c6efa-default-rtdb.firebaseio.com",
+      projectId: "scorekeeping-c6efa",
+      storageBucket: "scorekeeping-c6efa.appspot.com",
+      messagingSenderId: "653633600985",
+      appId: "1:653633600985:web:61ae0782bca7b101a16dc8"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>-->
 </head>
 <body>
   <table>
@@ -22,16 +45,40 @@
         <td><ul id="team2List"></ul></td>
       </tr>
       <tr id="addPlayerButtons">
-        <td><button onclick="addplayer(1)">Add Player</button></td>
-        <td><button onclick="addplayer(2)">Add Player</button></td>
+        <td><button onClick="addplayer(1, team1List.children.length)">Add Player</button></td>
+        <td><button onClick="addplayer(2, team1List.children.length + 500)">Add Player</button></td>
       </tr>
     </tbody>
   </table>
-  <button id="editBtn">Edit Mode</button>
+  <div id="cloudOptions" style="border: 1px solid black; border-radius: 10px;">
+    <h3>Cloud Save</h1>
+    User index: <input id="userIndex" type="number" value="1">
+    <button onclick="saveToCloud(document.getElementById('userIndex').value)">Save to Cloud</button>
+    <button onclick="fetchFromCloud(document.getElementById('userIndex').value)">Load from Cloud</button>
+    <h4 id="message"></h4>
+  </div>
+
+  <button id="editBtn" onclick="toggleEditMode();">Edit Mode</button>
 </body>
 </html>
 
 <style>
+input:focus {
+  z-index: 100;
+  outline: none;
+  background-color: rgb(36, 124, 206);
+  border-radius: 10px;
+}
+input:focus:read-only {
+  background-color: white;
+}
+
+button {
+  border-radius: 10px;
+  border: 0px;
+  background-color: rgb(180, 180, 180);
+}
+
 #Lists > tr > td > table {
   width: 100%;
   text-align: center;
@@ -45,38 +92,76 @@
   padding: 0;
 }
 
+input {
+  border: none;
+  border-radius: 0px;
+  background-color: rgb(197, 197, 197);
+  width: calc(100vw / 6.8);
+  font-size: 20px;
+  text-align: center;
+}
+
 
 </style>
 
 <script>
 const team1Header = document.getElementById("team1Header");
 const team2Header = document.getElementById("team2Header");
+const cloudOptions = document.getElementById("cloudOptions");
+const message = document.getElementById("message");
 const team1List = document.getElementById("team1List");
 const team2List = document.getElementById("team2List");
 const editBtn = document.getElementById("editBtn");
 const addPlayerButtons = document.getElementById("addPlayerButtons");
-const newplayer = "<li><input type='value'><input type='value'><input type='value'></li>";
+const newplayer01 = "<li><input type='number' value='0' tabindex='";
+const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
 
 let editMode = false;
 
-function addplayer(i) {
+function addplayer(i, d) {
+  var ret
     if(i == 1) {
-      team1List.innerHTML += newplayer;
+      //team1List.innerHTML += newplayer;
+      team1List.appendChild(temp(newplayer01 + d + newplayer02));
+      ret = team1List.children[team1List.children.length-1]
     } else {
-      team2List.innerHTML += newplayer;
+      //team2List.innerHTML += newplayer;
+      team2List.appendChild(temp(newplayer01 + d + newplayer02));
+      ret = team2List.children[team2List.children.length-1];
     }
+    //console.log(ret);
+    return ret;
+}
+function removePlayer(i) {
+  i.parentElement.remove();
 }
 
-const toggleEditMode = () => {
+function incVal(i) {
+  i.value = parseInt(i.value) + 1;
+  //i.value += 1;
+}
+
+function temp(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+
+  // Change this to div.childNodes to support multiple top-level nodes.
+  return div.firstChild;
+}
+
+function toggleEditMode() {
+  console.log("TOGGLE");
   editMode = !editMode;
 
-  if (editMode) {
-    editBtn.innerText = "EDIT MODE";
+  if (!editMode) {
+    editBtn.innerText = "ENTER USE MODE";
+    cloudOptions.style.display = 'block';
     team1Header.contentEditable = true;
     team2Header.contentEditable = true;
     addPlayerButtons.style.display = 'table-row';
   } else {
-    editBtn.innerText = "USE MODE";
+    editBtn.innerText = "ENTER EDIT MODE";
+    cloudOptions.style.display = 'none';
     team1Header.contentEditable = false;
     team2Header.contentEditable = false;
     addPlayerButtons.style.display = 'none';
@@ -84,63 +169,117 @@ const toggleEditMode = () => {
 
   for (let i = 0; i < team1List.children.length; i++) {
     let player = team1List.children[i];
-    let goals = player.children[1];
-    let fouls = player.children[2];
 
-    player.children[0].contentEditable = editMode;
-    goals.contentEditable = editMode;
-    fouls.contentEditable = editMode;
+    player.children[0].readOnly = editMode;
+    player.children[1].readOnly = editMode;
+    player.children[2].readOnly = editMode;
+    console.log(player.children[0].readOnly);
+  
 
-    if (editMode) {
-      goals.style.backgroundColor = "lightgray";
-      fouls.style.backgroundColor = "lightgray";
+    if(!editMode) {
+      player.children[3].style.display = 'table-cell';
+      player.children[1].setAttribute('onclick','');
+      player.children[2].setAttribute('onclick','');
     } else {
-      goals.style.backgroundColor = "transparent";
-      fouls.style.backgroundColor = "transparent";
-      goals.onclick = function() {
-        goals.innerText = parseInt(goals.innerText) + 1;
-        updateScores();
-      };
-      fouls.onclick = function() {
-        fouls.innerText = parseInt(fouls.innerText) + 1;
-        updateScores();
-      };
+      player.children[3].style.display = 'none';
+      player.children[1].setAttribute('onclick','incVal(this)');
+      player.children[2].setAttribute('onclick','incVal(this)');
     }
   }
-
   for (let i = 0; i < team2List.children.length; i++) {
     let player = team2List.children[i];
-    let goals = player.children[1];
-    let fouls = player.children[2];
 
-    player.children[0].contentEditable = editMode;
-    goals.contentEditable = editMode;
-    fouls.contentEditable = editMode;
+    player.children[0].readOnly = editMode;
+    player.children[1].readOnly = editMode;
+    player.children[2].readOnly = editMode;
 
-    if (editMode) {
-      goals.style.backgroundColor = "lightgray";
-      fouls.style.backgroundColor = "lightgray";
+    if(!editMode) {
+      player.children[3].style.display = 'table-cell';
+      player.children[1].setAttribute('onclick','');
+      player.children[2].setAttribute('onclick','');
     } else {
-      goals.style.backgroundColor = "transparent";
-      fouls.style.backgroundColor = "transparent";
-      goals.onclick = function() {
-        goals.innerText = parseInt(goals.innerText) + 1;
-        updateScores();
-      };
-      fouls.onclick = function() {
-        fouls.innerText = parseInt(fouls.innerText) + 1;
-        updateScores();
-      };
+      player.children[3].style.display = 'none';
+      player.children[1].setAttribute('onclick','incVal(this)');
+      player.children[2].setAttribute('onclick','incVal(this)');
     }
   }
+
+
 };
 
-editBtn.onclick = toggleEditMode;
-toggleEditMode();
+
 for(x=1;x<15;x++) {
-  addplayer(1);
-  addplayer(2);
+  addplayer(1, x);
+  addplayer(2, x+100);
 }
 
+toggleEditMode();
+
+
+var database;
+function setupFirebase() {
+  const firebaseConfig = {
+    databaseURL: "https://scorekeeping-c6efa-default-rtdb.firebaseio.com/"
+  };
+  firebase.initializeApp(firebaseConfig);
+  database = firebase.database();
+}
+
+function pad(num) {
+  num = num.toString();
+  while (num.length < 3) num = "0" + num;
+  return num;
+}
+
+function saveToCloud(id) {
+  var dataString = pad(team1List.children.length) + pad(team2List.children.length);
+  // 014014
+
+  for (let i = 0; i < team1List.children.length; i++) {
+    let player = team1List.children[i];
+    dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
+  }
+  for (let i = 0; i < team2List.children.length; i++) {
+    let player = team2List.children[i];
+    dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
+  }
+
+  firebase.database().ref('users/' + id).set({
+    val: dataString
+  });
+
+  message.innerHTML = "Saved to user " + id + "!"
+}
+
+function fetchFromCloud(id) {
+  var get = firebase.database().ref('users/' + id);
+  get.on('value', (snapshot) => {
+    // String containing data
+    const data = snapshot.val()['val'];
+    console.log(data);
+    team1List.innerHTML = '';
+    team2List.innerHTML = '';
+
+    for(i=0;i<parseInt(data.substr(0, 3));i++) {
+      var newPlayer = addplayer(1, i);
+      newPlayer.children[0].value = parseInt(data.substr(9*i + 6, 3));
+      newPlayer.children[1].value = parseInt(data.substr(9*i + 9, 3));
+      newPlayer.children[2].value = parseInt(data.substr(9*i + 12, 3));
+    }
+    var L2off = 9*parseInt(data.substr(0, 3))
+    for(i=0;i<parseInt(data.substr(3, 3));i++) {
+      var newPlayer = addplayer(2, i + 100);
+      newPlayer.children[0].value = parseInt(data.substr(9*i + 6 + L2off, 3));
+      newPlayer.children[1].value = parseInt(data.substr(9*i + 9 + L2off, 3));
+      newPlayer.children[2].value = parseInt(data.substr(9*i + 12 + L2off, 3));
+    }
+
+    message.innerHTML = "Loaded!"
+
+
+  });
+}
+
+setupFirebase();
 
 </script>
