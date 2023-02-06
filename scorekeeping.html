@@ -41,8 +41,24 @@
         </td>
       </tr>
       <tr>
-        <td><ul id="team1List"></ul></td>
-        <td><ul id="team2List"></ul></td>
+        <td><ul id="team1List"></ul>
+              <div id="cloudOptions1" style="border: 1px solid black; border-radius: 10px;">
+                <h3>Cloud Save</h1>
+                User index: <input id="userIndex1" value="1">
+                <button onclick="saveToCloud(document.getElementById('userIndex1').value, 1)">Save to Cloud</button>
+                <button onclick="fetchFromCloud(document.getElementById('userIndex1').value, 1)">Load from Cloud</button>
+                <h4 id="message"></h4>
+              </div>
+        </td>
+        <td><ul id="team2List"></ul>
+              <div id="cloudOptions2" style="border: 1px solid black; border-radius: 10px;">
+                <h3>Cloud Save</h1>
+                User index: <input id="userIndex2" value="1">
+                <button onclick="saveToCloud(document.getElementById('userIndex2').value, 2)">Save to Cloud</button>
+                <button onclick="fetchFromCloud(document.getElementById('userIndex2').value, 2)">Load from Cloud</button>
+                <h4 id="message"></h4>
+              </div>
+        </td>
       </tr>
       <tr id="addPlayerButtons">
         <td><button onClick="addplayer(1, team1List.children.length)">Add Player</button></td>
@@ -50,13 +66,7 @@
       </tr>
     </tbody>
   </table>
-  <div id="cloudOptions" style="border: 1px solid black; border-radius: 10px;">
-    <h3>Cloud Save</h1>
-    User index: <input id="userIndex" type="number" value="1">
-    <button onclick="saveToCloud(document.getElementById('userIndex').value)">Save to Cloud</button>
-    <button onclick="fetchFromCloud(document.getElementById('userIndex').value)">Load from Cloud</button>
-    <h4 id="message"></h4>
-  </div>
+
 
   <button id="editBtn" onclick="toggleEditMode();">Edit Mode</button>
 </body>
@@ -107,7 +117,8 @@ input {
 <script>
 const team1Header = document.getElementById("team1Header");
 const team2Header = document.getElementById("team2Header");
-const cloudOptions = document.getElementById("cloudOptions");
+const cloudOptions1 = document.getElementById("cloudOptions1");
+const cloudOptions2 = document.getElementById("cloudOptions2");
 const message = document.getElementById("message");
 const team1List = document.getElementById("team1List");
 const team2List = document.getElementById("team2List");
@@ -155,13 +166,15 @@ function toggleEditMode() {
 
   if (!editMode) {
     editBtn.innerText = "ENTER USE MODE";
-    cloudOptions.style.display = 'block';
+    cloudOptions1.style.display = 'block';
+    cloudOptions2.style.display = 'block';
     team1Header.contentEditable = true;
     team2Header.contentEditable = true;
     addPlayerButtons.style.display = 'table-row';
   } else {
     editBtn.innerText = "ENTER EDIT MODE";
-    cloudOptions.style.display = 'none';
+    cloudOptions1.style.display = 'none';
+    cloudOptions2.style.display = 'none';
     team1Header.contentEditable = false;
     team2Header.contentEditable = false;
     addPlayerButtons.style.display = 'none';
@@ -231,17 +244,26 @@ function pad(num) {
   return num;
 }
 
-function saveToCloud(id) {
-  var dataString = pad(team1List.children.length) + pad(team2List.children.length);
-  // 014014
+function saveToCloud(id, team) {
+  var dataString;
+  // 
 
-  for (let i = 0; i < team1List.children.length; i++) {
-    let player = team1List.children[i];
-    dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
-  }
-  for (let i = 0; i < team2List.children.length; i++) {
-    let player = team2List.children[i];
-    dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
+  if(team == 1) {
+    dataString = pad(team1List.children.length);
+    //014
+    for (let i = 0; i < team1List.children.length; i++) {
+      let player = team1List.children[i];
+      dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
+    }
+    dataString += team1Header.innerHTML;
+  } else {
+    dataString = pad(team2List.children.length);
+    //014
+    for (let i = 0; i < team2List.children.length; i++) {
+      let player = team2List.children[i];
+      dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
+    }
+    dataString += team2Header.innerHTML;
   }
 
   firebase.database().ref('users/' + id).set({
