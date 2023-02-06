@@ -24,6 +24,9 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
   </script>-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
 </head>
 <body>
   <table>
@@ -47,7 +50,7 @@
                 User index: <input id="userIndex1" value="1">
                 <button onclick="saveToCloud(document.getElementById('userIndex1').value, 1)">Save to Cloud</button>
                 <button onclick="fetchFromCloud(document.getElementById('userIndex1').value, 1)">Load from Cloud</button>
-                <h4 id="message"></h4>
+                <h4 id="message1"></h4>
               </div>
         </td>
         <td><ul id="team2List"></ul>
@@ -56,7 +59,7 @@
                 User index: <input id="userIndex2" value="1">
                 <button onclick="saveToCloud(document.getElementById('userIndex2').value, 2)">Save to Cloud</button>
                 <button onclick="fetchFromCloud(document.getElementById('userIndex2').value, 2)">Load from Cloud</button>
-                <h4 id="message"></h4>
+                <h4 id="message2"></h4>
               </div>
         </td>
       </tr>
@@ -68,25 +71,36 @@
   </table>
 
 
-  <button id="editBtn" onclick="toggleEditMode();">Edit Mode</button>
+  <button id="editBtn" onclick="toggleEditMode();">Please enable javascript execution to continue</button>
+  <div id="pointers">
+    <button id="pointer1" style="outline: solid white 1px;">+1</button>
+    <button id="pointer2">+2</button>
+    <button id="pointer3">+3</button>
+  </div>
 </body>
 </html>
 
 <style>
+* {
+    font-family: 'Silkscreen', cursive;
+    color: rgb(18, 179, 0);
+  }
 input:focus {
   z-index: 100;
   outline: none;
-  background-color: rgb(36, 124, 206);
-  border-radius: 10px;
+  background-color: rgb(96, 92, 15);
+  border-radius: 5px;
 }
 input:focus:read-only {
-  background-color: white;
+  background-color: rgb(31, 31, 31);
 }
 
 button {
   border-radius: 10px;
   border: 0px;
-  background-color: rgb(180, 180, 180);
+  background-color: rgb(25, 27, 34);
+  cursor: pointer;
+  font-size: large;
 }
 
 #Lists > tr > td > table {
@@ -101,16 +115,55 @@ button {
   list-style-type: none;
   padding: 0;
 }
+#team1Header, #team2Header {
+  color: rgb(18, 179, 0);
+}
 
 input {
+  color: rgb(18, 179, 0);
+  box-shadow: inset 0 0 10px #353535;
+
   border: none;
-  border-radius: 0px;
-  background-color: rgb(197, 197, 197);
+  border-radius: 5px;
+  background-color: rgb(0, 0, 0);
   width: calc(100vw / 6.8);
   font-size: 20px;
   text-align: center;
+  margin: 3px;
 }
 
+body {
+  background-color: black;
+  background: linear-gradient(90deg, rgb(5, 0, 109) 40%, rgb(177, 0, 0) 60%);
+  text-align: center;
+}
+table {
+  margin: auto;
+}
+
+
+*::selection {
+  background:rgba(0, 0, 0, 0);
+}
+input:focus::selection {
+  background:rgba(193, 193, 193, 128);
+}
+input:focus:read-only::selection {
+  background:rgba(0, 0, 0, 0);
+}
+input:read-only {
+  cursor: pointer;
+}
+
+#editBtn {
+  font-size: 80px;
+  background-color: #00000000;
+  height: min-content;
+  display: block;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+}
 
 </style>
 
@@ -119,7 +172,8 @@ const team1Header = document.getElementById("team1Header");
 const team2Header = document.getElementById("team2Header");
 const cloudOptions1 = document.getElementById("cloudOptions1");
 const cloudOptions2 = document.getElementById("cloudOptions2");
-const message = document.getElementById("message");
+const message1 = document.getElementById("message1");
+const message2 = document.getElementById("message2");
 const team1List = document.getElementById("team1List");
 const team2List = document.getElementById("team2List");
 const editBtn = document.getElementById("editBtn");
@@ -127,28 +181,29 @@ const addPlayerButtons = document.getElementById("addPlayerButtons");
 const newplayer01 = "<li><input type='number' value='0' tabindex='";
 const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
 
+let pointerAdd = 1;
 let editMode = false;
 
 function addplayer(i, d) {
   var ret
-    if(i == 1) {
-      //team1List.innerHTML += newplayer;
-      team1List.appendChild(temp(newplayer01 + d + newplayer02));
-      ret = team1List.children[team1List.children.length-1]
-    } else {
-      //team2List.innerHTML += newplayer;
-      team2List.appendChild(temp(newplayer01 + d + newplayer02));
-      ret = team2List.children[team2List.children.length-1];
-    }
-    //console.log(ret);
-    return ret;
+  if(i == 1) {
+    //team1List.innerHTML += newplayer;
+    team1List.appendChild(temp(newplayer01 + d + newplayer02));
+    ret = team1List.children[team1List.children.length-1]
+  } else {
+    //team2List.innerHTML += newplayer;
+    team2List.appendChild(temp(newplayer01 + d + newplayer02));
+    ret = team2List.children[team2List.children.length-1];
+  }
+  //console.log(ret);
+  return ret;
 }
 function removePlayer(i) {
   i.parentElement.remove();
 }
 
 function incVal(i) {
-  i.value = parseInt(i.value) + 1;
+  i.value = parseInt(i.value) + pointerAdd;
   //i.value += 1;
 }
 
@@ -165,19 +220,21 @@ function toggleEditMode() {
   editMode = !editMode;
 
   if (!editMode) {
-    editBtn.innerText = "ENTER USE MODE";
+    editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'block';
     cloudOptions2.style.display = 'block';
     team1Header.contentEditable = true;
     team2Header.contentEditable = true;
     addPlayerButtons.style.display = 'table-row';
   } else {
-    editBtn.innerText = "ENTER EDIT MODE";
+    editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'none';
     cloudOptions2.style.display = 'none';
     team1Header.contentEditable = false;
     team2Header.contentEditable = false;
     addPlayerButtons.style.display = 'none';
+    message1.innerHTML = '';
+    message2.innerHTML = '';
   }
 
   for (let i = 0; i < team1List.children.length; i++) {
@@ -270,36 +327,62 @@ function saveToCloud(id, team) {
     val: dataString
   });
 
-  message.innerHTML = "Saved to user " + id + "!"
+  if(team == 1) {message1.innerHTML = "Saved to user " + id + "!";}
+  else {message2.innerHTML = "Saved to user " + id + "!";}
+  
 }
 
-function fetchFromCloud(id) {
+function fetchFromCloud(id, team) { 
   var get = firebase.database().ref('users/' + id);
   get.on('value', (snapshot) => {
     // String containing data
     const data = snapshot.val()['val'];
     console.log(data);
-    team1List.innerHTML = '';
-    team2List.innerHTML = '';
-
-    for(i=0;i<parseInt(data.substr(0, 3));i++) {
-      var newPlayer = addplayer(1, i);
-      newPlayer.children[0].value = parseInt(data.substr(9*i + 6, 3));
-      newPlayer.children[1].value = parseInt(data.substr(9*i + 9, 3));
-      newPlayer.children[2].value = parseInt(data.substr(9*i + 12, 3));
+    if(team == 1) {
+      team1List.innerHTML = '';
+      for(i=0;i<parseInt(data.substr(0, 3));i++) {
+        var newPlayer = addplayer(1, i);
+        newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
+        newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
+        newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
+      }
+      team1Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
+      message1.innerHTML = "Loaded!"
+    } else {
+      team2List.innerHTML = '';
+      //var L2off = team1List.children.length;
+      for(i=0;i<parseInt(data.substr(0, 3));i++) {
+        var newPlayer = addplayer(2, i + 100);
+        newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
+        newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
+        newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
+      }
+      team2Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
+      message2.innerHTML = "Loaded!";
     }
-    var L2off = 9*parseInt(data.substr(0, 3))
-    for(i=0;i<parseInt(data.substr(3, 3));i++) {
-      var newPlayer = addplayer(2, i + 100);
-      newPlayer.children[0].value = parseInt(data.substr(9*i + 6 + L2off, 3));
-      newPlayer.children[1].value = parseInt(data.substr(9*i + 9 + L2off, 3));
-      newPlayer.children[2].value = parseInt(data.substr(9*i + 12 + L2off, 3));
-    }
-
-    message.innerHTML = "Loaded!"
-
-
   });
+}
+
+function clearPointers(that) {
+  that.parentElement.children[0].style.outline = '';
+  that.parentElement.children[1].style.outline = '';
+  that.parentElement.children[2].style.outline = '';
+}
+
+document.getElementById('pointer1').onclick = function() {
+  clearPointers(this);
+  this.style.outline = 'solid white 1px';
+  pointerAdd = 1;
+}
+document.getElementById('pointer2').onclick = function() {
+  clearPointers(this);
+  this.style.outline = 'solid white 1px';
+  pointerAdd = 2;
+}
+document.getElementById('pointer3').onclick = function() {
+  clearPointers(this);
+  this.style.outline = 'solid white 1px';
+  pointerAdd = 3;
 }
 
 setupFirebase();
