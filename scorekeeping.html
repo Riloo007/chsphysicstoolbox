@@ -37,14 +37,10 @@
       </tr>
       <tr>
         <td>
-          <table><tbody><tr><td>Player</td><td>Goals</td><td>Fouls</td></tr></tbody></table>
-        </td>
-        <td>
-          <table><tbody><tr><td>Player</td><td>Goals</td><td>Fouls</td></tr></tbody></table>
-        </td>
-      </tr>
-      <tr>
-        <td><ul id="team1List"></ul>
+          <div class="pgf"><div>Player</div><div>Goals</div><div>Fouls</div></div>
+          <ul id="team1List"></ul>
+          <button id="addP1" onClick="addplayer(1, team1List.children.length)">Add Player</button>
+          <br>
               <div id="cloudOptions1" style="border: 1px solid black; border-radius: 10px;">
                 <h3>Cloud Save</h1>
                 User index: <input id="userIndex1" value="1">
@@ -53,7 +49,11 @@
                 <h4 id="message1"></h4>
               </div>
         </td>
-        <td><ul id="team2List"></ul>
+        <td>
+          <div class="pgf"><div>Player</div><div>Goals</div><div>Fouls</div></div>
+          <ul id="team2List"></ul>
+          <button id="addP2" onClick="addplayer(2, team1List.children.length + 500)">Add Player</button>
+          <br>
               <div id="cloudOptions2" style="border: 1px solid black; border-radius: 10px;">
                 <h3>Cloud Save</h1>
                 User index: <input id="userIndex2" value="1">
@@ -63,16 +63,13 @@
               </div>
         </td>
       </tr>
-      <tr id="addPlayerButtons">
-        <td><button onClick="addplayer(1, team1List.children.length)">Add Player</button></td>
-        <td><button onClick="addplayer(2, team1List.children.length + 500)">Add Player</button></td>
-      </tr>
     </tbody>
   </table>
 
 
   <button id="editBtn" onclick="toggleEditMode();">Please enable javascript execution to continue</button>
   <div id="pointers">
+    <button id="pointer0">-1</button>
     <button id="pointer1" style="outline: solid white 1px;">+1</button>
     <button id="pointer2">+2</button>
     <button id="pointer3">+3</button>
@@ -81,14 +78,26 @@
 </html>
 
 <style>
+@font-face {
+  font-family: bitlcd;
+  src: url(LCD2.ttf);
+}
+
+.pgf > div {
+  display: inline-block;
+  width: 33.33%;
+}
+
 * {
     font-family: 'Silkscreen', cursive;
-    color: rgb(18, 179, 0);
+    font-family: bitLCD;
+    font-size: 30px;
+    color: rgb(0, 113, 179);
   }
 input:focus {
   z-index: 100;
   outline: none;
-  background-color: rgb(96, 92, 15);
+  background-color: rgb(37, 37, 37);
   border-radius: 5px;
 }
 input:focus:read-only {
@@ -114,27 +123,28 @@ button {
 #team1List, #team2List {
   list-style-type: none;
   padding: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 #team1Header, #team2Header {
-  color: rgb(18, 179, 0);
+  font-size: 50px;
 }
 
 input {
-  color: rgb(18, 179, 0);
   box-shadow: inset 0 0 10px #353535;
 
   border: none;
   border-radius: 5px;
   background-color: rgb(0, 0, 0);
   width: calc(100vw / 6.8);
-  font-size: 20px;
+  font-size: 25px;
   text-align: center;
   margin: 3px;
 }
 
 body {
   background-color: black;
-  background: linear-gradient(90deg, rgb(5, 0, 109) 40%, rgb(177, 0, 0) 60%);
+  /*background: linear-gradient(90deg, rgb(5, 0, 109) 40%, rgb(177, 0, 0) 60%);*/
   text-align: center;
 }
 table {
@@ -156,7 +166,7 @@ input:read-only {
 }
 
 #editBtn {
-  font-size: 80px;
+  font-size: 6vh;
   background-color: #00000000;
   height: min-content;
   display: block;
@@ -177,7 +187,8 @@ const message2 = document.getElementById("message2");
 const team1List = document.getElementById("team1List");
 const team2List = document.getElementById("team2List");
 const editBtn = document.getElementById("editBtn");
-const addPlayerButtons = document.getElementById("addPlayerButtons");
+const addP1 = document.getElementById("addP1");
+const addP2 = document.getElementById("addP2");
 const newplayer01 = "<li><input type='number' value='0' tabindex='";
 const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
 
@@ -225,14 +236,16 @@ function toggleEditMode() {
     cloudOptions2.style.display = 'block';
     team1Header.contentEditable = true;
     team2Header.contentEditable = true;
-    addPlayerButtons.style.display = 'table-row';
+    addP1.style.display = 'table-row';
+    addP2.style.display = 'table-row';
   } else {
     editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'none';
     cloudOptions2.style.display = 'none';
     team1Header.contentEditable = false;
     team2Header.contentEditable = false;
-    addPlayerButtons.style.display = 'none';
+    addP1.style.display = 'none';
+    addP2.style.display = 'none';
     message1.innerHTML = '';
     message2.innerHTML = '';
   }
@@ -302,6 +315,7 @@ function pad(num) {
 }
 
 function saveToCloud(id, team) {
+  id = id.toUpperCase();
   var dataString;
   // 
 
@@ -327,39 +341,49 @@ function saveToCloud(id, team) {
     val: dataString
   });
 
-  if(team == 1) {message1.innerHTML = "Saved to user " + id + "!";}
-  else {message2.innerHTML = "Saved to user " + id + "!";}
+  if(team == 1) {message1.innerHTML = "Saved to user <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
+  else {message2.innerHTML = "Saved to user <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
   
 }
 
 function fetchFromCloud(id, team) { 
+  id = id.toUpperCase();
   var get = firebase.database().ref('users/' + id);
   get.on('value', (snapshot) => {
     // String containing data
-    const data = snapshot.val()['val'];
-    console.log(data);
-    if(team == 1) {
-      team1List.innerHTML = '';
-      for(i=0;i<parseInt(data.substr(0, 3));i++) {
-        var newPlayer = addplayer(1, i);
-        newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
-        newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
-        newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
+    try {
+      const data = snapshot.val()['val'];
+      console.log(data);
+      if(team == 1) {
+        team1List.innerHTML = '';
+        for(i=0;i<parseInt(data.substr(0, 3));i++) {
+          var newPlayer = addplayer(1, i);
+          newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
+          newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
+          newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
+        }
+        team1Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
+        message1.style.color = 'rgb(0, 113, 179)'
+        message1.innerHTML = "Loaded!"
+      } else {
+        team2List.innerHTML = '';
+        //var L2off = team1List.children.length;
+        for(i=0;i<parseInt(data.substr(0, 3));i++) {
+          var newPlayer = addplayer(2, i + 100);
+          newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
+          newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
+          newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
+        }
+        team2Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
+        message2.style.color = 'rgb(0, 113, 179)'
+        message2.innerHTML = "Loaded!";
       }
-      team1Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
-      message1.innerHTML = "Loaded!"
-    } else {
-      team2List.innerHTML = '';
-      //var L2off = team1List.children.length;
-      for(i=0;i<parseInt(data.substr(0, 3));i++) {
-        var newPlayer = addplayer(2, i + 100);
-        newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
-        newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
-        newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
-      }
-      team2Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
-      message2.innerHTML = "Loaded!";
+    } catch (error) {
+      if(team == 1) {message1.innerHTML = "Team not found"; message1.style.color = 'rgb(179, 161, 0)'}
+      else {message2.innerHTML = "Team not found"; message2.style.color = 'rgb(179, 161, 0)'}
+      
     }
+    
   });
 }
 
@@ -367,8 +391,14 @@ function clearPointers(that) {
   that.parentElement.children[0].style.outline = '';
   that.parentElement.children[1].style.outline = '';
   that.parentElement.children[2].style.outline = '';
+  that.parentElement.children[3].style.outline = '';
 }
 
+document.getElementById('pointer0').onclick = function() {
+  clearPointers(this);
+  this.style.outline = 'solid white 1px';
+  pointerAdd = -1;
+}
 document.getElementById('pointer1').onclick = function() {
   clearPointers(this);
   this.style.outline = 'solid white 1px';
