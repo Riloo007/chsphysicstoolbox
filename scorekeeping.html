@@ -9,7 +9,7 @@
     <tbody id="Lists">
       <tr>
         <td><input id="team1Header" value="Team 1"></td>
-        <td><input id="team1Header" value="Team 2"></td>
+        <td><input id="team2Header" value="Team 2"></td>
       </tr>
       <tr>
         <td>
@@ -17,11 +17,11 @@
           <ul id="team1List"></ul>
           <button id="addP1" onClick="addplayer(1, team1List.children.length)">Add Player</button>
           <br>
-          <div id="cloudOptions1" style="border: 1px solid black; border-radius: 10px;">
+          <div id="cloudOptions1">
             <h3>Cloud Save</h1>
             User index: <input id="userIndex1" value="1">
-            <button onclick="saveToCloud(uindex1, 1)">Save to Cloud</button>
-            <button onclick="fetchFromCloud(document.getElementById('userIndex1').value, 1)">Load from Cloud</button>
+            <button onclick="saveToCloud(uindex1.value, 1)">Save to Cloud</button>
+            <button onclick="fetchFromCloud(1)">Load from Cloud</button>
             <h4 id="message1"></h4>
           </div>
         </td>
@@ -30,11 +30,11 @@
           <ul id="team2List"></ul>
           <button id="addP2" onClick="addplayer(2, team1List.children.length + 500)">Add Player</button>
           <br>
-          <div id="cloudOptions2" style="border: 1px solid black; border-radius: 10px;">
+          <div id="cloudOptions2">
             <h3>Cloud Save</h1>
             User index: <input id="userIndex2" value="1">
-            <button onclick="saveToCloud(document.getElementById('userIndex2').value, 2)">Save to Cloud</button>
-            <button onclick="fetchFromCloud(document.getElementById('userIndex2').value, 2)">Load from Cloud</button>
+            <button onclick="saveToCloud(uindex2.value, 2)">Save to Cloud</button>
+            <button onclick="fetchFromCloud(2)">Load from Cloud</button>
             <h4 id="message2"></h4>
           </div>
         </td>
@@ -43,9 +43,9 @@
   </table>
 
   <div id="colorSettings">
-    Text color: <input id="pageColor" type="color" value="#0071b3">
-    Background color: <input id="backgroundColor" type="color">
-    Button color: <input id="buttonColor" type="color">
+    Text color: <input id="pageColor" type="color" value="#0071b3"><br>
+    Background color: <input id="backgroundColor" type="color"><br>
+    Button color: <input id="buttonColor" type="color"><br>
   </div>
 
 
@@ -63,11 +63,7 @@
 
 
 <style>
-#colorSettings{
-  border-radius: 10px;
-  padding: 10px;
-  border: solid 1px rgb(0, 113, 179);
-}
+
 
 @font-face {
   font-family: bitlcd;
@@ -80,11 +76,12 @@
 }
 
 * {
-    font-family: 'Silkscreen', cursive;
-    font-family: bitLCD;
-    font-size: 30px;
+  font-family: 'Silkscreen', cursive;
+  font-family: bitLCD;
+  font-size: 30px;
+  text-align: center;
+}
 
-  }
 input:focus {
   z-index: 100;
   outline: none;
@@ -111,16 +108,6 @@ button {
   text-align: center;
 }
 
-#team1List, #team2List {
-  list-style-type: none;
-  padding: 0;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-#team1Header, #team2Header {
-  font-size: 50px;
-}
-
 input {
   box-shadow: inset 0 0 10px #353535;
 
@@ -132,6 +119,28 @@ input {
   text-align: center;
   margin: 3px;
 }
+
+#team1List, #team2List {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#team1Header, #team2Header {
+  font-size: 50px;
+  background-color: #00000000;
+  box-shadow: none;
+  width: 100%;
+  cursor: auto;
+}
+#cloudOptions1 {
+  border-right: solid rgb(56, 56, 56) 3px;
+}
+#cloudOptions2 {
+  border-left: solid rgb(56, 56, 56) 3px;
+}
+
+
 
 body {
   background-color: black;
@@ -166,6 +175,14 @@ input:read-only {
   position: fixed;
   right: 0;
   bottom: 0;
+}
+
+#colorSettings{
+  border-top: solid rgb(56, 56, 56) 3px;
+  border-bottom: solid rgb(56, 56, 56) 3px;
+  padding: 10px;
+  font-size: normal;
+  width: 50vw;
 }
 
 </style>
@@ -220,6 +237,7 @@ function removePlayer(i) {
 function incVal(i) {
   i.value = parseInt(i.value) + pointerAdd;
   if(i.value >= 5) {i.style.color = 'rgb(179, 161, 0)';}
+  if(i.value < 5) {i.style.color = pageColor;}
   //i.value += 1;
 }
 
@@ -239,9 +257,10 @@ function toggleEditMode() {
     editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'block';
     cloudOptions2.style.display = 'block';
-    colorSettings.style.display = 'block';
-    team1Header.contentEditable = true;
-    team2Header.contentEditable = true;
+    colorSettings.style.display = 'inline-block';
+    team1Header.readOnly = false;
+    team2Header.readOnly = false;
+    //team1Header.style.cursor = 'auto'
     addP1.style.display = 'table-row';
     addP2.style.display = 'table-row';
   } else {
@@ -249,8 +268,8 @@ function toggleEditMode() {
     cloudOptions1.style.display = 'none';
     cloudOptions2.style.display = 'none';
     colorSettings.style.display = 'none';
-    team1Header.contentEditable = false;
-    team2Header.contentEditable = false;
+    team1Header.readOnly = true;
+    team2Header.readOnly = true;
     addP1.style.display = 'none';
     addP2.style.display = 'none';
     message1.innerHTML = '';
@@ -347,8 +366,8 @@ function saveToCloud(id, team) {
     val: dataString
   });
 
-  if(team == 1) {message1.innerHTML = "Saved to user <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
-  else {message2.innerHTML = "Saved to user <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
+  if(team == 1) {message1.innerHTML = "Saved Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
+  else {message2.innerHTML = "Saved Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
   
 }
 
@@ -372,7 +391,7 @@ function fetchFromCloud(team) {
         }
         team1Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
         message1.style.color = 'rgb(0, 113, 179)'
-        message1.innerHTML = "Loaded!"
+        message1.innerHTML = "Loaded Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";
       } else {
         team2List.innerHTML = '';
         for(i=0;i<parseInt(data.substr(0, 3));i++) {
@@ -383,7 +402,7 @@ function fetchFromCloud(team) {
         }
         team2Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
         message2.style.color = 'rgb(0, 113, 179)'
-        message2.innerHTML = "Loaded!";
+        message2.innerHTML = "Loaded Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";
       }
     } catch (error) {
       if(team == 1) {message1.innerHTML = "Team not found"; message1.style.color = 'rgb(179, 161, 0)'}
