@@ -241,6 +241,7 @@ function removePlayer(i) {
 
 function incVal(i) {
   i.value = parseInt(i.value) + pointerAdd;
+  if(i.value >= 5) {i.style.color = 'rgb(179, 161, 0)';}
   //i.value += 1;
 }
 
