@@ -182,6 +182,7 @@ const colorSettings = document.getElementById("colorSettings");
 const newplayer01 = "<li><input type='number' value='0' tabindex='";
 const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
 
+editBtn.innerText = "⚙︎";
 let pointerAdd = 1;
 let editMode = false;
 
@@ -223,7 +224,6 @@ function toggleEditMode() {
   editMode = !editMode;
 
   if (!editMode) {
-    editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'block';
     cloudOptions2.style.display = 'block';
     colorSettings.style.display = 'inline-block';
@@ -234,8 +234,8 @@ function toggleEditMode() {
     addP2.style.display = 'table-row';
     reset1.style.display = 'table-row';
     reset2.style.display = 'table-row';
+    document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + '} *::selection{background: rgb(56, 56, 56);}'
   } else {
-    editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'none';
     cloudOptions2.style.display = 'none';
     colorSettings.style.display = 'none';
@@ -247,6 +247,7 @@ function toggleEditMode() {
     reset2.style.display = 'none';
     message1.innerHTML = '';
     message2.innerHTML = '';
+    document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + '} *::selection{background: #00000000;}'
   }
 
   for (let i = 0; i < team1List.children.length; i++) {
@@ -384,11 +385,21 @@ function fetchFromCloud(team) {
   });
 }
 
-resetScores(i) {
+function resetScores(i) {
   if(i==1) {
-    for (let i = 0; i < team1List.children.length; i++) {}
+    for (let i = 0; i < team1List.children.length; i++) {
+      team1List.children[i].children[1].value = 0;
+      team1List.children[i].children[2].value = 0;
+      team1List.children[i].children[1].style.color = 'rgb(0, 113, 179)';
+      team1List.children[i].children[2].style.color = 'rgb(0, 113, 179)';
+    }
   } else {
-    for (let i = 0; i < team1List.children.length; i++) {}
+    for (let i = 0; i < team2List.children.length; i++) {
+      team2List.children[i].children[1].value = 0;
+      team2List.children[i].children[2].value = 0;
+      team2List.children[i].children[1].style.color = 'rgb(0, 113, 179)';
+      team2List.children[i].children[2].style.color = 'rgb(0, 113, 179)';
+    }
   }
 }
 
@@ -433,6 +444,7 @@ buttonColor.onchange = function() {
   //document.getElementById('USTYLE').style.backgroundColor = this.value;
   document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus, button{background-color:' + this.value + ';}'
 }
+
 
 setupFirebase();
 
