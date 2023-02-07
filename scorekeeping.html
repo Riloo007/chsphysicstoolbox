@@ -59,20 +59,10 @@
 </body>
 </html>
 
-
-
-
 <style>
-
-
 @font-face {
   font-family: bitlcd;
   src: url(LCD2.ttf);
-}
-
-.pgf > div {
-  display: inline-block;
-  width: 33.33%;
 }
 
 * {
@@ -81,50 +71,27 @@
   font-size: 30px;
   text-align: center;
 }
-
-input:focus {
-  z-index: 100;
-  outline: none;
-  background-color: rgb(37, 37, 37);
-  border-radius: 5px;
-}
-input:focus:read-only {
-  background-color: rgb(31, 31, 31);
+*::selection {
+  background:rgba(0, 0, 0, 0);
 }
 
+.pgf > div {
+  display: inline-block;
+  width: 33.33%;
+}
 button {
-  border-radius: 10px;
+  border-radius: 3px;
   border: 0px;
   background-color: rgb(25, 27, 34);
   cursor: pointer;
   font-size: large;
-}
-
-#Lists > tr > td > table {
-  width: 100%;
-  text-align: center;
-}
-#Lists {
-  text-align: center;
-}
-
-input {
-  box-shadow: inset 0 0 10px #353535;
-
-  border: none;
-  border-radius: 5px;
-  background-color: rgb(0, 0, 0);
-  width: calc(100vw / 7);
-  font-size: 25px;
-  text-align: center;
-  margin: 3px;
+  padding: 5px;
 }
 
 #team1List, #team2List {
   list-style-type: none;
   padding: 0;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: 5px;
 }
 #team1Header, #team2Header {
   font-size: 50px;
@@ -133,40 +100,37 @@ input {
   width: 100%;
   cursor: auto;
 }
-#cloudOptions1 {
-  border-right: solid rgb(56, 56, 56) 3px;
-}
-#cloudOptions2 {
-  border-left: solid rgb(56, 56, 56) 3px;
-}
-
-
+#cloudOptions1 {border-right: solid rgb(56, 56, 56) 3px;}
+#cloudOptions2 {border-left: solid rgb(56, 56, 56) 3px;}
 
 body {
   background-color: black;
-  /*background: linear-gradient(90deg, rgb(5, 0, 109) 40%, rgb(177, 0, 0) 60%);*/
   text-align: center;
+  /*background: linear-gradient(90deg, rgb(5, 0, 109) 40%, rgb(177, 0, 0) 60%);*/
 }
-body
 
 table {
   margin: auto;
   margin-bottom: 15px;
+  width: 100%;
+  text-align: center;
 }
 
-
-*::selection {
-  background:rgba(0, 0, 0, 0);
+input {
+  box-shadow: inset 0 0 10px #353535;
+  border: none;
+  border-radius: 3px;
+  background-color: rgb(0, 0, 0);
+  width: calc(100vw / 7);
+  font-size: 25px;
+  text-align: center;
+  margin: 3px;
 }
-input:focus::selection {
-  background:rgba(193, 193, 193, 128);
+input:focus {
+  outline: none;
+  background-color: rgb(37, 37, 37);
 }
-input:focus:read-only::selection {
-  background:rgba(0, 0, 0, 0);
-}
-input:read-only {
-  cursor: pointer;
-}
+input:read-only {cursor: pointer;}
 
 #editBtn {
   font-size: 6vh;
