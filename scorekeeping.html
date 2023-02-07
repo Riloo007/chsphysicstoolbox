@@ -16,6 +16,7 @@
           <div class="pgf"><div>Player</div><div>Goals</div><div>Fouls</div></div>
           <ul id="team1List"></ul>
           <button id="addP1" onClick="addplayer(1, team1List.children.length)">Add Player</button>
+          <button id="reset1" onClick="resetScores(1)">Reset Scores</button>
           <br>
           <div id="cloudOptions1">
             <h3>Cloud Save</h1>
@@ -29,6 +30,7 @@
           <div class="pgf"><div>Player</div><div>Goals</div><div>Fouls</div></div>
           <ul id="team2List"></ul>
           <button id="addP2" onClick="addplayer(2, team1List.children.length + 500)">Add Player</button>
+          <button id="reset2" onClick="resetScores(2)">Reset Scores</button>
           <br>
           <div id="cloudOptions2">
             <h3>Cloud Save</h1>
@@ -172,6 +174,8 @@ const team2List = document.getElementById("team2List");
 const editBtn = document.getElementById("editBtn");
 const addP1 = document.getElementById("addP1");
 const addP2 = document.getElementById("addP2");
+const reset1 = document.getElementById("reset1");
+const reset2 = document.getElementById("reset2");
 const uindex1 = document.getElementById('userIndex1');
 const uindex2 = document.getElementById('userIndex2');
 const colorSettings = document.getElementById("colorSettings");
@@ -228,6 +232,8 @@ function toggleEditMode() {
     //team1Header.style.cursor = 'auto'
     addP1.style.display = 'table-row';
     addP2.style.display = 'table-row';
+    reset1.style.display = 'table-row';
+    reset2.style.display = 'table-row';
   } else {
     editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'none';
@@ -237,6 +243,8 @@ function toggleEditMode() {
     team2Header.readOnly = true;
     addP1.style.display = 'none';
     addP2.style.display = 'none';
+    reset1.style.display = 'none';
+    reset2.style.display = 'none';
     message1.innerHTML = '';
     message2.innerHTML = '';
   }
@@ -374,6 +382,14 @@ function fetchFromCloud(team) {
       else {message2.innerHTML = "Team not found"; message2.style.color = 'rgb(179, 161, 0)'}
     }
   });
+}
+
+resetScores(i) {
+  if(i==1) {
+    for (let i = 0; i < team1List.children.length; i++) {}
+  } else {
+    for (let i = 0; i < team1List.children.length; i++) {}
+  }
 }
 
 function clearPointers(that) {
