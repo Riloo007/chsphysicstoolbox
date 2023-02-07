@@ -1,39 +1,15 @@
 <html>
 <head>
-  <title>Team Management</title>
+  <title>Player Scoreboard</title>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
-  <!--
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-  
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyB54arIWiHODagJUmcMVa4olpSMGNUIxII",
-      authDomain: "scorekeeping-c6efa.firebaseapp.com",
-      databaseURL: "https://scorekeeping-c6efa-default-rtdb.firebaseio.com",
-      projectId: "scorekeeping-c6efa",
-      storageBucket: "scorekeeping-c6efa.appspot.com",
-      messagingSenderId: "653633600985",
-      appId: "1:653633600985:web:61ae0782bca7b101a16dc8"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-  </script>-->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
 </head>
 <body id="body">
   <table>
     <tbody id="Lists">
       <tr>
-        <td><h1 id="team1Header">Team 1</h1></td>
-        <td><h1 id="team2Header">Team 2</h1></td>
+        <td><input id="team1Header" value="Team 1"></td>
+        <td><input id="team1Header" value="Team 2"></td>
       </tr>
       <tr>
         <td>
@@ -41,26 +17,26 @@
           <ul id="team1List"></ul>
           <button id="addP1" onClick="addplayer(1, team1List.children.length)">Add Player</button>
           <br>
-              <div id="cloudOptions1" style="border: 1px solid black; border-radius: 10px;">
-                <h3>Cloud Save</h1>
-                User index: <input id="userIndex1" value="1">
-                <button onclick="saveToCloud(document.getElementById('userIndex1').value, 1)">Save to Cloud</button>
-                <button onclick="fetchFromCloud(document.getElementById('userIndex1').value, 1)">Load from Cloud</button>
-                <h4 id="message1"></h4>
-              </div>
+          <div id="cloudOptions1" style="border: 1px solid black; border-radius: 10px;">
+            <h3>Cloud Save</h1>
+            User index: <input id="userIndex1" value="1">
+            <button onclick="saveToCloud(uindex1, 1)">Save to Cloud</button>
+            <button onclick="fetchFromCloud(document.getElementById('userIndex1').value, 1)">Load from Cloud</button>
+            <h4 id="message1"></h4>
+          </div>
         </td>
         <td>
           <div class="pgf"><div>Player</div><div>Goals</div><div>Fouls</div></div>
           <ul id="team2List"></ul>
           <button id="addP2" onClick="addplayer(2, team1List.children.length + 500)">Add Player</button>
           <br>
-              <div id="cloudOptions2" style="border: 1px solid black; border-radius: 10px;">
-                <h3>Cloud Save</h1>
-                User index: <input id="userIndex2" value="1">
-                <button onclick="saveToCloud(document.getElementById('userIndex2').value, 2)">Save to Cloud</button>
-                <button onclick="fetchFromCloud(document.getElementById('userIndex2').value, 2)">Load from Cloud</button>
-                <h4 id="message2"></h4>
-              </div>
+          <div id="cloudOptions2" style="border: 1px solid black; border-radius: 10px;">
+            <h3>Cloud Save</h1>
+            User index: <input id="userIndex2" value="1">
+            <button onclick="saveToCloud(document.getElementById('userIndex2').value, 2)">Save to Cloud</button>
+            <button onclick="fetchFromCloud(document.getElementById('userIndex2').value, 2)">Load from Cloud</button>
+            <h4 id="message2"></h4>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -214,6 +190,8 @@ const team2List = document.getElementById("team2List");
 const editBtn = document.getElementById("editBtn");
 const addP1 = document.getElementById("addP1");
 const addP2 = document.getElementById("addP2");
+const uindex1 = document.getElementById('userIndex1');
+const uindex2 = document.getElementById('userIndex2');
 const colorSettings = document.getElementById("colorSettings");
 const newplayer01 = "<li><input type='number' value='0' tabindex='";
 const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
@@ -374,11 +352,13 @@ function saveToCloud(id, team) {
   
 }
 
-function fetchFromCloud(id, team) { 
+function fetchFromCloud(team) {
+  var id;
+  if(team == 1) {id = uindex1.value;}
+  if(team == 2) {id = uindex2.value;}
   id = id.toUpperCase();
   var get = firebase.database().ref('users/' + id);
   get.on('value', (snapshot) => {
-    // String containing data
     try {
       const data = snapshot.val()['val'];
       console.log(data);
@@ -395,9 +375,8 @@ function fetchFromCloud(id, team) {
         message1.innerHTML = "Loaded!"
       } else {
         team2List.innerHTML = '';
-        //var L2off = team1List.children.length;
         for(i=0;i<parseInt(data.substr(0, 3));i++) {
-          var newPlayer = addplayer(2, i + 100);
+          var newPlayer = addplayer(2, i + 500);
           newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
           newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
           newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
@@ -409,9 +388,7 @@ function fetchFromCloud(id, team) {
     } catch (error) {
       if(team == 1) {message1.innerHTML = "Team not found"; message1.style.color = 'rgb(179, 161, 0)'}
       else {message2.innerHTML = "Team not found"; message2.style.color = 'rgb(179, 161, 0)'}
-      
     }
-    
   });
 }
 
