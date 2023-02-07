@@ -390,15 +390,15 @@ function resetScores(i) {
     for (let i = 0; i < team1List.children.length; i++) {
       team1List.children[i].children[1].value = 0;
       team1List.children[i].children[2].value = 0;
-      team1List.children[i].children[1].style.color = 'rgb(0, 113, 179)';
-      team1List.children[i].children[2].style.color = 'rgb(0, 113, 179)';
+      team1List.children[i].children[1].style.color = '';
+      team1List.children[i].children[2].style.color = '';
     }
   } else {
     for (let i = 0; i < team2List.children.length; i++) {
       team2List.children[i].children[1].value = 0;
       team2List.children[i].children[2].value = 0;
-      team2List.children[i].children[1].style.color = 'rgb(0, 113, 179)';
-      team2List.children[i].children[2].style.color = 'rgb(0, 113, 179)';
+      team2List.children[i].children[1].style.color = '';
+      team2List.children[i].children[2].style.color = '';
     }
   }
 }
@@ -433,7 +433,7 @@ document.getElementById('pointer3').onclick = function() {
 
 pageColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
-  document.getElementById('USTYLE').innerHTML = '*{color: ' + this.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus, button{background-color:' + buttonColor.value + '}'
+  document.getElementById('USTYLE').innerHTML = '*{color: ' + this.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + '}'
 }
 backgroundColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
@@ -442,7 +442,7 @@ backgroundColor.onchange = function() {
 buttonColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
   //document.getElementById('USTYLE').style.backgroundColor = this.value;
-  document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus, button{background-color:' + this.value + ';}'
+  document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + this.value + ';}'
 }
 
 
