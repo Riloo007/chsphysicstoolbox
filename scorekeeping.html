@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
 </head>
-<body>
+<body id="body">
   <table>
     <tbody id="Lists">
       <tr>
@@ -66,6 +66,12 @@
     </tbody>
   </table>
 
+  <div id="colorSettings">
+    Text color: <input id="pageColor" type="color" value="#0071b3">
+    Background color: <input id="backgroundColor" type="color">
+    Button color: <input id="buttonColor" type="color">
+  </div>
+
 
   <button id="editBtn" onclick="toggleEditMode();">Please enable javascript execution to continue</button>
   <div id="pointers">
@@ -77,7 +83,16 @@
 </body>
 </html>
 
+
+
+
 <style>
+#colorSettings{
+  border-radius: 10px;
+  padding: 10px;
+  border: solid 1px rgb(0, 113, 179);
+}
+
 @font-face {
   font-family: bitlcd;
   src: url(LCD2.ttf);
@@ -92,7 +107,7 @@
     font-family: 'Silkscreen', cursive;
     font-family: bitLCD;
     font-size: 30px;
-    color: rgb(0, 113, 179);
+
   }
 input:focus {
   z-index: 100;
@@ -147,6 +162,8 @@ body {
   /*background: linear-gradient(90deg, rgb(5, 0, 109) 40%, rgb(177, 0, 0) 60%);*/
   text-align: center;
 }
+body
+
 table {
   margin: auto;
 }
@@ -177,7 +194,15 @@ input:read-only {
 
 </style>
 
+<style id="USTYLE">
+  *{color: rgb(0, 113, 179);}
+</style>
+
 <script>
+
+const pageColor = document.getElementById('pageColor');
+const backgroundColor = document.getElementById('backgroundColor');
+const buttonColor = document.getElementById('buttonColor');
 const team1Header = document.getElementById("team1Header");
 const team2Header = document.getElementById("team2Header");
 const cloudOptions1 = document.getElementById("cloudOptions1");
@@ -189,6 +214,7 @@ const team2List = document.getElementById("team2List");
 const editBtn = document.getElementById("editBtn");
 const addP1 = document.getElementById("addP1");
 const addP2 = document.getElementById("addP2");
+const colorSettings = document.getElementById("colorSettings");
 const newplayer01 = "<li><input type='number' value='0' tabindex='";
 const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
 
@@ -234,6 +260,7 @@ function toggleEditMode() {
     editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'block';
     cloudOptions2.style.display = 'block';
+    colorSettings.style.display = 'block';
     team1Header.contentEditable = true;
     team2Header.contentEditable = true;
     addP1.style.display = 'table-row';
@@ -242,6 +269,7 @@ function toggleEditMode() {
     editBtn.innerText = "⚙︎";
     cloudOptions1.style.display = 'none';
     cloudOptions2.style.display = 'none';
+    colorSettings.style.display = 'none';
     team1Header.contentEditable = false;
     team2Header.contentEditable = false;
     addP1.style.display = 'none';
@@ -289,7 +317,6 @@ function toggleEditMode() {
 
 
 };
-
 
 for(x=1;x<15;x++) {
   addplayer(1, x);
@@ -413,6 +440,20 @@ document.getElementById('pointer3').onclick = function() {
   clearPointers(this);
   this.style.outline = 'solid white 1px';
   pointerAdd = 3;
+}
+
+pageColor.onchange = function() {
+  //document.getElementById('body').style.color = this.value;
+  document.getElementById('USTYLE').innerHTML = '*{color: ' + this.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus, button{background-color:' + buttonColor.value + '}'
+}
+backgroundColor.onchange = function() {
+  //document.getElementById('body').style.color = this.value;
+  document.getElementById('body').style.backgroundColor = this.value;
+}
+buttonColor.onchange = function() {
+  //document.getElementById('body').style.color = this.value;
+  //document.getElementById('USTYLE').style.backgroundColor = this.value;
+  document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus, button{background-color:' + this.value + ';}'
 }
 
 setupFirebase();
