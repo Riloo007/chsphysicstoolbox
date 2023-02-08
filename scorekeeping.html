@@ -48,7 +48,7 @@
     Text color: <input id="pageColor" type="color" value="#0071b3"><br>
     Background color: <input id="backgroundColor" type="color"><br>
     Button color: <input id="buttonColor" type="color"><br>
-    Font Size: <input onchange="fontsizechange(this)" value="25" type="number">
+    Font Size: <input onchange="fontsizechange(this)" value="25" max="50" min="10" type="range">
   </div>
 
 
@@ -191,13 +191,18 @@ const uindex1 = document.getElementById('userIndex1');
 const uindex2 = document.getElementById('userIndex2');
 const colorSettings = document.getElementById("colorSettings");
 const newplayer01 = "<li><input value='0' style='width: 35px;'><input tabindex='";
-const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
+const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button><button onclick='toggleHide(this)'>👁</button></li>";
 
 
 
 editBtn.innerText = "⚙︎";
 let pointerAdd = 1;
 let editMode = false;
+
+function toggleHide(that) {
+  if (that.innerHTML == '🚫') {that.innerHTML = '👁';}
+  else {that.innerHTML = '🚫';}
+}
 
 function addplayer(i, d) {
   var ret
@@ -266,6 +271,12 @@ function toggleEditMode() {
 
   for (let i = 0; i < team1List.children.length; i++) {
     let player = team1List.children[i];
+    if(!editMode) {
+      player.style.display = '';
+    } else {
+      if(player.children[5].innerHTML == '🚫') {player.style.display = 'none';}
+      else {player.style.display = '';}
+    }
 
     player.children[0].readOnly = editMode;
     player.children[1].readOnly = editMode;
@@ -278,14 +289,22 @@ function toggleEditMode() {
       player.children[2].setAttribute('onclick','');
       player.children[3].setAttribute('onclick','');
       player.children[4].style.display = 'table-cell';
+      player.children[5].style.display = 'table-cell';
     } else {
       player.children[2].setAttribute('onclick','incVal2(this)');
       player.children[3].setAttribute('onclick','incVal1(this)');
       player.children[4].style.display = 'none';
+      player.children[5].style.display = 'none';
     }
   }
   for (let i = 0; i < team2List.children.length; i++) {
     let player = team2List.children[i];
+    if(!editMode) {
+      player.style.display = '';
+    } else {
+      if(player.children[5].innerHTML == '🚫') {player.style.display = 'none';}
+      else {player.style.display = '';}
+    }
 
     player.children[0].readOnly = editMode;
     player.children[1].readOnly = editMode;
@@ -296,10 +315,12 @@ function toggleEditMode() {
       player.children[4].style.display = 'table-cell';
       player.children[2].setAttribute('onclick','');
       player.children[3].setAttribute('onclick','');
+      player.children[5].style.display = 'table-cell';
     } else {
       player.children[4].style.display = 'none';
       player.children[2].setAttribute('onclick','incVal2(this)');
       player.children[3].setAttribute('onclick','incVal1(this)');
+      player.children[5].style.display = 'none';
     }
   }
 
