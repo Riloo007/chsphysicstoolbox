@@ -13,7 +13,7 @@
       </tr>
       <tr>
         <td>
-          <div class="pgf"><div>Player</div><div>Goals</div><div>Fouls</div></div>
+          <div class="pgf"><div>Player</div><div>Points</div><div>Fouls</div></div>
           <ul id="team1List"></ul>
           <button id="addP1" onClick="addplayer(1, team1List.children.length)">Add Player</button>
           <button id="reset1" onClick="resetScores(1)">Reset Scores</button>
@@ -27,7 +27,7 @@
           </div>
         </td>
         <td>
-          <div class="pgf"><div>Player</div><div>Goals</div><div>Fouls</div></div>
+          <div class="pgf"><div>Player</div><div>Points</div><div>Fouls</div></div>
           <ul id="team2List"></ul>
           <button id="addP2" onClick="addplayer(2, team1List.children.length + 500)">Add Player</button>
           <button id="reset2" onClick="resetScores(2)">Reset Scores</button>
@@ -48,9 +48,11 @@
     Text color: <input id="pageColor" type="color" value="#0071b3"><br>
     Background color: <input id="backgroundColor" type="color"><br>
     Button color: <input id="buttonColor" type="color"><br>
+    Font Size: <input onchange="fontsizechange(this)" value="25" type="number">
   </div>
 
 
+  <button id="fsBtn" onclick="document.documentElement.requestFullscreen(); this.remove()">+</button>
   <button id="editBtn" onclick="toggleEditMode();">An error has occured.</button>
   <div id="pointers">
     <button id="pointer0">-1</button>
@@ -79,7 +81,9 @@
 
 .pgf > div {
   display: inline-block;
-  width: 33.33%;
+  margin-left: 5.33%;
+  margin-right: 5;
+  width: 20%;
 }
 button {
   border-radius: 3px;
@@ -123,7 +127,7 @@ input {
   border: none;
   border-radius: 3px;
   background-color: rgb(0, 0, 0);
-  width: calc(100vw / 7);
+  width: calc(100vw / 8);
   font-size: 25px;
   text-align: center;
   margin: 3px;
@@ -134,7 +138,7 @@ input:focus {
 }
 input:read-only {cursor: pointer;}
 
-#editBtn {
+#editBtn, #fsBtn {
   font-size: 6vh;
   background-color: #00000000;
   height: min-content;
@@ -142,6 +146,9 @@ input:read-only {cursor: pointer;}
   position: fixed;
   right: 0;
   bottom: 0;
+}
+#fsBtn {
+  margin-right: 50px;
 }
 
 #colorSettings{
@@ -156,6 +163,10 @@ input:read-only {cursor: pointer;}
 
 <style id="USTYLE">
   *{color: rgb(0, 113, 179);}
+</style>
+
+<style id="iStyle">
+  input {font-size: rgb(0, 113, 179)}
 </style>
 
 <script>
@@ -179,8 +190,10 @@ const reset2 = document.getElementById("reset2");
 const uindex1 = document.getElementById('userIndex1');
 const uindex2 = document.getElementById('userIndex2');
 const colorSettings = document.getElementById("colorSettings");
-const newplayer01 = "<li><input type='number' value='0' tabindex='";
+const newplayer01 = "<li><input value='0' style='width: 35px;'><input tabindex='";
 const newplayer02 = "'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button></li>";
+
+
 
 editBtn.innerText = "⚙︎";
 let pointerAdd = 1;
@@ -204,12 +217,13 @@ function removePlayer(i) {
   i.parentElement.remove();
 }
 
-function incVal(i) {
+function incVal1(i) {
   i.value = parseInt(i.value) + pointerAdd;
-  if(i.value >= 5) {i.style.color = 'rgb(179, 161, 0)';}
-  if(i.value < 5) {i.style.color = pageColor;}
+  if(i.value >= 4) {i.style.color = 'rgb(179, 161, 0)';}
+  if(i.value < 4) {i.style.color = pageColor;}
   //i.value += 1;
 }
+function incVal2(i) {i.value = parseInt(i.value) + pointerAdd;}
 
 function temp(htmlString) {
   var div = document.createElement('div');
@@ -256,17 +270,18 @@ function toggleEditMode() {
     player.children[0].readOnly = editMode;
     player.children[1].readOnly = editMode;
     player.children[2].readOnly = editMode;
-    console.log(player.children[0].readOnly);
+    player.children[3].readOnly = editMode;
+    //console.log(player.children[0].readOnly);
   
 
     if(!editMode) {
-      player.children[3].style.display = 'table-cell';
-      player.children[1].setAttribute('onclick','');
       player.children[2].setAttribute('onclick','');
+      player.children[3].setAttribute('onclick','');
+      player.children[4].style.display = 'table-cell';
     } else {
-      player.children[3].style.display = 'none';
-      player.children[1].setAttribute('onclick','incVal(this)');
-      player.children[2].setAttribute('onclick','incVal(this)');
+      player.children[2].setAttribute('onclick','incVal2(this)');
+      player.children[3].setAttribute('onclick','incVal1(this)');
+      player.children[4].style.display = 'none';
     }
   }
   for (let i = 0; i < team2List.children.length; i++) {
@@ -275,15 +290,16 @@ function toggleEditMode() {
     player.children[0].readOnly = editMode;
     player.children[1].readOnly = editMode;
     player.children[2].readOnly = editMode;
+    player.children[3].readOnly = editMode;
 
     if(!editMode) {
-      player.children[3].style.display = 'table-cell';
-      player.children[1].setAttribute('onclick','');
+      player.children[4].style.display = 'table-cell';
       player.children[2].setAttribute('onclick','');
+      player.children[3].setAttribute('onclick','');
     } else {
-      player.children[3].style.display = 'none';
-      player.children[1].setAttribute('onclick','incVal(this)');
-      player.children[2].setAttribute('onclick','incVal(this)');
+      player.children[4].style.display = 'none';
+      player.children[2].setAttribute('onclick','incVal2(this)');
+      player.children[3].setAttribute('onclick','incVal1(this)');
     }
   }
 
@@ -312,6 +328,10 @@ function pad(num) {
   while (num.length < 3) num = "0" + num;
   return num;
 }
+function padS(str) {
+  while (str.length < 16) {str += "*";}
+  return str;
+}
 
 function saveToCloud(id, team) {
   id = id.toUpperCase();
@@ -323,17 +343,17 @@ function saveToCloud(id, team) {
     //014
     for (let i = 0; i < team1List.children.length; i++) {
       let player = team1List.children[i];
-      dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
+      dataString += pad(player.children[0].value) + padS(player.children[1].value) + pad(player.children[2].value) + pad(player.children[3].value);
     }
-    dataString += team1Header.innerHTML;
+    dataString += team1Header.value;
   } else {
     dataString = pad(team2List.children.length);
     //014
     for (let i = 0; i < team2List.children.length; i++) {
       let player = team2List.children[i];
-      dataString += pad(player.children[0].value) + pad(player.children[1].value) + pad(player.children[2].value);
+      dataString += pad(player.children[0].value) + padS(player.children[1].value) + pad(player.children[2].value) + pad(player.children[3].value);
     }
-    dataString += team2Header.innerHTML;
+    dataString += team2Header.value;
   }
 
   firebase.database().ref('users/' + id).set({
@@ -359,22 +379,26 @@ function fetchFromCloud(team) {
         team1List.innerHTML = '';
         for(i=0;i<parseInt(data.substr(0, 3));i++) {
           var newPlayer = addplayer(1, i);
-          newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
-          newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
-          newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
+          newPlayer.children[0].value = parseInt(data.substr(25*i + 3, 3));
+          console.log('Player Name: [' + data.substr(25*i + 6, 16) + ']');
+          newPlayer.children[1].value = data.substr(25*i + 6, 16).split('*').join('');
+          newPlayer.children[2].value = parseInt(data.substr(25*i + 22, 3));
+          newPlayer.children[3].value = parseInt(data.substr(25*i + 25, 3));
         }
-        team1Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
+        team1Header.value = data.substr(25*parseInt(data.substr(0, 3)) + 3);
         message1.style.color = 'rgb(0, 113, 179)'
         message1.innerHTML = "Loaded Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";
       } else {
         team2List.innerHTML = '';
         for(i=0;i<parseInt(data.substr(0, 3));i++) {
           var newPlayer = addplayer(2, i + 500);
-          newPlayer.children[0].value = parseInt(data.substr(9*i + 3, 3));
-          newPlayer.children[1].value = parseInt(data.substr(9*i + 6, 3));
-          newPlayer.children[2].value = parseInt(data.substr(9*i + 9, 3));
+          newPlayer.children[0].value = parseInt(data.substr(25*i + 3, 3));
+          console.log('Player Name: [' + data.substr(25*i + 6, 16) + ']');
+          newPlayer.children[1].value = data.substr(25*i + 6, 16).split('*').join('');
+          newPlayer.children[2].value = parseInt(data.substr(25*i + 22, 3));
+          newPlayer.children[3].value = parseInt(data.substr(25*i + 25, 3));
         }
-        team2Header.innerHTML = data.substr(9*parseInt(data.substr(0, 3)) + 3);
+        team2Header.value = data.substr(25*parseInt(data.substr(0, 3)) + 3);
         message2.style.color = 'rgb(0, 113, 179)'
         message2.innerHTML = "Loaded Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";
       }
@@ -447,5 +471,17 @@ buttonColor.onchange = function() {
 
 
 setupFirebase();
+
+document.body.addEventListener("focus", function(event) {
+  if (event.target.tagName === "INPUT") {
+    event.target.select();
+    console.log("selected");
+  }
+}, true);
+
+
+function fontsizechange(that) {
+  document.getElementById('iStyle').innerHTML='input {font-size: ' + that.value + '}';
+}
 
 </script>
