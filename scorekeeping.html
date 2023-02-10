@@ -48,14 +48,14 @@
   </table>
 
   <div id="colorSettings">
-    Text color: <input id="pageColor" type="color" value="#0071b3"><br>
+    Text color: <input id="pageColor" type="color" value="#ffffff"><br>
     Warning color: <input id="warningcolor" type="color" value="#b3a100"><br>
     Background color: <input id="backgroundColor" type="color"><br>
     Button color: <input id="buttonColor" type="color"><br>
-    Button Transparency: <input id="buttonTransparency" type="range" max="256" min="0"><br>
-    Title Font Size: <input id="inTFont" onchange="fontsizechange()" value="50" max="100" min="30" type="range"><br>
+    Button Transparency: <input id="buttonTransparency" type="range" max="255" min="16"><br>
+    Title Font Size: <input id="inTFont" onchange="fontsizechange()" value="86" max="100" min="30" type="range"><br>
     Header Font Size: <input id="inHFont" onchange="fontsizechange()" value="25" max="50" min="10" type="range"><br>
-    Scores Font Size: <input id="inSFont" onchange="fontsizechange()" value="25" max="50" min="10" type="range">
+    Scores Font Size: <input id="inSFont" onchange="fontsizechange()" value="47" max="50" min="10" type="range">
   </div>
 
 
@@ -71,6 +71,13 @@
 </html>
 
 <style>
+  #Lists :nth-child(2) > td {
+    background: url(https://www.pngitem.com/pimgs/b/195-1958264_cougar-png.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+
 @font-face {
   font-family: bitlcd;
   src: url(LCD2.ttf);
@@ -89,7 +96,7 @@
 .pgf > div {
   display: inline;
   margin: 5px;
-  font-size: 20px;
+  font-size: 25px;
   /*display: inline-block;
   margin-left: 10.33%;
   margin-right: 5;
@@ -110,9 +117,10 @@
   list-style-type: none;
   padding: 0;
   margin: 5px;
+  height: 70vh;
 }
 #team1Header, #team2Header {
-  font-size: 50px;
+  font-size: 86px;
   background-color: #00000000;
   box-shadow: none;
   width: 100%;
@@ -140,7 +148,7 @@ input {
   border-radius: 3px;
   background-color: rgb(0, 0, 0);
   width: calc(100vw / 14);
-  font-size: 25px;
+  font-size: 47px;
   text-align: center;
   margin: 3px;
 }
@@ -161,6 +169,15 @@ button {
   height: 26px;
   margin-left: 2px;
   margin-right: 2px;
+}
+#pointers {
+  display: block;
+  position: fixed;
+  bottom: 5px;
+  left: 1;
+  right: 1;
+  margin: auto;
+  width: max-content;
 }
 #pointers > button {
   border-radius: 3px;
@@ -208,11 +225,11 @@ input[type=number] {
 </style>
 
 <style id="USTYLE">
-  *{color: rgb(0, 113, 179);}
+  *{color: white;}
 </style>
 
 <style id="iStyle">
-  input {font-size: rgb(0, 113, 179)}
+  input {}
 </style>
 
 <script>
@@ -222,6 +239,7 @@ const warningcolor = document.getElementById('warningcolor');
 const backgroundColor = document.getElementById('backgroundColor');
 const buttonColor = document.getElementById('buttonColor');
 const buttonTransparency = document.getElementById('buttonTransparency');
+const pointers = document.getElementById('pointers');
 const team1Header = document.getElementById("team1Header");
 const team2Header = document.getElementById("team2Header");
 const cloudOptions1 = document.getElementById("cloudOptions1");
@@ -241,6 +259,7 @@ const uindex1 = document.getElementById('userIndex1');
 const uindex2 = document.getElementById('userIndex2');
 const colorSettings = document.getElementById("colorSettings");
 const newplayer01 = "<li><input value='0' tabindex='";
+const newplayer11 = "<li><input value='' tabindex='";
 const newplayer02 = "' style='width: 4vw;'><input maxlength='16' style='width: 20vw;'><input type='number' value='0'><input type='number' value='0'><button onclick='removePlayer(this);'>-</button><button onclick='toggleHide(this)'>👁</button></li>";
 
 
@@ -265,11 +284,12 @@ function addplayer(i, d) {
     team2List.appendChild(temp(newplayer01 + d + newplayer02));
     ret = team2List.children[team2List.children.length-1];
   }
-  //console.log(ret);
+  /*setTimeout(recalculateHeights, 1);*/
   return ret;
 }
 function removePlayer(i) {
   i.parentElement.remove();
+  /*recalculateHeights();*/
 }
 
 function incVal1(i) {
@@ -295,6 +315,7 @@ function toggleEditMode() {
   if (!editMode) {
     cloudOptions1.style.display = 'block';
     cloudOptions2.style.display = 'block';
+    pointers.style.display = 'none';
     colorSettings.style.display = 'inline-block';
     team1Header.readOnly = false;
     team2Header.readOnly = false;
@@ -305,10 +326,11 @@ function toggleEditMode() {
     reset2.style.display = 'table-row';
     team1Color.parentElement.style.display = 'table-row';
     team2Color.parentElement.style.display = 'table-row';
-    document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + '} *::selection{background: rgb(56, 56, 56);}'
+    document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + '; box-shadow: inset 0 0 10px #353535' + parseInt(buttonTransparency.value).toString(16) + ';} *::selection{background: rgb(56, 56, 56);}'
   } else {
     cloudOptions1.style.display = 'none';
     cloudOptions2.style.display = 'none';
+    pointers.style.display = 'block';
     colorSettings.style.display = 'none';
     team1Header.readOnly = true;
     team2Header.readOnly = true;
@@ -320,7 +342,7 @@ function toggleEditMode() {
     team2Color.parentElement.style.display = 'none';
     message1.innerHTML = '';
     message2.innerHTML = '';
-    document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + '} *::selection{background: #00000000;}'
+    document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + '; box-shadow: inset 0 0 10px #353535' + parseInt(buttonTransparency.value).toString(16) + ';} *::selection{background: #00000000;}'
   }
 
   for (let i = 0; i < team1List.children.length; i++) {
@@ -381,12 +403,12 @@ function toggleEditMode() {
 
 };
 
-for(x=1;x<15;x++) {
+for(x=0;x<11;x++) {
   addplayer(1, x);
-  addplayer(2, x+100);
+  team2List.appendChild(temp(newplayer11 + (x + 400) + newplayer02));
+  //addplayer(2, x+100);
 }
 
-toggleEditMode();
 
 
 var database;
@@ -414,7 +436,8 @@ function saveToCloud(id, team) {
   // 
 
   if(team == 1) {
-    dataString = pad(team1List.children.length);
+    dataString = team1Color.value;
+    dataString += pad(team1List.children.length);
     //014
     for (let i = 0; i < team1List.children.length; i++) {
       let player = team1List.children[i];
@@ -422,7 +445,8 @@ function saveToCloud(id, team) {
     }
     dataString += team1Header.value;
   } else {
-    dataString = pad(team2List.children.length);
+    dataString = team2Color.value;
+    dataString += pad(team2List.children.length);
     //014
     for (let i = 0; i < team2List.children.length; i++) {
       let player = team2List.children[i];
@@ -440,7 +464,7 @@ function saveToCloud(id, team) {
   
 }
 
-function fetchFromCloud(team) {
+function fetchFromCloud(team, classic) {
   var id;
   if(team == 1) {id = uindex1.value;}
   if(team == 2) {id = uindex2.value;}
@@ -448,9 +472,12 @@ function fetchFromCloud(team) {
   var get = firebase.database().ref('users/' + id);
   get.on('value', (snapshot) => {
     try {
-      const data = snapshot.val()['val'];
+      data = snapshot.val()['val'];
       console.log(data);
       if(team == 1) {
+        team1Color.value = data.substr(0,7);
+        team1Color.onchange();
+        data = data.substr(7);
         team1List.innerHTML = '';
         for(i=0;i<parseInt(data.substr(0, 3));i++) {
           var newPlayer = addplayer(1, i);
@@ -464,6 +491,9 @@ function fetchFromCloud(team) {
         message1.style.color = 'rgb(0, 113, 179)'
         message1.innerHTML = "Loaded Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";
       } else {
+        team2Color.value = data.substr(0,7);
+        team2Color.onchange();
+        data = data.substr(7);
         team2List.innerHTML = '';
         for(i=0;i<parseInt(data.substr(0, 3));i++) {
           var newPlayer = addplayer(2, i + 500);
@@ -532,7 +562,8 @@ document.getElementById('pointer3').onclick = function() {
 
 pageColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
-  document.getElementById('USTYLE').innerHTML = '*{color: ' + this.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + buttonTransparency.value.toString(16) + ';}'
+  updateStyles();
+  //document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + ';}'
 }
 backgroundColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
@@ -541,7 +572,8 @@ backgroundColor.onchange = function() {
 buttonColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
   //document.getElementById('USTYLE').style.backgroundColor = this.value;
-  document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + this.value + buttonTransparency.value.toString(16) + ';}'
+  //document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + this.value + parseInt(buttonTransparency.value).toString(16) + ';}'
+  updateStyles();
 }
 team1Color.onchange = function() {
   console.log('COLOR');
@@ -552,8 +584,9 @@ team2Color.onchange = function() {
   document.getElementById('body').style = 'background: linear-gradient(90deg, ' + team1Color.value + ' 50%, ' + team2Color.value + ' 50%);'
 }
 buttonTransparency.onchange = function() {
-  document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + buttonTransparency.value.toString(16) + ';}'
-}
+  //document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + ';}'
+  updateStyles();
+} 
 
 setupFirebase();
 
@@ -568,11 +601,32 @@ document.body.addEventListener("focus", function(event) {
 function fontsizechange(that, i) {
   const sty = document.getElementById('iStyle');
 
-  sty.innerHTML = 'input {font-size: ' + document.getElementById('inSFont').value + '} #team1Header, #team2Header {font-size: ' + document.getElementById('inTFont').value + '} .pgf > div {font-size:' + document.getElementById('inHFont').value + ';}';
-  
+  updateStyles();  
 }
 
 
-document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + buttonTransparency.value.toString(16) + ';}'
+function updateStyles() {
+  document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'button, #pointers > button, input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + '; box-shadow: inset 0 0 10px #353535' + parseInt(buttonTransparency.value).toString(16) + ';}'
+}
+//document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + ';}'
+updateStyles();
+
+function recalculateHeights() {
+  var t1 = team1List.offsetHeight;
+  var t2 = team2List.offsetHeight;
+  if(t1 > t2) {
+    team2List.style.height = t1;
+    team2List.offsetHeight = t1;
+    return t1;
+  } else {
+    team1List.style.height = t2;
+    team1List.offsetHeight = t2;
+    return t2;
+  }
+}
+
+
+toggleEditMode();
+
 
 </script>
