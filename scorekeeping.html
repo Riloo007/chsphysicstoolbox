@@ -239,6 +239,9 @@ input[type=number] {
 
 <script>
 
+const inTFont = document.getElementById('inTFont');
+const inHFont = document.getElementById('inHFont');
+const inSFont = document.getElementById('inSFont');
 const pageColor = document.getElementById('pageColor');
 const warningcolor = document.getElementById('warningcolor');
 const backgroundColor = document.getElementById('backgroundColor');
@@ -603,10 +606,11 @@ document.body.addEventListener("focus", function(event) {
 }, true);
 
 
-function fontsizechange(that, i) {
+function fontsizechange() {
   const sty = document.getElementById('iStyle');
 
-  updateStyles();  
+  sty.innerHTML = 'input{font-size:' + inSfont + ';} #team2Header, #team1Header {font-size: ' + inTfont.value + ';} .pgf{font-size:' + inHfont.value + ';}'
+  //updateStyles();  
 }
 
 
@@ -614,7 +618,7 @@ function updateStyles() {
   document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'button, #pointers > button, input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + '; box-shadow: inset 0 0 10px #353535' + parseInt(buttonTransparency.value).toString(16) + ';}'
 }
 //document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + ';}'
-updateStyles();
+
 
 function recalculateHeights() {
   var t1 = team1List.offsetHeight;
@@ -632,6 +636,7 @@ function recalculateHeights() {
 
 
 toggleEditMode();
+updateStyles();
 
 
 </script>

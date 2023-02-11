@@ -20,6 +20,7 @@
                         <td>Player</td>
                         <td>Points</td>
                         <td>Fouls</td>
+                        <td></td>
                     </tr>
                 </table>
                 <table id="team1List">
@@ -47,6 +48,7 @@
                         <td>Player</td>
                         <td>Points</td>
                         <td>Fouls</td>
+                        <td></td>
                     </tr>
                 </table>
                 <table id="team2List">
@@ -127,7 +129,7 @@
 
 <style>
   #Lists :nth-child(2) > td {
-    background: url(cougar.png);
+    background: url();
     /*background: url(https://www.pngitem.com/pimgs/b/195-1958264_cougar-png.png);*/
     background-size: contain;
     background-repeat: no-repeat;
@@ -151,8 +153,9 @@
 }
 
 .pgf tr :nth-child(1) {width: 60%;}
-.pgf tr :nth-child(2) {width: 20%;}
-.pgf tr :nth-child(3) {width: 20%;}
+.pgf tr :nth-child(2) {width: 15%;}
+.pgf tr :nth-child(3) {width: 15%;}
+.pgf tr :nth-child(4) {width: 10%;}
 
 
 #team1List, #team2List {
@@ -305,6 +308,9 @@ input[type=number] {
 
 <script>
 
+const inTFont = document.getElementById('inTFont');
+const inHFont = document.getElementById('inHFont');
+const inSFont = document.getElementById('inSFont');
 const pageColor = document.getElementById('pageColor');
 const warningcolor = document.getElementById('warningcolor');
 const backgroundColor = document.getElementById('backgroundColor');
@@ -492,7 +498,7 @@ function toggleEditMode() {
     }
   }
 
-
+  updateStyles();
 };
 
 for(x=0;x<11;x++) {
@@ -697,10 +703,12 @@ document.body.addEventListener("focus", function(event) {
 }, true);
 
 
-function fontsizechange(that, i) {
-  const sty = document.getElementById('iStyle');
+function fontsizechange() {
+  document.getElementById('iStyle').innerHTML = 'input{font-size:' + inSFont.value + ';} #team2Header, #team1Header {font-size: ' + inTFont.value + ';} .pgf td {font-size:' + inHFont.value + ';}'
 
-  updateStyles();  
+  //sty.innerHTML = ''
+
+  //updateStyles();  
 }
 
 
