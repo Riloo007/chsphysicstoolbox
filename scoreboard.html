@@ -499,6 +499,9 @@ function toggleEditMode() {
   }
 
   updateStyles();
+  if(!editMode) {document.getElementById('USTYLE').innerHTML += '*::selection{background: rgb(56, 56, 56);}'}
+  else {document.getElementById('USTYLE').innerHTML += '*::selection{background: #00000000;}'}
+  
 };
 
 for(x=0;x<11;x++) {
@@ -731,6 +734,15 @@ function recalculateHeights() {
     return t2;
   }
 }
+
+body.addEventListener("keypress", (event) => {
+  console.log(`key=${event.key},code=${event.code}`);
+  if(event.code == 'KeyH') {
+    console.log(editBtn);
+    if(editBtn.style.display == '') {editBtn.style.display = 'none';}
+    else {editBtn.style.display = '';}
+  }
+});
 
 function toggleColorSettings() {
     colorSettings.parentElement.style.display == '' ? colorSettings.parentElement.style.display = 'none' : colorSettings.parentElement.style.display = '';
