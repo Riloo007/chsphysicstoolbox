@@ -116,7 +116,7 @@
 
 
 
-  <button id="fsBtn" onclick="document.documentElement.requestFullscreen(); this.remove()">+</button>
+  <button id="fsBtn" onclick="document.documentElement.requestFullscreen(); document.documentElement.webkitEnterFullscreen(); this.remove()">+</button>
   <button id="editBtn" onclick="toggleEditMode();">An error has occured.</button>
   <div id="pointers">
     <button id="pointer0">-1</button>
