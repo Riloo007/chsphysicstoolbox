@@ -65,7 +65,7 @@
                         </div><br>
                         <h3>Cloud Save</h1>
                         User index: <input id="userIndex2" value="1"><br>
-                        <button onclick="saveToCloud(uindex1.value, 2)">Save to Cloud</button>
+                        <button onclick="saveToCloud(uindex2.value, 2)">Save to Cloud</button>
                         <button onclick="fetchFromCloud(2)">Load from Cloud</button>
                         <h4 id="message2"></h4>
                     </div>
@@ -116,7 +116,7 @@
 
 
 
-  <button id="fsBtn" onclick="document.documentElement.requestFullscreen(); document.documentElement.webkitEnterFullscreen(); this.remove()">+</button>
+  <button id="fsBtn" onclick="fullScreen(); this.remove()">+</button>
   <button id="editBtn" onclick="toggleEditMode();">An error has occured.</button>
   <div id="pointers">
     <button id="pointer0">-1</button>
@@ -751,5 +751,15 @@ function toggleColorSettings() {
 toggleEditMode();
 colorSettings.parentElement.style.display = 'none';
 
+function fullScreen() {
+  var elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+}
 
 </script>
