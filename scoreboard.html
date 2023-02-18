@@ -375,7 +375,15 @@ function incVal1(i) {
   if(i.value < 4) {i.style.color = pageColor.value;}
   //i.value += 1;
 }
+function decVal1(i) {
+  i.value = parseInt(i.value) - 1;
+  if(i.value >= 4) {i.style.color = warningcolor.value;}
+  if(i.value < 4) {i.style.color = pageColor.value;}
+  //i.value += 1;
+}
 function incVal2(i) {i.value = parseInt(i.value) + pointerAdd;}
+
+function decVal2(i) {i.value = parseInt(i.value) - 1;}
 
 function temp(htmlString) {
   var div = document.createElement('div');
@@ -462,11 +470,15 @@ function toggleEditMode() {
     if(!editMode) {
       player.children[2].setAttribute('onclick','');
       player.children[3].setAttribute('onclick','');
+      player.children[2].setAttribute('oncontextmenu','');
+      player.children[3].setAttribute('oncontextmenu','');
       player.children[4].style.display = 'inline-block';
       player.children[5].style.display = 'inline-block';
     } else {
       player.children[2].setAttribute('onclick','incVal2(this)');
       player.children[3].setAttribute('onclick','incVal1(this)');
+      player.children[2].setAttribute('oncontextmenu','decVal2(this); return false;');
+      player.children[3].setAttribute('oncontextmenu','decVal1(this); return false;');
       player.children[4].style.display = 'none';
       player.children[5].style.display = 'none';
     }
@@ -489,11 +501,15 @@ function toggleEditMode() {
       player.children[4].style.display = 'inline-block';
       player.children[2].setAttribute('onclick','');
       player.children[3].setAttribute('onclick','');
+      player.children[2].setAttribute('oncontextmenu','');
+      player.children[3].setAttribute('oncontextmenu','');
       player.children[5].style.display = 'inline-block';
     } else {
       player.children[4].style.display = 'none';
       player.children[2].setAttribute('onclick','incVal2(this)');
       player.children[3].setAttribute('onclick','incVal1(this)');
+      player.children[2].setAttribute('oncontextmenu','decVal2(this); return false;');
+      player.children[3].setAttribute('oncontextmenu','decVal1(this); return false;');
       player.children[5].style.display = 'none';
     }
   }
@@ -538,6 +554,7 @@ function saveToCloud(id, team) {
 
   if(team == 1) {
     dataString = team1Color.value;
+    link = backgroundImage1.value;
     dataString += pad(team1List.children.length);
     //014
     for (let i = 0; i < team1List.children.length; i++) {
@@ -547,6 +564,7 @@ function saveToCloud(id, team) {
     dataString += team1Header.value;
   } else {
     dataString = team2Color.value;
+    link = backgroundImage2.value;
     dataString += pad(team2List.children.length);
     //014
     for (let i = 0; i < team2List.children.length; i++) {
@@ -557,7 +575,8 @@ function saveToCloud(id, team) {
   }
 
   firebase.database().ref('users/' + id).set({
-    val: dataString
+    val: dataString,
+    link: link
   });
 
   if(team == 1) {message1.innerHTML = "Saved Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
@@ -576,6 +595,7 @@ function fetchFromCloud(team, classic) {
       data = snapshot.val()['val'];
       console.log(data);
       if(team == 1) {
+        team1List.parentElement.style.backgroundImage = 'url(' + snapshot.val()['link'] + ')';
         team1Color.value = data.substr(0,7);
         team1Color.onchange();
         data = data.substr(7);
@@ -592,6 +612,7 @@ function fetchFromCloud(team, classic) {
         message1.style.color = 'rgb(0, 113, 179)'
         message1.innerHTML = "Loaded Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";
       } else {
+        team2List.parentElement.style.backgroundImage = 'url(' + snapshot.val()['link'] + ')';
         team2Color.value = data.substr(0,7);
         team2Color.onchange();
         data = data.substr(7);
