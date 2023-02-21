@@ -1,0 +1,89 @@
+:root {
+    --panel-color: #FFFFFF;
+    --panel-width: 5vw;
+}
+
+body {
+    display: grid;
+    grid-template-areas: "side main";
+    grid-template-columns: "1 1 1";
+    margin: 0px;
+    padding: 0px;
+    background-color: #222222;
+    max-height: calc(100vh - 10px);
+    overflow: hidden;
+}
+body > div {
+    overflow: hidden;
+}
+
+#sidePanel {
+    transition: margin-left 400ms ease;
+    grid-area: side;
+    text-align: center;
+    height: calc(100vh - 10px);
+    margin: 5px;
+    margin-right: 2px;
+    margin-left: 5px;
+    width: var(--panel-width);
+    z-index: 1;
+}
+#sidePanel.shown {
+    margin-left: calc(-1 * var(--panel-width));
+}
+#sidePanel, #menuPanel {
+    border-radius: 5px;
+    background-color: var(--panel-color);
+}
+#menuPanel {
+    width: 100%;
+    height: var(--panel-width);
+}
+
+#mainPanel {
+    grid-area: main;
+    width: calc(100vw - var(--panel-width) - 13px);
+    height: calc(100vh - 10px);
+    margin: 5px;
+    margin-left: 2px;
+}
+#mainPanel.dispView {
+    width: 100%;
+}
+#mainPanel.dispView > #menuPanel {
+    display: none;
+}
+
+#displayPanel {
+    width: calc(100% - 18px);
+    margin-top: 5px;
+    height: calc(100% - var(--panel-width) - 22px);
+    background-color: #00000000;
+    border: dashed 5px #ffffff;
+    padding: 3px;
+}
+#displayPanelContent {
+    width: 100%;
+    height: 100%;
+    background-color: #bbbbbb;
+
+    position: inherit;
+    top: auto;
+    left: auto;
+}
+#displayPanelContent.dispView {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+
+.pfp {
+    align-self: center;
+    margin: auto;
+    margin-top: 3px;
+    border-radius: 2vw;
+    width: 4vw;
+    height: 4vw;
+    background-color: #424242;
+}

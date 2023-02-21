@@ -6,28 +6,78 @@
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
 </head>
 <body id="body" style="background:rgb(0, 0, 0);">
-  <table>
+<button id="CSB" onclick="toggleColorSettings()">Color Settings</button>
+<table>
     <tbody id="Lists">
-      <tr>
-        <td><input id="team1Header" value="Team 1"></td>
-        <td><input id="team2Header" value="Team 2"></td>
-      </tr>
-      <tr>
-        <td>
-          <div class="pgf"><div>Player</div><div>Points</div><div>Fouls</div></div>
-          <ul id="team1List"></ul>
-          <button id="addP1" onClick="addplayer(1, team1List.children.length)">Add Player</button>
-          <button id="reset1" onClick="resetScores(1)">Reset Scores</button>
-          <div>Team Color: <input id="team1Color" type="color"></div><br>
-          <div style="display: none;">Team Logo: <input id="team1Image" type="file"></div><br>
+        <tr>
+            <td><button onclick="settings(1, true)">Edit</button><input id="team1Header" value="Team 1"></td>
+            <td><button onclick="settings(2, true)">Edit</button><input id="team2Header" value="Team 2"></td>
+        </tr>
+        <tr>
+            <td>
+                <table class="pgf">
+                    <tr>
+                        <td>Player</td>
+                        <td>Points</td>
+                        <td>Fouls</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <table id="team1List">
+                    <!-- Here goes the List-->
+                </table>
+                <button id="addP1" onClick="addplayer(1, team1List.children.length)">Add Player</button>
+                <button id="reset1" onClick="resetScores(1)">Reset Scores</button>
+                <div class="popupL">
+                    <div id="cloudOptions1">
+                        <button onclick="settings(1, false)">X</button>
+                        <div>Team Color: <input id="team1Color" type="color"><br>
+                            Background image URL: <input id="backgroundImage1" type="url">
+                        </div><br>
+                        <h3>Cloud Save</h1>
+                        User index: <input id="userIndex1" value="1"><br>
+                        <button onclick="saveToCloud(uindex1.value, 1)">Save to Cloud</button>
+                        <button onclick="fetchFromCloud(1)">Load from Cloud</button>
+                        <h4 id="message1"></h4>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <table class="pgf">
+                    <tr>
+                        <td>Player</td>
+                        <td>Points</td>
+                        <td>Fouls</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <table id="team2List">
+                    <!-- Here goes the List-->
+                </table>
+                <button id="addP2" onClick="addplayer(2, team1List.children.length)">Add Player</button>
+                <button id="reset2" onClick="resetScores(2)">Reset Scores</button>
+                <div class="popupR">
+                    <div id="cloudOptions2">
+                        <button onclick="settings(2, false)">X</button>
+                        <div>
+                            Team Color: <input id="team2Color" type="color"><br>
+                            Background image URL: <input id="backgroundImage2" type="url">
+                        </div><br>
+                        <h3>Cloud Save</h1>
+                        User index: <input id="userIndex2" value="1"><br>
+                        <button onclick="saveToCloud(uindex2.value, 2)">Save to Cloud</button>
+                        <button onclick="fetchFromCloud(2)">Load from Cloud</button>
+                        <h4 id="message2"></h4>
+                    </div>
+                </div>
+            </td>
+            <!--
+
+        
+
+
           <br>
-          <div id="cloudOptions1">
-            <h3>Cloud Save</h1>
-            User index: <input id="userIndex1" value="1"><br>
-            <button onclick="saveToCloud(uindex1.value, 1)">Save to Cloud</button>
-            <button onclick="fetchFromCloud(1)">Load from Cloud</button>
-            <h4 id="message1"></h4>
-          </div>
+
         </td>
         <td>
           <div class="pgf"><div>Player</div><div>Points</div><div>Fouls</div></div>
@@ -44,12 +94,14 @@
             <button onclick="fetchFromCloud(2)">Load from Cloud</button>
             <h4 id="message2"></h4>
           </div>
-        </td>
-      </tr>
+        </td>-->
+        </tr>
     </tbody>
-  </table>
+</table>
 
+<div class="popup">
   <div id="colorSettings">
+    <button onclick="toggleColorSettings()">X</button><br>
     Text color: <input id="pageColor" type="color" value="#ffffff"><br>
     Warning color: <input id="warningcolor" type="color" value="#b3a100"><br>
     Background color: <input id="backgroundColor" type="color"><br>
@@ -57,11 +109,14 @@
     Button Transparency: <input id="buttonTransparency" type="range" max="255" min="16"><br>
     Title Font Size: <input id="inTFont" onchange="fontsizechange()" value="86" max="100" min="30" type="range"><br>
     Header Font Size: <input id="inHFont" onchange="fontsizechange()" value="25" max="50" min="10" type="range"><br>
-    Scores Font Size: <input id="inSFont" onchange="fontsizechange()" value="47" max="50" min="10" type="range">
+    Scores Font Size: <input id="inSFont" onchange="fontsizechange()" value="47" max="100" min="10" type="range">
   </div>
+</div>
 
 
-  <button id="fsBtn" onclick="document.documentElement.requestFullscreen(); this.remove()">+</button>
+
+
+  <button id="fsBtn" onclick="fullScreen(); this.remove()">+</button>
   <button id="editBtn" onclick="toggleEditMode();">An error has occured.</button>
   <div id="pointers">
     <button id="pointer0">-1</button>
@@ -74,7 +129,7 @@
 
 <style>
   #Lists :nth-child(2) > td {
-    background: url(cougar.png);
+    background: url();
     /*background: url(https://www.pngitem.com/pimgs/b/195-1958264_cougar-png.png);*/
     background-size: contain;
     background-repeat: no-repeat;
@@ -97,25 +152,11 @@
   background:rgba(0, 0, 0, 0);
 }
 
-.pgf > div {
-  display: inline;
-  margin: 5px;
-  font-size: 25px;
-  /*display: inline-block;
-  margin-left: 10.33%;
-  margin-right: 5;
-  width: 10%;*/
-}
-.pgf :first-child {
-  display: inline-block;
-  /*width: 45%;*/
-}
-.pgf :nth-child(1) {
-  width: calc(24vw + 6px);
-}
-.pgf :nth-child(2), .pgf :nth-child(3) {
-  width: calc(100vw / 13);
-}
+.pgf tr :nth-child(1) {width: 60%;}
+.pgf tr :nth-child(2) {width: 15%;}
+.pgf tr :nth-child(3) {width: 15%;}
+.pgf tr :nth-child(4) {width: 10%;}
+
 
 #team1List, #team2List {
   list-style-type: none;
@@ -131,8 +172,9 @@
   width: 100%;
   cursor: auto;
 }
+/*
 #cloudOptions1 {border-right: solid rgb(56, 56, 56) 3px;}
-#cloudOptions2 {border-left: solid rgb(56, 56, 56) 3px;}
+#cloudOptions2 {border-left: solid rgb(56, 56, 56) 3px;}*/
 
 body {
   text-align: center;
@@ -207,12 +249,39 @@ button {
   margin-right: 100px;
 }
 
-#colorSettings{
-  border-top: solid rgb(56, 56, 56) 3px;
-  border-bottom: solid rgb(56, 56, 56) 3px;
-  padding: 10px;
-  font-size: normal;
+.popup {
+    width: 100vw;
+}
+#popup, .popup, .popupL, .popupR {
+  margin: auto;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 1;
+  align-items: center;
+  display: flex;
+  backdrop-filter: blur(10px);
+  text-shadow: 0px 0px 4px #aaaaaa;
+}
+.popupR, .popupL {
   width: 50vw;
+}
+.popup > div, .popupL > div, .popupR > div {
+    margin: 10px;
+    padding: 20px;
+    border: solid 2px white;
+    background-color: #000000;
+    border-radius: 10px;
+    width: 40vw;
+    margin: auto;
+}
+.popupL {
+    left: 0%;
+    right: 50%;
+}
+.popupR {
+    left: 50%;
+    right: 0%;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -306,7 +375,15 @@ function incVal1(i) {
   if(i.value < 4) {i.style.color = pageColor.value;}
   //i.value += 1;
 }
+function decVal1(i) {
+  i.value = parseInt(i.value) - 1;
+  if(i.value >= 4) {i.style.color = warningcolor.value;}
+  if(i.value < 4) {i.style.color = pageColor.value;}
+  //i.value += 1;
+}
 function incVal2(i) {i.value = parseInt(i.value) + pointerAdd;}
+
+function decVal2(i) {i.value = parseInt(i.value) - 1;}
 
 function temp(htmlString) {
   var div = document.createElement('div');
@@ -316,17 +393,35 @@ function temp(htmlString) {
   return div.firstChild;
 }
 
+function settings(i, o) {
+    if(o) {
+        if(i == 1) {
+            cloudOptions1.parentElement.style.display = '';
+        } else {
+            cloudOptions2.parentElement.style.display = '';
+        }
+    } else {
+        if(i == 1) {
+            cloudOptions1.parentElement.style.display = 'none';
+        } else {
+            cloudOptions2.parentElement.style.display = 'none';
+        }
+    }
+    
+}
+
 function toggleEditMode() {
   console.log("TOGGLE");
   editMode = !editMode;
 
   if (!editMode) {
-    cloudOptions1.style.display = 'block';
-    cloudOptions2.style.display = 'block';
     pointers.style.display = 'none';
-    colorSettings.style.display = 'inline-block';
+    document.getElementById('CSB').style.display = '';
+    //colorSettings.parentElement.style.display = '';
     team1Header.readOnly = false;
     team2Header.readOnly = false;
+    team1Header.parentElement.children[0].style.display = '';
+    team2Header.parentElement.children[0].style.display = '';
     //team1Header.style.cursor = 'auto'
     addP1.style.display = 'table-row';
     addP2.style.display = 'table-row';
@@ -336,12 +431,15 @@ function toggleEditMode() {
     team2Color.parentElement.style.display = 'table-row';
     document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + '; box-shadow: inset 0 0 10px #353535' + parseInt(buttonTransparency.value).toString(16) + ';} *::selection{background: rgb(56, 56, 56);}'
   } else {
-    cloudOptions1.style.display = 'none';
-    cloudOptions2.style.display = 'none';
+    document.getElementById('CSB').style.display = 'none';
+    cloudOptions1.parentElement.style.display = 'none';
+    cloudOptions2.parentElement.style.display = 'none';
     pointers.style.display = 'block';
-    colorSettings.style.display = 'none';
+    //colorSettings.parentElement.style.display = 'none';
     team1Header.readOnly = true;
     team2Header.readOnly = true;
+    team1Header.parentElement.children[0].style.display = 'none';
+    team2Header.parentElement.children[0].style.display = 'none';
     addP1.style.display = 'none';
     addP2.style.display = 'none';
     reset1.style.display = 'none';
@@ -372,11 +470,15 @@ function toggleEditMode() {
     if(!editMode) {
       player.children[2].setAttribute('onclick','');
       player.children[3].setAttribute('onclick','');
+      player.children[2].setAttribute('oncontextmenu','');
+      player.children[3].setAttribute('oncontextmenu','');
       player.children[4].style.display = 'inline-block';
       player.children[5].style.display = 'inline-block';
     } else {
       player.children[2].setAttribute('onclick','incVal2(this)');
       player.children[3].setAttribute('onclick','incVal1(this)');
+      player.children[2].setAttribute('oncontextmenu','decVal2(this); return false;');
+      player.children[3].setAttribute('oncontextmenu','decVal1(this); return false;');
       player.children[4].style.display = 'none';
       player.children[5].style.display = 'none';
     }
@@ -399,16 +501,23 @@ function toggleEditMode() {
       player.children[4].style.display = 'inline-block';
       player.children[2].setAttribute('onclick','');
       player.children[3].setAttribute('onclick','');
+      player.children[2].setAttribute('oncontextmenu','');
+      player.children[3].setAttribute('oncontextmenu','');
       player.children[5].style.display = 'inline-block';
     } else {
       player.children[4].style.display = 'none';
       player.children[2].setAttribute('onclick','incVal2(this)');
       player.children[3].setAttribute('onclick','incVal1(this)');
+      player.children[2].setAttribute('oncontextmenu','decVal2(this); return false;');
+      player.children[3].setAttribute('oncontextmenu','decVal1(this); return false;');
       player.children[5].style.display = 'none';
     }
   }
 
-
+  updateStyles();
+  if(!editMode) {document.getElementById('USTYLE').innerHTML += '*::selection{background: rgb(56, 56, 56);}'}
+  else {document.getElementById('USTYLE').innerHTML += '*::selection{background: #00000000;}'}
+  
 };
 
 for(x=0;x<11;x++) {
@@ -445,6 +554,7 @@ function saveToCloud(id, team) {
 
   if(team == 1) {
     dataString = team1Color.value;
+    link = backgroundImage1.value;
     dataString += pad(team1List.children.length);
     //014
     for (let i = 0; i < team1List.children.length; i++) {
@@ -454,6 +564,7 @@ function saveToCloud(id, team) {
     dataString += team1Header.value;
   } else {
     dataString = team2Color.value;
+    link = backgroundImage2.value;
     dataString += pad(team2List.children.length);
     //014
     for (let i = 0; i < team2List.children.length; i++) {
@@ -464,7 +575,8 @@ function saveToCloud(id, team) {
   }
 
   firebase.database().ref('users/' + id).set({
-    val: dataString
+    val: dataString,
+    link: link
   });
 
   if(team == 1) {message1.innerHTML = "Saved Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";}
@@ -483,6 +595,7 @@ function fetchFromCloud(team, classic) {
       data = snapshot.val()['val'];
       console.log(data);
       if(team == 1) {
+        team1List.parentElement.style.backgroundImage = 'url(' + snapshot.val()['link'] + ')';
         team1Color.value = data.substr(0,7);
         team1Color.onchange();
         data = data.substr(7);
@@ -499,6 +612,7 @@ function fetchFromCloud(team, classic) {
         message1.style.color = 'rgb(0, 113, 179)'
         message1.innerHTML = "Loaded Team <span style='color: rgb(179, 161, 0)'>" + id + "</span>!";
       } else {
+        team2List.parentElement.style.backgroundImage = 'url(' + snapshot.val()['link'] + ')';
         team2Color.value = data.substr(0,7);
         team2Color.onchange();
         data = data.substr(7);
@@ -568,6 +682,7 @@ document.getElementById('pointer3').onclick = function() {
   pointerAdd = 3;
 }
 
+
 pageColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
   updateStyles();
@@ -576,6 +691,12 @@ pageColor.onchange = function() {
 backgroundColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
   document.getElementById('body').style.backgroundColor = this.value;
+}
+backgroundImage1.onchange = function() {
+    team1List.parentElement.style.backgroundImage = 'url(' + this.value + ')';
+}
+backgroundImage2.onchange = function() {
+    team2List.parentElement.style.backgroundImage = 'url(' + this.value + ')';
 }
 buttonColor.onchange = function() {
   //document.getElementById('body').style.color = this.value;
@@ -607,9 +728,10 @@ document.body.addEventListener("focus", function(event) {
 
 
 function fontsizechange() {
-  const sty = document.getElementById('iStyle');
+  document.getElementById('iStyle').innerHTML = 'input{font-size:' + inSFont.value + ';} #team2Header, #team1Header {font-size: ' + inTFont.value + ';} .pgf td {font-size:' + inHFont.value + ';}'
 
-  sty.innerHTML = 'input{font-size:' + inSfont + ';} #team2Header, #team1Header {font-size: ' + inTfont.value + ';} .pgf{font-size:' + inHfont.value + ';}'
+  //sty.innerHTML = ''
+
   //updateStyles();  
 }
 
@@ -618,7 +740,7 @@ function updateStyles() {
   document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'button, #pointers > button, input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + '; box-shadow: inset 0 0 10px #353535' + parseInt(buttonTransparency.value).toString(16) + ';}'
 }
 //document.getElementById('USTYLE').innerHTML = '*{color: ' + pageColor.value + ';}' + 'input:read-only, input, input:focus:read-only, input:focus{background-color:' + buttonColor.value + parseInt(buttonTransparency.value).toString(16) + ';}'
-
+updateStyles();
 
 function recalculateHeights() {
   var t1 = team1List.offsetHeight;
@@ -634,9 +756,31 @@ function recalculateHeights() {
   }
 }
 
+body.addEventListener("keypress", (event) => {
+  console.log(`key=${event.key},code=${event.code}`);
+  if(event.code == 'KeyH') {
+    console.log(editBtn);
+    if(editBtn.style.display == '') {editBtn.style.display = 'none';}
+    else {editBtn.style.display = '';}
+  }
+});
+
+function toggleColorSettings() {
+    colorSettings.parentElement.style.display == '' ? colorSettings.parentElement.style.display = 'none' : colorSettings.parentElement.style.display = '';
+}
 
 toggleEditMode();
-updateStyles();
+colorSettings.parentElement.style.display = 'none';
 
+function fullScreen() {
+  var elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+}
 
 </script>
