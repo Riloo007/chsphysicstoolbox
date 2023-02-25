@@ -3,30 +3,175 @@
   <meta name="viewport" content="width=device-width, user-scalable=no">
   <title>Player Scoreboard</title>
   <link rel="stylesheet" href="sbtest.css">
-  <script src="sbtest.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+  <script src="sbtest.js"></script>
 </head>
 <body id="body" style="background:rgb(0, 0, 0);">
-    <div id="sidePanel">
-        <div class="pfp">
-        </div>
+    <div id="sidePanel" class="sidePanel">
+      <span>
+        <div onclick="showUserProfile()" class="pfp"></div>
+        <br>
+        <div class="gearIcon" onclick="toggleEditView();"></div>
+        <br>
+        <div id="sp_colorBtn" onclick="showPanel(2)">
+            <div></div><br>
+            <div></div>
+            <div></div>
+        </div>     
+      </span>
+      <span class="profile pf-Hidden">
+        <div class="ex" onclick="hideUserProfile();"></div><br>
+        <div class="pfpExpanded"></div>
+        <h2 id="username">chsphysicstoolbox</h2>
+        <button onclick="logoutuser();">Logout<div class="logoutIcon"></div></button>
+      </span>
+
     </div>
     <div id="mainPanel">
+      <div id="panel1">
+        <!-- Game Editor -->
         <div id="menuPanel">
-            <select>
-                <option value="">Teams ... </option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-            </select>
+          <select id="p1teamList1" class="p1_select">
+            <option>T1</option>
+            <option>T2</option>
+            <option>T3</option>
+            <option>T4</option>
+          </select>
+
+          <select id="p1teamList2" class="p1_select">
+            <option>T1</option>
+            <option>T2</option>
+            <option>T3</option>
+            <option>T4</option>
+          </select>
+          <div class="gearIcon" onclick="showPanel(3);"></div>
+            
         </div>
-        <div id="displayPanel">
+        <div class="displayPanel">
             <div id="displayPanelContent">
-                
+              <!--  START MAIN DISPLAY  -->  
+
+              <table id="Main">
+                <tbody>
+                  <tr>
+                    <td><input class="Main-titles" id="Main-team1Header" value="Team 1"></td>
+                    <td><input class="Main-titles" id="Main-team2Header" value="Team 2"></td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <div id="Main-List1" class="Main-lists">
+                        <p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>
+                        <input class="c-pnu" value=''>
+                        <input class="c-pna">
+                        <input class="c-ppo" type='number' value='0'>
+                        <input class="c-pfo" type='number' value='0'>
+
+                        <input class="c-pnu" value=''>
+                        <input class="c-pna">
+                        <input class="c-ppo" type='number' value='0'>
+                        <input class="c-pfo" type='number' value='0'>
+                      </div>
+                      <button id="clearScores1" onClick="resetScores(1)">Clear Scores</button>
+                    </td>
+                    <td>
+                      <div id="Main-List2" class="Main-lists">
+                        <p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>
+                        <input class="c-pnu" value=''>
+                        <input class="c-pna">
+                        <input class="c-ppo" type='number' value='0'>
+                        <input class="c-pfo" type='number' value='0'>
+                      </div>
+                      <button id="clearScores2" onClick="resetScores(2)">Clear Scores</button>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+
+              <!--  END MAIN DISPLAY  -->  
             </div>
         </div>
+      </div>
+      <div id="panel2">
+        <!-- Style Editor -->
+        <button class="bkBtn" onclick="showPanel(1);">← Back</button>
+        <div class="topMenu">
+          <select class="p2def">
+            <option value="">Team 1 </option>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+          </select>
+          <div class="gearIcon" onclick="showPanel(3);"></div>
+        </div>
+        <div class="displayPanel">
+            <div class="displayPanelContent">
+              <!--  START COLORS DISPLAY  -->
+
+              <input class="Main-titles" id="Team-Header" value="Team 1">
+              <div id="Team-List1" class="Main-lists">
+                <p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>
+                <input class="c-pnu" value=''>
+                <input class="c-pna">
+                <input class="c-ppo" type='number' value='0'>
+                <input class="c-pfo" type='number' value='0'>
+
+                <input class="c-pnu" value=''>
+                <input class="c-pna">
+                <input class="c-ppo" type='number' value='0'>
+                <input class="c-pfo" type='number' value='0'>
+              </div>
+
+              <!--  END COLORS DISPLAY  -->  
+            </div>
+        </div>
+        <div class="p2_settingsPanel">
+          <div class="p2_settingsMenu">
+            <div class="p2_settingsList">
+               <h3>Backdrop</h3>
+               <p>Color: <input type="color"></p>
+               <p>Logo: <input type="url"></p>
+               <p>Blur: <input type="range" max="30" min="0" value="0"></p>
+
+               <h3>Buttons</h3>
+               <p>Shadow: <input type="checkbox"></p>
+               <p>Color: <input type="color"></p>
+            </div>
+            <button class="sBtn">SAVE</button>
+          </div>
+        </div>
+      </div>
+      <div id="panel3">
+        <!-- Team Editor -->
+        <button class="bkBtn" onclick="showPanel(1);">← Back</button>
+        <div class="displayPanel">
+          <div class="displayPanelContent dp3">
+            <!--  START TEAM DISPLAY  -->
+
+            <input class="Main-titles" id="p3TeamHeader" value="Team 1">
+
+            <ul id="p3TeamList" class="Team-lists">
+            </ul>
+            <button onclick="AddPlayer();">Add Player</button>
+          
+            <!--  END TEAM DISPLAY  --> 
+          </div> 
+        </div>
+        <div class="p3_settingsPanel">
+          <div class="p3_settingsMenu">
+            <h3>Teams</h3>
+            <div class="p3_settingsList">
+              <ul id="p3_settingsList">
+              </ul>
+              <button onclick="AddTeam();">Add Team</button>
+            </div>
+            <button class="sBtn">SAVE</button>
+          </div>
+        </div>
+      </div>
     </div>
+    
 </body>
 </html>
-

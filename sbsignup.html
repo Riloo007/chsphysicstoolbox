@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Scoreboard</title>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+</head>
+<html>
+    <body>
+        <div class="signinwindow">
+            <h1>Player Scoreboard</h1>
+            <input id="email" type="email" placeholder="Email Address">
+            <input id="password" type="password" placeholder="Password">
+            
+            <button onclick="loginwithemail()">Log In</button>
+            <h2>OR</h2>
+            <button onclick="createEmail()">Sign Up</button>
+
+            <p id="errorMessage"></p>
+        </div>
+    </body>
+</html>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+    * {
+        font-family: 'Nunito', sans-serif;
+    }
+    h1 {
+        font-size: 40px;
+        margin-top: 0px;
+    }
+    body {
+        background: rgb(0,47,115);
+        background: linear-gradient(14deg, rgba(0,47,115,1) 0%, rgba(79,156,255,1) 100%);
+        background-repeat: no-repeat;
+        text-align: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .separate {
+        display: inline-block;
+        border-radius: 3px;
+        width: 90%;
+        background-color: black;
+        height: 5px;
+    }
+    .signinwindow {
+        background-color: rgba(124, 194, 255, 0.123);
+        border-radius: 40px;
+        border: solid 2px rgba(0,47,115,0.4);
+        display: inline-block;
+        width: 60%;
+        height: auto;
+        padding: 40px;
+    }
+    .signinwindow input {
+        transition-duration: 0.5s;
+        width: 90%;
+        border-radius: 10px;
+        height: 50px;
+        background-color: rgba(240, 240, 240, 0.507);
+        margin: 10px;
+        border: none;
+        outline: none;
+        font-size: 30px;
+    }
+    .signinwindow input:focus, .signinwindow button:focus {
+        color: black;
+        background-color: rgba(240, 240, 240, 0.678);
+        outline: solid 1px rgb(63, 63, 63);
+        transform: scale(1.1);
+    }
+    .signinwindow input::placeholder {
+        transition-duration: 0.5s;
+        color: rgba(0, 0, 0, 0.5);
+        text-align: center;
+    }
+    .signinwindow input:focus::placeholder {
+        color: rgba(0, 0, 0, 0);
+    }
+    .signinwindow button {
+        transition-duration: 0.5s;
+        background-color: rgba(240, 240, 240, 0.507);
+        width: 50%;
+        height: 40px;
+        border: none;
+        border-radius: 10px;
+        outline: none;
+        cursor: pointer;
+        font-size: 30px;
+        color: rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<script>
+
+
+var user;
+function createEmail() {
+    firebase.auth().setPersistence(persist).then(() => {
+        firebase.auth().createUserWithEmailAndPassword(get('email').value, get('password').value).then((userCredential) => {
+            // User created successfully
+            // Load user data
+            user = userCredential.user;
+            console.log(user.uid);
+            get("errorMessage").innerHTML = "Account Created Successfully!";
+            firebase.database().ref('accounts/' + user.uid).set({
+                email: get('email').value,
+                Basketball: {
+                    Teams: {
+                        'East High Wildcats': {
+                            DName: 'Wildcats',
+                            Players: {
+                                '1': 'Troy Bolton',
+                                '2': 'Chad Danforth' 
+                            },
+                            Settings: {
+                                backgroundColor: '#FFFFFF',
+                                textColor: '#18308f'
+                            }
+                        }
+                    }
+                }
+            });
+            a = document.createElement('a'); a.href = 'sbtest.html'; a.click();
+        }).catch((error) => {
+            //get("errorMessage").innerHTML = "Invalid email / Email is already in use";
+            get("errorMessage").innerHTML = error.message;
+            console.log(error);
+        });
+    }).catch((error) => {
+        // setPersist did not work : 
+        window.href = 'sbsignup.html';
+    });
+}
+
+function loginwithemail() {
+    firebase.auth().setPersistence(persist).then(() => {
+        firebase.auth().signInWithEmailAndPassword(get('email').value, get('password').value).then((userCredential) => {
+            // User signed in successfully
+            // Load user data
+            user = userCredential.user;
+            console.log(user.uid);
+            get("errorMessage").innerHTML = "Logged in Successfully!";
+            // Redirect to editor page
+            a = document.createElement('a'); a.href = 'sbtest.html'; a.click();
+        }).catch((error) => {
+            //get("errorMessage").innerHTML = "Incorrect Email or Password";
+            get("errorMessage").innerHTML = error.message;
+        });
+    }).catch((error) => {
+        // setPersist did not work : 
+        window.href = 'sbsignup.html';
+    });
+}
+
+function getTest() {
+    var get = firebase.database().ref('accounts/' + firebase.auth().currentUser.uid);
+    get.on('value', (snapshot) => {
+        if(snapshot.val()) {
+            // Update Everything
+            console.log(snapshot.val());
+        } else {
+            // Create Account
+            firebase.database().ref('accounts/' + firebase.auth().currentUser.uid + '/basketball/').set({
+                val: 'dataString',
+                link: 'link'
+            });
+        }
+    });
+}
+
+function getTest2() {
+  var get = firebase.database().ref('accounts/' + user['l']);
+  get.on('value', (snapshot) => {
+    console.log("GOTIT")
+    console.log(snapshot.val());
+  });
+  console.log("Sent...")
+}
+
+function get(i) {
+    return document.getElementById(i);
+}
+
+// Firebase Setup
+var database;
+function setupFirebase() {
+  const firebaseConfig = {
+    apiKey: "AIzaSyB54arIWiHODagJUmcMVa4olpSMGNUIxII",
+    authDomain: "scorekeeping-c6efa.firebaseapp.com",
+    databaseURL: "https://scorekeeping-c6efa-default-rtdb.firebaseio.com",
+    projectId: "scorekeeping-c6efa",
+    storageBucket: "scorekeeping-c6efa.appspot.com",
+    messagingSenderId: "653633600985",
+    appId: "1:653633600985:web:61ae0782bca7b101a16dc8"
+  };
+  firebase.initializeApp(firebaseConfig);
+  database = firebase.database();
+}
+setupFirebase();
+
+const persist = firebase.auth.Auth.Persistence.LOCAL;
+
+</script>
