@@ -60,11 +60,12 @@ table {
     width: var(--panel-width);
     z-index: 1;
 
-    box-shadow: 2px 2px 5px #eee;
     outline: solid 1px #555;
+    box-shadow: 2px 2px 5px #eee;
 }
 #sidePanel.shown {
-    margin-left: calc(-1 * var(--panel-width) - 10px);
+    box-shadow: 0px 0px 0px #000;
+    margin-left: calc(-1 * var(--panel-width) - 14px);
 }
 #sidePanel {
     border-radius: 5px;
@@ -234,7 +235,7 @@ select {
 #displayPanelContent *::selection {background-color: #87dbf5;}
 #displayPanelContent.dispView *::selection {background-color: #00000000;}
 
-#sp_colorBtn, .TeamListsButton {
+#sp_colorBtn, .TeamListsButton, .vsIcon{
     cursor: pointer;
     background-color: #bbbbbb;
     height: var(--panel-width);
@@ -245,6 +246,7 @@ select {
     align-items: center;
     position: relative;
     z-index: 10;
+    margin-top: 10px;
 }
 #sp_colorBtn:hover {outline: solid 1px black; transform: rotate(120deg) scale(1.1); border-radius: 100%; position: relative;}
 #sp_colorBtn div {width: 14px; aspect-ratio: 1; margin: 0px; border-radius: 100%; position: absolute; top: 50%; left: 50%; transition-duration: 0.5s;}
@@ -255,7 +257,7 @@ select {
 #sp_colorBtn:hover div:nth-child(3) {transform: rotate(240deg) translate(13px) rotate(-240deg) translate(-50%, -50%);}
 #sp_colorBtn:hover div:nth-child(4) {transform: rotate(0deg) translate(13px) rotate(0deg) translate(-50%, -50%);}
 
-.TeamListsButton {overflow: hidden; margin-top: 10px;}
+.TeamListsButton {overflow: hidden;}
 .TeamListsButton:hover {overflow: visible; transform: scale(1.2);}
 .TeamListsButton div {
     transition-duration: 0.5s;
@@ -318,7 +320,7 @@ select {
     transform: scale(1);
 }
 
-.gearIcon, .trashIcon, .loadIcon {
+.gearIcon, .trashIcon, .loadIcon, .vsIcon, .expandIcon {
     background-size: cover;
     height: var(--panel-width);
     aspect-ratio: 1;
@@ -326,6 +328,18 @@ select {
     border-radius: 5px;
     transition-duration: 0.3s;
     cursor: pointer;
+}
+.expandIcon {
+    background-image: url(expand-icon.png);
+}
+.expandIcon:hover {
+    transform: scale(1.15);
+}
+.vsIcon {
+    background-image: url(vs-icon.png);
+}
+.vsIcon:hover {
+    transform: scale(1.15);
 }
 .gearIcon {
     background-image: url(gear.png);
@@ -423,7 +437,7 @@ button:hover {
 
 
 .Main-lists {
-  width: calc(50vw - 40px);
+  width: calc(50vw - 75px);
   list-style-type: none;
   padding: 0;
   margin: 5px;
@@ -432,7 +446,7 @@ button:hover {
   grid-template-areas: 
   "pl pl po fo"
   "pnumber pname ppoints pfouls";
-  grid-template-columns: 10% 70% 10% 10%;
+  grid-template-columns: 11% 65% 12% 12%;
 }
 .Main-lists p.h-pl {grid-area: pl;}
 .Main-lists p.h-po {grid-area: po;}
@@ -500,92 +514,73 @@ button:hover {
     position: relative;
 }
 
+.p2Display {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 /***
     
     User Style Classes
 
 ***/
 
-.dp2 {
+.dp2, .dp1{
     background-color: #000000;
-    background-image: url(https://i.ibb.co/FzYLmcL/Cougar-Head-outlined.png);
+    background-image: url();
+    background-size: 90%;
     color: #FFFFFF;
+    font-size: 15px;
 
     /* Constants */
-    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    position: relative;
 }
 
-.dp2 input {
-    background-color: #252734;
-    font-size: 10px;
-    
+.dp2 input, .dp1 input {
+    background-color: #000000FF;
+    font-size: 20px;
+    box-shadow: inset 0 0 10px #838383;
+    color: #FFFFFF;
+    margin: 2px;
 
     /* Constants */
     border-radius: 3px;
     border: 0px;
+    height: max-content;
+}   .dp2 input:read-only {
     cursor: pointer;
-    height: 26px;
+    outline: none;
+}
+.dp2 p {
+    text-align: center;
 }
 
-.dp2 > div.displayPanelContent {
+.dp2 > div.displayPanelContent, .dp1 > div.displayPanelContent {
     backdrop-filter: blur(5px);
 
     /* Constants */
     background-color: #00000000;
 }
 
-.dp2 > div.overlay {
+.dp2 > div.overlay, .dp1 > div.overlay {
     /*backdrop-filter: brightness(1.2) contrast(2);*/
 
     /* Constants */
-    position: relative;
-    transform: translate(0px, -100%);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
     height: 100%;
+    pointer-events: none; 
 }
 
-.dp2 input.Main-titles {
+.dp2 input.Main-titles, .dp1 input.Main-titles {
     color: #fcfcfc;
     font-size: 86px;
 
     /* Constants */
     height: auto;
     background-color: #00000000;
-}
-
-
-/*
-    User Style 2
-*/
-
-.dp1 {
-    background-color: #000000;
-    background-image: url(https://i.ibb.co/FzYLmcL/Cougar-Head-outlined.png);
-    color: #FFFFFF;
-
-    /* Constants */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.dp1 > div.displayPanelContent {
-    backdrop-filter: blur(5px);
-
-    /* Constants */
-    background-color: #00000000;
-}
-
-.dp1 > div.overlay {
-    /*backdrop-filter: brightness(1.2) contrast(2);*/
-
-    /* Constants */
-    position: relative;
-    transform: translate(0px, -100%);
-    height: 100%;
-}
-
-.dp1 input.Main-titles {
-    color: #fcfcfc;
+    box-shadow: none;
 }

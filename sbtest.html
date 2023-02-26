@@ -24,7 +24,9 @@
       <span>
         <div onclick="showUserProfile()" class="pfp"></div>
         <br>
-        <div class="gearIcon" onclick="toggleEditView();"></div>
+        <div id="expandIcon" class="expandIcon" onclick="toggleEditView();"></div>
+        <br><br>
+        <div class="vsIcon" onclick="showPanel(1);"></div>
         <br>
         <div id="sp_colorBtn" onclick="showPanel(2)">
             <div></div><br>
@@ -74,7 +76,7 @@
 
                   <tr>
                     <td class="dp2">
-                      <div>
+                      <div class="displayPanelContent">
                         <input class="Main-titles" id="Main-team1Header" readonly value="Team 1">
                         <div id="Main-List1" class="Main-lists">
                           <p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>
@@ -84,7 +86,7 @@
                       <div class="overlay"></div>
                     </td>
                     <td class="dp1">
-                      <div>
+                      <div class="displayPanelContent">
                         <input class="Main-titles" id="Main-team2Header" readonly value="Team 2">
                         <div id="Main-List2" class="Main-lists">
                           <p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>
@@ -109,7 +111,7 @@
           </select>
           <div class="gearIcon" onclick="showPanel(3);"></div>
         </div>
-        <div class="displayPanel dp2">
+        <div class="displayPanel dp2 p2Display">
             <div class="displayPanelContent">
               <!--  START COLORS DISPLAY  -->
 
@@ -128,6 +130,7 @@
                <h3>Backdrop</h3>
                <p>Color: <input id="p2BColor" type="color"></p>
                <p>Logo URL: <input id="p2BImg" type="url"></p>
+               <p>Logo Size: <input id="p2BSize" type="range" min="0" max="300"></p>
                <p>Blur: <input id="p2BBlur" type="range" max="30" min="0" value="0"></p>
 
                <h3>Buttons</h3>

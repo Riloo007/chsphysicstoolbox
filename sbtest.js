@@ -60,6 +60,8 @@ function showPanel(i) {
     if(i == 1) {
         if(get('p1teamList1').value != get('p1teamList1').children[0].innerHTML) {
             p1LoadStyles(0, get('p1teamList1').value);
+        }
+        if(get('p1teamList2').value != get('p1teamList2').children[0].innerHTML) {
             p1LoadStyles(1, get('p1teamList2').value);
         }
         get("panel1").style.display = "";
@@ -99,8 +101,10 @@ document.addEventListener('mousemove', function(event) {
 
 
 document.addEventListener("DOMContentLoaded", function() {
-    toggleEditView();
-    toggleEditView();
+    showWarning("Loading...");
+    //toggleEditView();
+    //toggleEditView();
+    showPanel(1);
 
     let onchangeElements = get('p2_settingsList').getElementsByTagName('input');
     for(let x = 0; x < onchangeElements.length; x++) {
@@ -120,44 +124,50 @@ function p1LoadTeam(i, team) {
     p1LoadStyles(i-1, team);
 }
 
+function style(i) {
+    x = i.split('}');
+    for(y=0; y<x.length - 1; y++) {
+        document.styleSheets[1].insertRule(x[y], document.styleSheets[1].cssRules.length);
+    }
+}
+
 function p1LoadStyles(i, team) {
     var sheet;
     if(i == 1) {sheet = 'dp1'} else {sheet = 'dp2';}
     var colorData = userData.Basketball.Teams[team].Settings;
 
-    document.styleSheets[1].insertRule(`
+    newStyles = `
+    .${sheet} {
+        background-color: ${colorData.BColor};
+        background-image: url(${colorData.BImg});
+        background-size: ${colorData.BSize}%;
+        color: ${colorData.THColor};
+        font-size: ${colorData.THSize}px;
+    }
 
-        .${sheet} {
-            background-color: ${colorData.BColor};
-            background-image: url(${colorData.BImg});
-            color: #FFFFFF;
-        }
-
-    `, document.styleSheets[1].cssRules.length);
-
-    document.styleSheets[1].insertRule(`
-
-        .${sheet} > div.displayPanelContent {
-            backdrop-filter: blur(${colorData.BBlur}px);
-        }
-
-    `, document.styleSheets[1].cssRules.length);
+    .${sheet} input {
+        background-color: ${colorData.IColor}${parseInt(colorData.ITransparency).toString(16)};
+        font-size: ${colorData.TSSize}px;
+        box-shadow: inset 0 0 10px ${colorData.IShadowColor}${colorData.IShadow ? parseInt(colorData.ITransparency).toString(16) : '00'};
+        color: ${colorData.TSColor};
+        margin: 2px;
+    }
     
-    document.styleSheets[1].insertRule(`
-
-        .${sheet} > div.overlay {
-            background: #00000000;
-        }
-
-    `, document.styleSheets[1].cssRules.length);
+    .${sheet} > div.displayPanelContent {
+        backdrop-filter: blur(${colorData.BBlur}px);
+    }
     
-    document.styleSheets[1].insertRule(`
+    .${sheet} > div.overlay {
+        /*backdrop-filter: brightness(1.2) contrast(2);*/
+    }
+    
+    .${sheet} input.Main-titles {
+        color: ${colorData.TTColor};
+        font-size: ${colorData.TTSize}px;
+    }
+    `
 
-        .${sheet} input.Main-titles {
-            color: #fcfcfc;
-        }
-
-    `, document.styleSheets[1].cssRules.length);
+    style(newStyles);
 }
 
 var p2ActiveTeam = '';
@@ -173,8 +183,9 @@ function p2LoadTeam(i) {
     if(!!teamSettings) {
         get('p2BColor').value = teamSettings.BColor;
         get('p2BImg').value = teamSettings.BImg;
+        get('p2BSize').value = teamSettings.BSize;
         get('p2BBlur').value = teamSettings.BBlur;
-        get('p2IShadow').value = teamSettings.IShadow;
+        get('p2IShadow').checked = teamSettings.IShadow;
         get('p2IShadowColor').value = teamSettings.IShadowColor;
         get('p2IColor').value = teamSettings.IColor;
         get('p2ITransparency').value = teamSettings.ITransparency;
@@ -191,6 +202,7 @@ function p2LoadTeam(i) {
 
         teamSettings.BColor = '#000000';
         teamSettings.BImg = '';
+        teamSettings.BSize = '90';
         teamSettings.BBlur = '0';
         teamSettings.IShadow = 'true';
         teamSettings.IShadowColor = '#FFFFFF'
@@ -214,8 +226,9 @@ function p2UpdateColors() {
 
     userData.Basketball.Teams[team].Settings.BColor = get('p2BColor').value;
     userData.Basketball.Teams[team].Settings.BImg = get('p2BImg').value;
+    userData.Basketball.Teams[team].Settings.BSize = get('p2BSize').value;
     userData.Basketball.Teams[team].Settings.BBlur = get('p2BBlur').value;
-    userData.Basketball.Teams[team].Settings.IShadow = get('p2IShadow').value;
+    userData.Basketball.Teams[team].Settings.IShadow = get('p2IShadow').checked;
     userData.Basketball.Teams[team].Settings.IShadowColor = get('p2IShadowColor').value
     userData.Basketball.Teams[team].Settings.IColor = get('p2IColor').value;
     userData.Basketball.Teams[team].Settings.ITransparency = get('p2ITransparency').value;
@@ -227,40 +240,43 @@ function p2UpdateColors() {
     userData.Basketball.Teams[team].Settings.THSize = get('p2THSize').value;
     userData.Basketball.Teams[team].Settings.TSSize = get('p2TSSize').value;
 
+    sheet = 'dp2'
+    var colorData = userData.Basketball.Teams[team].Settings;
 
-    document.styleSheets[1].insertRule(`
+    newStyles = `
+    .${sheet} {
+        background-color: ${colorData.BColor};
+        background-image: url(${colorData.BImg});
+        background-size: ${colorData.BSize}%;
+        color: ${colorData.THColor};
+        font-size: ${colorData.THSize}px;
+    }
 
-        .dp2 {
-            background-color: ${get('p2BColor').value};
-            background-image: url(${get('p2BImg').value});
-            color: #FFFFFF;
-        }
-
-    `, document.styleSheets[1].cssRules.length);
-
-    document.styleSheets[1].insertRule(`
-
-        .dp2 > div.displayPanelContent {
-            backdrop-filter: blur(${get('p2BBlur').value}px);
-        }
-
-    `, document.styleSheets[1].cssRules.length);
+    .${sheet} input {
+        background-color: ${colorData.IColor}${parseInt(colorData.ITransparency).toString(16)};
+        font-size: ${colorData.TSSize}px;
+        box-shadow: inset 0 0 10px ${colorData.IShadowColor}${colorData.IShadow ? parseInt(colorData.ITransparency).toString(16) : '00'};
+        color: ${colorData.TSColor};
+        margin: 2px;
+    }
     
-    document.styleSheets[1].insertRule(`
-
-        .dp2 > div.overlay {
-            background: #00000000;
-        }
-
-    `, document.styleSheets[1].cssRules.length);
+    .${sheet} > div.displayPanelContent {
+        backdrop-filter: blur(${colorData.BBlur}px);
+    }
     
-    document.styleSheets[1].insertRule(`
-
-        .dp2 input.Main-titles {
-            color: #fcfcfc;
-        }
-
-    `, document.styleSheets[1].cssRules.length);
+    .${sheet} > div.overlay {
+        /*backdrop-filter: brightness(1.2) contrast(2);*/
+    }
+    
+    .${sheet} input.Main-titles {
+        color: ${colorData.TTColor};
+        font-size: ${colorData.TTSize}px;
+    }
+    `
+    ////
+    console.log(newStyles);
+    style(newStyles);
+    ////
 
 }
 
@@ -325,6 +341,7 @@ function toggleEditView() {
     showPanel(1);
     inEditView = !inEditView;
     inEditView ? exitfullScreen() : fullScreen();
+    inEditView ? get('expandIcon').style.backgroundImage = 'url(expand-icon.png)' : get('expandIcon').style.backgroundImage = 'url(ex.png)';
     
     get("displayPanelContent").classList.toggle('dispView');
     get("mainPanel").classList.toggle('dispView');
@@ -363,47 +380,44 @@ function updateAttributes(teamList, iev) {
 }
 
 function resetScores(i) {
+    textColor = userData.Basketball.Teams[get('p1teamList' + i).value].Settings.TSColor;
     i == 1 ? teamList = get("Main-List1") : teamList = get("Main-List2");
     for (let i = 0; i < ((teamList.childElementCount - 3) / 4); i++) {
         let p = i * 4 + 3;
         teamList.children[p + 2].value = '0';
         teamList.children[p + 3].value = '0';
-        teamList.children[p + 2].style.color = getVars(1).textColor;
-        teamList.children[p + 3].style.color = getVars(1).textColor;
+        teamList.children[p + 2].style.color = textColor;
+        teamList.children[p + 3].style.color = textColor;
     }
 }
 
 function incVal(i, j) {
     // this i = input
     // bool j = warning styles
+    if(i.parentElement.id == "Main-List1") {x = 1;}
+    if(i.parentElement.id == "Main-List2") {x = 2;}
+    warningColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TWColor;
+    textColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TSColor;
     i.value = parseInt(i.value) + pointerAdd;
     if(j) {
-        if(i.value >= 4) {i.style.color = getVars(1).warningcolor;}
-        if(i.value < 4) {i.style.color = getVars(1).textColor;}        
+        if(i.value >= 4) {i.style.color = warningColor;}
+        if(i.value < 4) {i.style.color = textColor}        
     }
 }
 
 function decVal(i, j) {
+    if(i.parentElement.id == "Main-List1") {x = 1;}
+    if(i.parentElement.id == "Main-List2") {x = 2;}
+    warningColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TWColor;
+    textColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TSColor;
     // this i = input
     // bool j = warning styles
     i.value = parseInt(i.value) - pointerAdd;
     if(j) {
-        if(i.value >= 4) {i.style.color = getVars(1).warningcolor;}
-        if(i.value < 4) {i.style.color = getVars(1).textColor;}        
+        if(i.value >= 4) {i.style.color = warningColor;}
+        if(i.value < 4) {i.style.color = textColor;}        
     }
     return false;
-}
-
-function getVars(i) {
-    if(i == 1) {
-        // ...
-    } else {
-
-    }
-    return {
-        warningcolor: '#ff00bb',
-        textColor: '#000000'
-    }
 }
 
 var p3ActiveTeam = '';
@@ -566,9 +580,12 @@ function loadDataFromCloud() {
           get('p1teamList1').innerHTML = htmlData;
           get('p1teamList2').innerHTML = htmlData;
           get('p2SelectList').innerHTML = htmlData;
+
+          hideWarning();
         } catch {
           console.log('Teams Path not Found');
           showPanel(3);
+          showWarning("No teams found, start by creating some", "Okay")
         }
     });
 }
