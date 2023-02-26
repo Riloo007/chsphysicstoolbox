@@ -547,6 +547,11 @@ button:hover {
 
 .dp2 input.Main-titles {
     color: #fcfcfc;
+    font-size: 86px;
+
+    /* Constants */
+    height: auto;
+    background-color: #00000000;
 }
 
 

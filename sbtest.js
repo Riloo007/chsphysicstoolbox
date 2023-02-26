@@ -324,7 +324,7 @@ function p1AddPlayers(i) {
 function toggleEditView() {
     showPanel(1);
     inEditView = !inEditView;
-    inEditView ? fullScreen() : exitfullScreen();
+    inEditView ? exitfullScreen() : fullScreen();
     
     get("displayPanelContent").classList.toggle('dispView');
     get("mainPanel").classList.toggle('dispView');
