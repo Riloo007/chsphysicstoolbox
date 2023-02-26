@@ -40,6 +40,21 @@ function hideUserProfile() {
     get('body').style.overflow = "";
 }
 
+function fullScreen() {
+    var elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+      elem.msRequestFullscreen();
+    }
+}
+
+function exitfullScreen() {
+    document.exitFullscreen();
+}
+
 function showPanel(i) {
     _hidePanels();
     if(i == 1) {
@@ -309,7 +324,7 @@ function p1AddPlayers(i) {
 function toggleEditView() {
     showPanel(1);
     inEditView = !inEditView;
-
+    inEditView ? fullScreen() : exitfullScreen();
     
     get("displayPanelContent").classList.toggle('dispView');
     get("mainPanel").classList.toggle('dispView');

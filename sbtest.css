@@ -18,6 +18,15 @@ h3 {
     text-align: center;
 }
 
+input {
+    text-align: center;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 body {
     display: grid;
     grid-template-areas: "side main";
@@ -506,6 +515,18 @@ button:hover {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.dp2 input {
+    background-color: #252734;
+    font-size: 10px;
+    
+
+    /* Constants */
+    border-radius: 3px;
+    border: 0px;
+    cursor: pointer;
+    height: 26px;
 }
 
 .dp2 > div.displayPanelContent {
