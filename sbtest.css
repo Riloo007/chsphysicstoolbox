@@ -154,6 +154,22 @@ select {
     margin-left: 15px;
 }
 
+#p3NoTeam {
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    width: calc(100% - 30px);
+    height: calc(100% + 10px);
+    background-color: #000000;
+    background-color: var(--panel-color);
+    font-family: 'Nunito', sans-serif;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    text-align: center;
+    font-size: 30px;
+    font-style: italic;
+}
+
 .p2def {height: var(--panel-width);}
 
 #panel3 {
@@ -174,7 +190,7 @@ select {
     height: calc(100% - (2 * var(--panel-width)));
 }
 .p3_settingsList li {
-    width: 100%;
+    width: calc(100% - 10px);
     height: 30px;
     background: #d1d1d1;
     padding: 5px;
@@ -189,6 +205,13 @@ select {
     /*outline: solid 2px rgb(71, 71, 71);*/
     box-shadow: 0px 0px 5px black;
     background: #e6e6e6;
+}
+.p3_settingsList li.selected {
+    outline: solid rgb(94, 173, 234) 2px;
+    background: #bfd4de;
+}
+.p3_settingsList li.selected:hover {
+    background: #cadde5;
 }
 .p3_settingsList button {
     width: 100%;
@@ -210,9 +233,11 @@ select {
     cursor: pointer;
     border-radius: inherit;
 }
-.p3_settingsList div.p3overlay:hover {
-    /*background: linear-gradient(90deg, rgb(108, 108, 108) 0%, rgba(0,212,255,0) 100%);*/
-    
+#p3TeamList > li > input.c-pna {
+    width: 77%;
+}
+#p3TeamList .trashIcon {
+    float: inherit;
 }
 .sBtn {
     height: var(--panel-width);
@@ -239,13 +264,16 @@ select {
     width: calc(100%);
     height: calc(100%);
     background-color: #bbbbbb;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
-
 #displayPanelContent {
-    overflow: auto;
     position: inherit;
     top: auto;
     left: auto;
+}
+#displayPanelContent::-webkit-scrollbar, .displayPanelContent::-webkit-scrollbar {
+    display: none;
 }
 #displayPanelContent.dispView {
     overflow: hidden;
