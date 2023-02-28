@@ -445,7 +445,8 @@ function AddTeam(teamName, loadOnly) {
     
     if(!teamName){teamName = 'New Team';}
     var newTeam = document.createElement('li');
-    newTeam.innerHTML = `<input value="${teamName + x}" onchange="teamNameChanged(this);"><div data-value="${teamName + x}" onclick="p3LoadTeam(this.dataset.value);" class="loadIcon"></div><div class="trashIcon" onclick="RemoveTeam(this);"></div>`;
+    // p3LoadTeam(this.dataset.value);
+    newTeam.innerHTML = `<input value="${teamName + x}" onchange="teamNameChanged(this);"><div class="trashIcon" onclick="RemoveTeam(this);"></div><div class="p3overlay" data-value="${teamName + x}" onclick="p3LoadTeam(this.dataset.value);"></div>`;
     get("p3_settingsList").append(newTeam);
 }
 function teamNameChanged(i) {
