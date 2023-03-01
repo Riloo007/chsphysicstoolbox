@@ -154,7 +154,7 @@ select {
     margin-left: 15px;
 }
 
-#p3NoTeam {
+#p3NoTeam, #p2NoTeam, #p1aNoTeam, #p1bNoTeam {
     position: absolute;
     left: -5px;
     top: -5px;

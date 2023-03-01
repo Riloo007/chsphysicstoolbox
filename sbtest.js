@@ -52,7 +52,9 @@ function fullScreen() {
 }
 
 function exitfullScreen() {
-    document.exitFullscreen();
+    if(document.fullscreenElement) {
+        document.exitFullscreen();
+    }
 }
 
 function p3ShowNoTeam() {
@@ -64,11 +66,18 @@ function p3HideNoTeam() {
 function showPanel(i) {
     _hidePanels();
     if(i == 1) {
+        // If a team is actually selected
         if(get('p1teamList1').value != get('p1teamList1').children[0].innerHTML) {
             p1LoadStyles(0, get('p1teamList1').value);
+            get('p1aNoTeam').style.display = 'none';
+        } else {
+            get('p1aNoTeam').style.display = 'block';
         }
         if(get('p1teamList2').value != get('p1teamList2').children[0].innerHTML) {
             p1LoadStyles(1, get('p1teamList2').value);
+            get('p1aNoTeam').style.display = 'none';
+        } else {
+            get('p1bNoTeam').style.display = 'block';
         }
         get("panel1").style.display = "";
     } else if(i == 2) {
@@ -174,6 +183,12 @@ function p1LoadStyles(i, team) {
 
 var ActiveTeam = '';
 function p2LoadTeam(i) {
+    if(i == "") {
+        get('p2NoTeam').style.display = 'block';
+        return null;
+    } else {
+        get('p2NoTeam').style.display = 'none';
+    }
     var plist = userData.Basketball.Teams[i].Players;
     get('p2TeamHeader').value = userData.Basketball.Teams[i].DName;
     get('p2Team-List').innerHTML = `<p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>`;
@@ -220,7 +235,7 @@ function p2LoadTeam(i) {
 
         p2LoadTeam(get('p2SelectList').value);
     }
-    p2UpdateColors();
+    i != "" ? p2UpdateColors() : null;
 }
 
 function p2UpdateColors(team) {
@@ -341,15 +356,34 @@ function p1AddPlayers(i) {
     }
 }
 
+/*document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.key == "Escape" && !inEditView) {
+        toggleEditView();
+    }
+};*/
+
+addEventListener("fullscreenchange", (event) => {
+    if(!document.fullscreenElement && !inEditView) {
+        toggleEditView();
+    }
+});
+
 function toggleEditView() {
     showPanel(1);
+    toggleShowSidePanel(!inEditView);
     inEditView = !inEditView;
-    inEditView ? exitfullScreen() : fullScreen();
-    inEditView ? get('expandIcon').style.backgroundImage = 'url(expand-icon.png)' : get('expandIcon').style.backgroundImage = 'url(ex.png)';
-    
-    get("displayPanelContent").classList.toggle('dispView');
-    get("mainPanel").classList.toggle('dispView');
-    toggleShowSidePanel(inEditView);
+    if(inEditView) {
+        get('expandIcon').style.backgroundImage = 'url(expand-icon.png)';
+        get("displayPanelContent").classList.remove('dispView');
+        get("mainPanel").classList.remove('dispView');
+        exitfullScreen();
+    } else {
+        get('expandIcon').style.backgroundImage = 'url(ex.png)'
+        get("displayPanelContent").classList.add('dispView');
+        get("mainPanel").classList.add('dispView');
+        fullScreen();
+    }
 
     //get("Main-team1Header").readOnly = !inEditView;
     //get("Main-team2Header").readOnly = !inEditView;
