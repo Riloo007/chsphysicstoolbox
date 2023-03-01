@@ -51,14 +51,11 @@
       <div id="panel1">
         <!-- Game Editor -->
         <div id="menuPanel">
-          <select id="p1teamList1" class="p1_select" onchange="p1LoadTeam(1, this.value)">
-            <option>T1</option>
-            <option>T2</option>
-            <option>T3</option>
-            <option>T4</option>
+          <select id="p1teamList1" class="p1_select" onchange="p1LoadTeam(1, this.value); this.classList.add('selected');">
+            <option>please reload the page...</option>
           </select>
 
-          <select id="p1teamList2" class="p1_select" onchange="p1LoadTeam(2, this.value)">
+          <select id="p1teamList2" class="p1_select" onchange="p1LoadTeam(2, this.value); this.classList.add('selected');">
             <option>T1</option>
             <option>T2</option>
             <option>T3</option>
@@ -113,7 +110,7 @@
         <!-- Style Editor -->
         <button class="bkBtn" onclick="showPanel(1);">← Back</button>
         <div class="topMenu">
-          <select class="p2def" id="p2SelectList" onchange="p2LoadTeam(this.value)">
+          <select class="p2def" id="p2SelectList" onchange="p2LoadTeam(this.value); this.classList.add('selected');">
           </select>
           <div class="gearIcon" onclick="showPanel(3);"></div>
         </div>

@@ -81,6 +81,10 @@ function showPanel(i) {
         }
         get("panel1").style.display = "";
     } else if(i == 2) {
+        if(ActiveTeam == "" && get('p1teamList1').value != get('p1teamList1').children[0].innerHTML) {
+            ActiveTeam = get('p1teamList1').value;
+            get('p2SelectList').value = ActiveTeam;
+        }
         p2LoadTeam(ActiveTeam);
         get("panel2").style.display = "";
     } else {
@@ -128,8 +132,10 @@ function p1LoadTeam(i, team) {
     p1AddPlayers(i);
     if(i == 1) {
         get('Main-team1Header').value = teamData.DName;
+        get('p1aNoTeam').style.display = 'none';
     } else {
         get('Main-team2Header').value = teamData.DName;
+        get('p1bNoTeam').style.display = 'none';
     }
     
     p1LoadStyles(i-1, team);
@@ -183,6 +189,14 @@ function p1LoadStyles(i, team) {
 
 var ActiveTeam = '';
 function p2LoadTeam(i) {
+    ActiveTeam = i;
+    lst = get('p3_settingsList').getElementsByTagName('div')
+    for(s = 0; s < lst.length; s++) {
+        if(lst[s].dataset.value == ActiveTeam) {
+            p3LoadTeam(lst[s]);
+            break;
+        }
+    }
     if(i == "") {
         get('p2NoTeam').style.display = 'block';
         return null;
@@ -235,7 +249,7 @@ function p2LoadTeam(i) {
 
         p2LoadTeam(get('p2SelectList').value);
     }
-    i != "" ? p2UpdateColors() : null;
+    i != "" ? p2UpdateColors(i) : null;
 }
 
 function p2UpdateColors(team) {
@@ -478,6 +492,7 @@ function AddTeam(teamName, loadOnly) {
     
             }
         }
+        updateLists();
     } else {x = ''}
     //ActiveTeam = teamName + x;
     
@@ -503,8 +518,11 @@ function RemoveTeam(i, force) {
     if(force) {
         //get('p3message').innerHTML = "Removing " + i.parentElement.children[1].dataset.value + "...";
         p3ShowNoTeam();
-        delete userData.Basketball.Teams[i.parentElement.children[1].dataset.value];
+        console.log(i.parentElement.children[2].dataset.value);
+        delete userData.Basketball.Teams[i.parentElement.children[2].dataset.value];
         i.parentElement.remove();
+        console.log(userData.Basketball.Teams);
+        updateLists();
     } else {
         thisRef = i;
         showWarning('Are you sure you want to remove the team "' + i.parentElement.children[0].value + '"?', 'Yes, delete', 'No, cancel', 'RemoveTeam(thisRef, true);', 'null');
@@ -545,6 +563,7 @@ function p3LoadTeam(j) {
     p2UpdateColors(i);
 
     ActiveTeam = i;
+    get('p2SelectList').value = i;
     console.log(userData.Basketball.Teams);
     get('p3TeamHeader').value = userData.Basketball.Teams[i].DName;
     get("p3TeamList").innerHTML = '';
@@ -625,25 +644,39 @@ function loadDataFromCloud() {
         console.log(userData);
         get('username').innerHTML = userData.email;
         try {
-          var teams = userData.Basketball.Teams;
-          var htmlData = '<option disabled selected>Choose a team...</option>';
-          for(let i in teams) {
-              htmlData += "<option>" + i + "</option>"
-              AddTeam(i, true);
-              console.log(i);
+            var teams = userData.Basketball.Teams;
+            var htmlData = '<option disabled selected>Choose a team...</option>';
+            for(let i in teams) {
+                htmlData += "<option>" + i + "</option>"
+                AddTeam(i, true);
+                console.log(i);
+            }
+            //ActiveTeam = Object.keys(userData.Basketball.Teams)[0];
+            get('p1teamList1').innerHTML = htmlData;
+            get('p1teamList2').innerHTML = htmlData;
+            get('p2SelectList').innerHTML = htmlData;
+    
+            hideWarning();
+          } catch {
+            console.log('Teams Path not Found');
+            showPanel(3);
+            showWarning("No teams found, start by creating some", "Okay")
           }
-          //ActiveTeam = Object.keys(userData.Basketball.Teams)[0];
-          get('p1teamList1').innerHTML = htmlData;
-          get('p1teamList2').innerHTML = htmlData;
-          get('p2SelectList').innerHTML = htmlData;
-
-          hideWarning();
-        } catch {
-          console.log('Teams Path not Found');
-          showPanel(3);
-          showWarning("No teams found, start by creating some", "Okay")
-        }
     });
+}
+function updateLists() {
+    var teams = userData.Basketball.Teams;
+    var htmlData = '<option disabled selected>Choose a team...</option>';
+    for(let i in teams) {
+        htmlData += "<option>" + i + "</option>"
+        console.log(i);
+    }
+    //ActiveTeam = Object.keys(userData.Basketball.Teams)[0];
+    get('p1teamList1').innerHTML = htmlData;
+    get('p1teamList2').innerHTML = htmlData;
+    get('p2SelectList').innerHTML = htmlData;
+
+    hideWarning();
 }
 
 function saveDataToCloud() {

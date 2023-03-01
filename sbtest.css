@@ -129,6 +129,14 @@ select {
 #panel2 div.topMenu select {
     width: calc(100% - var(--panel-width));
 }
+.topMenu select.selected, #menuPanel select.selected {
+    background: #bfd4de;
+    border: solid rgb(94, 173, 234) 2px;
+}
+.topMenu select.selected:hover, #menuPanel select.selected:hover {
+    background: #cadde5;
+}
+
 #panel2 div.displayPanel {
     grid-area: dispPanel;
     height: calc(100vh - var(--panel-width) - 30px);
@@ -467,6 +475,8 @@ button:hover {
 }
 #Main td {
     vertical-align: baseline;
+}
+#Main td > div.displayPanelContent {
     padding: 10px;
 }
 .displayPanelContent *, #displayPanelContent * {
