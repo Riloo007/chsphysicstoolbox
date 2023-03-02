@@ -190,10 +190,10 @@ function p1LoadStyles(i, team) {
 var ActiveTeam = '';
 function p2LoadTeam(i) {
     ActiveTeam = i;
-    lst = get('p3_settingsList').getElementsByTagName('div')
+    lst = get('p3_settingsList').getElementsByTagName('li')
     for(s = 0; s < lst.length; s++) {
         if(lst[s].dataset.value == ActiveTeam) {
-            p3LoadTeam(lst[s]);
+            p3LoadTeam(lst[s].children[2]);
             break;
         }
     }
@@ -484,27 +484,53 @@ function AddTeam(teamName, loadOnly) {
             x = '';
         }
         userData.Basketball.Teams[teamName + x] = {
-            DName: teamName,
-            Players: {
-    
-            },
+            DName: "New Team",
+            Players: {},
             Settings: {
-    
+                BBlur: "0",
+                BColor: "#000000",
+                BImg: '',
+                IShadow: 'true',
+                IShadowColor: '#FFFFFF',
+                IColor: '#555555',
+                ITransparency: '128',
+                TTColor: '#FFFFFF',
+                THColor: '#FFFFFF',
+                TSColor: '#FFFFFF',
+                TWColor: '#FF88aa',
+                TTSize: '40',
+                THSize: '25',
+                TSSize: '35'
             }
         }
         updateLists();
-    } else {x = ''}
+    } else {
+        x = ''
+    }
     //ActiveTeam = teamName + x;
     
     if(!teamName){teamName = 'New Team';}
     var newTeam = document.createElement('li');
-    newTeam.innerHTML = `<input value="${teamName + x}" onchange="teamNameChanged(this);"><div class="trashIcon" onclick="RemoveTeam(this);"></div><div class="p3overlay" data-value="${teamName + x}" onclick="p3LoadTeam(this);"></div>`;
+    console.log('!! [' + teamName + x + ']');
+    teamNameCorrected = teamName + x;
+    newTeam.dataset.value = teamNameCorrected;
+    newTeam.innerHTML = `<input value="${teamName + x}" onchange="teamNameChanged(this);"><div class="trashIcon" onclick="RemoveTeam(this);"></div><div class="p3overlay" onclick="p3LoadTeam(this);"></div>`;
     get("p3_settingsList").append(newTeam);
 }
 function teamNameChanged(i) {
-    userData.Basketball.Teams[i.value] = userData.Basketball.Teams[i.parentElement.children[1].dataset.value];
-    delete userData.Basketball.Teams[i.parentElement.children[1].dataset.value];
-    i.parentElement.children[1].dataset.value = i.value;
+    const oldName = i.parentElement.dataset.value;
+    const newName = i.value;
+    console.log("CHANGING OLD NAME: [" + oldName + "] TO NEW NAME: [" + newName + "]")
+    // Copy data from old place to new place
+    userData.Basketball.Teams[newName] = userData.Basketball.Teams[oldName];
+    // Remove old place
+    delete userData.Basketball.Teams[oldName];
+    // Update the old value
+    i.parentElement.dataset.value = newName;
+    // Change the Active Team
+    ActiveTeam = newName;
+    updateLists();
+    get('p2SelectList').value = newName;
 }
 function teamTitleChanged() {
     console.log(get('p3TeamHeader').value);
@@ -518,8 +544,8 @@ function RemoveTeam(i, force) {
     if(force) {
         //get('p3message').innerHTML = "Removing " + i.parentElement.children[1].dataset.value + "...";
         p3ShowNoTeam();
-        console.log(i.parentElement.children[2].dataset.value);
-        delete userData.Basketball.Teams[i.parentElement.children[2].dataset.value];
+        console.log(i.parentElement.dataset.value);
+        delete userData.Basketball.Teams[i.parentElement.dataset.value];
         i.parentElement.remove();
         console.log(userData.Basketball.Teams);
         updateLists();
@@ -547,7 +573,7 @@ function hideWarning() {
 
 function p3LoadTeam(j) {
     p3HideNoTeam();
-    i = j.dataset.value;
+    i = j.parentElement.dataset.value;
     // Enable clicking on all teams in list
     for(x = 0; x < get('p3_settingsList').children.length; x++) {
         get('p3_settingsList').children[x].children[2].style.pointerEvents = 'all';

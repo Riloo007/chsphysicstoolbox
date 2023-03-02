@@ -81,10 +81,12 @@ table {
     height: var(--panel-width);
 }
 .p1_select {
-    width: calc((100vw - (2 * var(--panel-width)) - 40px) / 2);
-    /*width: 45%;*/
+    width: calc(50% - 6px);
     height: 100%;
     display: inline-block;
+}
+#menuPanel:first-child {
+    margin-left: 3px;
 }
 select {
     height: 100%;
@@ -474,7 +476,7 @@ button:hover {
     text-align: center;
 }
 #Main td {
-    vertical-align: baseline;
+    vertical-align: top;
 }
 #Main td > div.displayPanelContent {
     padding: 10px;
@@ -573,10 +575,6 @@ button:hover {
     position: relative;
 }
 
-.p2Display {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
 
 /***
     
@@ -631,7 +629,7 @@ button:hover {
     top: 0; left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; 
+    pointer-events: none;
 }
 
 .dp2 input.Main-titles, .dp1 input.Main-titles {
@@ -642,4 +640,18 @@ button:hover {
     height: auto;
     background-color: #00000000;
     box-shadow: none;
+}
+
+td.dp1, td.dp2{
+    width: 50%;
+}
+ 
+
+
+.p2Display {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.p2Display div.overlay {
+    pointer-events: all;
 }
