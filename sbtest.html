@@ -100,10 +100,10 @@
 
               <!--  END MAIN DISPLAY  -->  
   <div id="pointers">
-    <button id="pointer0">-1</button>
-    <button id="pointer1" style="outline: solid white 1px;">+1</button>
-    <button id="pointer2">+2</button>
-    <button id="pointer3">+3</button>
+    <button id="pointer0" onclick="cpAdd(this, -1);">-1</button>
+    <button id="pointer1" onclick="cpAdd(this, 1);">+1</button>
+    <button id="pointer2" onclick="cpAdd(this, 2);">+2</button>
+    <button id="pointer3" onclick="cpAdd(this, 3);">+3</button>
   </div>
             </div>
         </div>
@@ -164,7 +164,7 @@
       <div id="panel3">
         <!-- Team Editor -->
         <button class="bkBtn" onclick="showPanel(1);">← Back</button>
-        <div class="displayPanel dp2">
+        <div class="displayPanel dp2 p3Display">
           <div class="displayPanelContent">
             <!--  START TEAM DISPLAY  -->
 

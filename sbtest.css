@@ -169,7 +169,7 @@ select {
     left: -5px;
     top: -5px;
     width: calc(100% - 30px);
-    height: calc(100% + 10px);
+    height: calc(100% - 30px);
     background-color: #000000;
     background-color: var(--panel-color);
     font-family: 'Nunito', sans-serif;
@@ -281,15 +281,18 @@ select {
     border: dashed 2px #ffffff;
     padding: 3px;
 }
-.displayPanelContent, #displayPanelContent {
-    /*padding: 10px;*/
-    width: calc(100% - 20px);
-    height: calc(100%);
-    background-color: #bbbbbb;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
 #displayPanelContent {
+    /*padding: 10px;
+    width: calc(100% - 20px);*/
+    background-color: #bbbbbb;
+    overflow: hidden;
+}
+.displayPanelContent {
+    height: 100%;
+}
+
+.displayPanelContent {
+    height: calc(100% - 20px);
     position: inherit;
     top: auto;
     left: auto;
@@ -298,12 +301,14 @@ select {
 #displayPanelContent::-webkit-scrollbar, .displayPanelContent::-webkit-scrollbar {
     display: none;
 }
-#displayPanelContent.dispView {
+#displayPanelContent.dispView, .displayPanelContent.dispView {
     overflow: hidden;
     position: fixed;
     top: 0;
     left: 0;
     display: block;
+    width: 100vw;
+    height: calc(100%);
 }
 #displayPanelContent *::selection {background-color: #87dbf5;}
 #displayPanelContent.dispView *::selection {background-color: #00000000;}
@@ -512,6 +517,7 @@ button:hover {
 
 
 .Main-lists {
+  overflow: auto;
   width: calc(50vw - 75px);
   list-style-type: none;
   padding: 0;
@@ -522,6 +528,9 @@ button:hover {
   "pl pl po fo"
   "pnumber pname ppoints pfouls";
   grid-template-columns: 11% 65% 12% 12%;
+}
+.Main-lists::-webkit-scrollbar {
+    display: none;
 }
 .Main-lists p.h-pl {grid-area: pl;}
 .Main-lists p.h-po {grid-area: po;}
@@ -662,7 +671,7 @@ td.dp1, td.dp2{
  
 
 
-.p2Display {
+.p2Display, .p3display {
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -721,15 +730,20 @@ TODO:
   left: 1;
   right: 1;
   margin: auto;
+  margin-bottom: -45px;
   width: max-content;
+  transition-duration: 0.5s;
 }
 #pointers > button {
   border-radius: 3px;
   border: 0px;
-  background-color: rgb(25, 27, 34);
+  background-color: rgb(141, 141, 141);
   cursor: pointer;
   font-size: large;
   margin: 3px;
   padding: 5px;
-  height: auto;
+  height: 30px;
+}
+#pointers.shown {
+    margin-bottom: 0px;
 }

@@ -113,6 +113,12 @@ document.addEventListener('mousemove', function(event) {
     } else if (!inEditView) {
         toggleShowSidePanel(false);
     }
+
+    if(event.clientY >= (window.innerHeight - 50) && !inEditView) {
+        get('pointers').classList.add('shown');
+    } else if (!inEditView) {
+        get('pointers').classList.remove('shown');
+    }
 });
 
 
@@ -352,6 +358,16 @@ document.addEventListener("DOMContentLoaded", function() {
 //_______________________________________________
 
 let pointerAdd = 1;
+function cpAdd(i, j) {
+    btns = get('pointers').children;
+    Array.from(btns).forEach(btn => {
+        btn.style.outline = 'none';
+        btn.style.border = 'none';
+    });
+    i.style.outline = 'solid white 1px';
+    i.style.border = 'black solid 1px';
+    pointerAdd = j;
+}
 
 function p1AddPlayers(i) {
     if(i == 1) {
@@ -359,13 +375,13 @@ function p1AddPlayers(i) {
         get('Main-List1').innerHTML = `<p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>`;
         for(let x in plist) {
             console.log(x);
-            get('Main-List1').innerHTML += `<input class="c-pnu" readonly value='${plist[x].pnumb}'><input readonly class="c-pna" value='${plist[x].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" type='number' value='0'>`
+            get('Main-List1').innerHTML += `<input class="c-pnu" readonly value='${plist[x].pnumb}'><input readonly class="c-pna" value='${plist[x].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" onchange="incVal(this, true, 0)" type='number' value='0'>`
         }
     } else {
         var plist = userData.Basketball.Teams[get('p1teamList2').value].Players;
         get('Main-List2').innerHTML = `<p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>`;
         for(let x in plist) {
-            get('Main-List2').innerHTML += `<input class="c-pnu" readonly value='${plist[x].pnumb}'><input readonly class="c-pna" value='${plist[x].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" type='number' value='0'>`
+            get('Main-List2').innerHTML += `<input class="c-pnu" readonly value='${plist[x].pnumb}'><input readonly class="c-pna" value='${plist[x].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" onchange="incVal(this, true, 0)" type='number' value='0'>`
         }
     }
 }
@@ -443,14 +459,15 @@ function resetScores(i) {
     }
 }
 
-function incVal(i, j) {
+function incVal(i, j, k) {
     // this i = input
     // bool j = warning styles
+    //  int k = optional Value
     if(i.parentElement.id == "Main-List1") {x = 1;}
     if(i.parentElement.id == "Main-List2") {x = 2;}
     warningColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TWColor;
     textColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TSColor;
-    i.value = parseInt(i.value) + pointerAdd;
+    k != undefined ? i.value = parseInt(i.value) + k : i.value = parseInt(i.value) + pointerAdd;
     if(j) {
         if(i.value >= 4) {i.style.color = warningColor;}
         if(i.value < 4) {i.style.color = textColor}        
