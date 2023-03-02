@@ -713,3 +713,23 @@ TODO:
 10. New Icons
 
 */
+
+#pointers {
+  display: block;
+  position: fixed;
+  bottom: 5px;
+  left: 1;
+  right: 1;
+  margin: auto;
+  width: max-content;
+}
+#pointers > button {
+  border-radius: 3px;
+  border: 0px;
+  background-color: rgb(25, 27, 34);
+  cursor: pointer;
+  font-size: large;
+  margin: 3px;
+  padding: 5px;
+  height: auto;
+}
