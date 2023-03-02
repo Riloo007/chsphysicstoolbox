@@ -250,8 +250,20 @@ select {
     float: inherit;
 }
 .sBtn {
-    height: var(--panel-width);
-    width: 100%;
+    position: fixed;
+    height: calc(1.5 * var(--panel-width));
+    width: calc(50vw - var(--panel-width) - 22px);
+    bottom: var(--panel-width);
+    background: #bfbfbf;
+    border-radius: 10px;
+    font-size: calc(0.8 * var(--panel-width));
+    vertical-align: middle;
+    text-align: center;
+}
+.sBtn button {
+    width: auto;
+    height: 80%;
+    display: inline-block;
 }
 #panel3 button.bkBtn {
     grid-area: back;
@@ -271,7 +283,7 @@ select {
 }
 .displayPanelContent, #displayPanelContent {
     /*padding: 10px;*/
-    width: calc(100%);
+    width: calc(100% - 20px);
     height: calc(100%);
     background-color: #bbbbbb;
     overflow-y: auto;
@@ -281,6 +293,7 @@ select {
     position: inherit;
     top: auto;
     left: auto;
+    display: contents;
 }
 #displayPanelContent::-webkit-scrollbar, .displayPanelContent::-webkit-scrollbar {
     display: none;
@@ -290,6 +303,7 @@ select {
     position: fixed;
     top: 0;
     left: 0;
+    display: block;
 }
 #displayPanelContent *::selection {background-color: #87dbf5;}
 #displayPanelContent.dispView *::selection {background-color: #00000000;}
@@ -501,7 +515,7 @@ button:hover {
   width: calc(50vw - 75px);
   list-style-type: none;
   padding: 0;
-  margin: 5px;
+  margin: auto;
   min-height: max-content;
   display: grid;
   grid-template-areas: 
@@ -606,11 +620,11 @@ button:hover {
     border-radius: 3px;
     border: 0px;
     height: max-content;
-}   .dp2 input:read-only {
+}   .dp2 input:read-only, .dp1 input:read-only {
     cursor: pointer;
     outline: none;
 }
-.dp2 p {
+.dp2 p, .dp2 p {
     text-align: center;
 }
 
