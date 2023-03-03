@@ -20,6 +20,8 @@
       </div>
     </div>
 
+    <div class="sBtn" id="globSBtn"><p>You have unsaved changes!</p><button onclick="saveDataToCloud();">Save</button></div>
+
     <div id="sidePanel" class="sidePanel">
       <span>
         <div onclick="showUserProfile()" class="pfp"></div>
@@ -112,11 +114,11 @@
         <!-- Style Editor -->
         <button class="bkBtn" onclick="showPanel(1);">← Back</button>
         <div class="topMenu">
-          <select class="p2def" id="p2SelectList" onchange="p2LoadTeam(this.value); this.classList.add('selected');">
+          <select class="p2def" id="p2SelectList" onchange="p2LoadTeam(this.value, this); this.classList.add('selected');">
           </select>
           <div class="gearIcon" onclick="showPanel(3);"></div>
         </div>
-        <div class="displayPanel dp2 p2Display">
+        <div class="displayPanel dp2 p2Display" id="p2Display">
             <div class="displayPanelContent">
               <!--  START COLORS DISPLAY  -->
 
@@ -133,7 +135,7 @@
             </div>
         </div>
         <div class="p2_settingsPanel">
-          <div class="p2_settingsMenu">
+          <div class="p2_settingsMenu" id="p2SettingsMenu">
             <div class="p2_settingsList" id="p2_settingsList">
                <h3>Backdrop</h3>
                <p>Color: <input id="p2BColor" type="color"></p>
@@ -157,7 +159,6 @@
                <p>Scores Size: <input id="p2TSSize" type="range" min="0" max="60"></p>
 
             </div>
-            <div class="sBtn" onclick="saveDataToCloud();">You have unsaved changes!<button>Save</button></div>
           </div>
         </div>
       </div>

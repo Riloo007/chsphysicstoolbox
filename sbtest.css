@@ -250,20 +250,32 @@ select {
     float: inherit;
 }
 .sBtn {
+    width: calc(100% - var(--panel-width) - 65px);
+    margin-left: calc(var(--panel-width) + 25px);
+    bottom: 10;
+    border-radius: 3px;
+    box-shadow: 0px -2px 3px #dcdbdb;
+    background: var(--panel-color);
+    z-index: 80;
     position: fixed;
-    height: calc(1.5 * var(--panel-width));
-    width: calc(50vw - var(--panel-width) - 22px);
-    bottom: var(--panel-width);
-    background: #bfbfbf;
-    border-radius: 10px;
-    font-size: calc(0.8 * var(--panel-width));
-    vertical-align: middle;
-    text-align: center;
+    height: 30px;
+    padding: 10px;
+    font-size: 25px;
+    display: none;
+}
+.sBtn p {
+    width: calc(100% - 100px);
+    display: inline-block;
 }
 .sBtn button {
-    width: auto;
-    height: 80%;
+    width: 100px;
+    height: 100%;
+    border-radius: 5px;
     display: inline-block;
+    transition-duration: .3s;
+}
+.sBtn button:hover {
+    transform: scale(1.1);
 }
 #panel3 button.bkBtn {
     grid-area: back;

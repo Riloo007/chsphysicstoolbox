@@ -21,6 +21,14 @@ function dropup(i) {
     i.style.overflow = "hidden";
 }
 
+function saveReminder(i) {
+    if(i) {
+        get('globSBtn').style.display = 'inline-flex';
+    } else {
+        get('globSBtn').style.display = 'none';
+    }
+}
+
 function showUserProfile() {
     if(!inEditView) {toggleEditView();}
     get('sidePanel').children[0].classList.remove('pf-Shown');
@@ -88,7 +96,7 @@ function showPanel(i) {
         p2LoadTeam(ActiveTeam);
         get("panel2").style.display = "";
     } else {
-        ActiveTeam != '' ? p2UpdateColors(ActiveTeam) : p3ShowNoTeam();
+        ActiveTeam != '' ? p2UpdateColors(ActiveTeam, true) : p3ShowNoTeam();
         get("panel3").style.display = "";
     }
 }
@@ -201,7 +209,15 @@ function p1LoadStyles(i, team) {
 }
 
 var ActiveTeam = '';
-function p2LoadTeam(i) {
+function p2LoadTeam(i, j) {
+    if(!j) {
+        j = {
+            value: '',
+            children: {
+                '0': ''
+            }
+        }
+    }
     ActiveTeam = i;
     lst = get('p3_settingsList').getElementsByTagName('li')
     for(s = 0; s < lst.length; s++) {
@@ -210,11 +226,29 @@ function p2LoadTeam(i) {
             break;
         }
     }
-    if(i == "") {
+    // ??
+    if(i == "" || j.value == j.children[0].innerHTML) {
+        console.log(j.children[0].innerHTML);
         get('p2NoTeam').style.display = 'block';
+        //get('p2Display').style.width = 'calc(100vw - var(--panel-width) - 45px)';
+
+        get('panel2').style.gridTemplateAreas = `
+            "back topmenu"
+            "dispPanel dispPanel"
+            "dispPanel dispPanel"
+        `;
+        //get('p2SelectList').style.display = 'none';
         return null;
     } else {
         get('p2NoTeam').style.display = 'none';
+
+        get('panel2').style.gridTemplateAreas = `
+            "back topmenu"
+            "dispPanel menu"
+            "dispPanel saveButton"
+        `;
+        //get('p2Display').style.width = '';
+        //get('p2SelectList').style.display = '';
     }
     var plist = userData.Basketball.Teams[i].Players;
     get('p2TeamHeader').value = userData.Basketball.Teams[i].DName;
@@ -260,12 +294,13 @@ function p2LoadTeam(i) {
         teamSettings.THSize = '25';
         teamSettings.TSSize = '35';
 
-        p2LoadTeam(get('p2SelectList').value);
+        p2LoadTeam(get('p2SelectList').value, get('p2SelectList'));
     }
-    i != "" ? p2UpdateColors(i) : null;
+    i != "" ? p2UpdateColors(i, true) : null;
 }
 
-function p2UpdateColors(team) {
+function p2UpdateColors(team, sr) {
+    sr != undefined ? saveReminder(true) : null;
     if(!team) {
         team = get('p2SelectList').value;
     
@@ -575,8 +610,10 @@ function RemoveTeam(i, force) {
     if(force) {
         //get('p3message').innerHTML = "Removing " + i.parentElement.children[1].dataset.value + "...";
         p3ShowNoTeam();
-        console.log(i.parentElement.dataset.value);
-        delete userData.Basketball.Teams[i.parentElement.dataset.value];
+        tname = i.parentElement.dataset.value;
+        if(tname == ActiveTeam) {ActiveTeam = '';}
+        console.log(tname);
+        delete userData.Basketball.Teams[tname];
         i.parentElement.remove();
         console.log(userData.Basketball.Teams);
         updateLists();
@@ -617,7 +654,7 @@ function p3LoadTeam(j) {
     j.parentElement.classList.add("selected");
 
     // Update the styles
-    p2UpdateColors(i);
+    p2UpdateColors(i, true);
 
     ActiveTeam = i;
     get('p2SelectList').value = i;
@@ -641,11 +678,14 @@ function AddPlayer(i, j, loadOnly) {
     pnumb = i;
     pname = j;
     if(!loadOnly) {
+        console.log(loadOnly);
         userData.Basketball.Teams[ActiveTeam].Players[pad(get('p3TeamList').children.length - 1)] = {pnumb, pname};
+        saveReminder();
     }
 }
 
 function playerNameChanged(i) {
+    saveReminder(true);
     pnumb = i.parentElement.children[0].value;
     pname = i.value;
     userData.Basketball.Teams[ActiveTeam].Players[pad(Array.prototype.indexOf.call(get('p3TeamList').children, i.parentElement))] = {pnumb, pname};
@@ -737,6 +777,7 @@ function updateLists() {
 }
 
 function saveDataToCloud() {
+    saveReminder(false);
     firebase.database().ref('accounts/' + userUID).set(userData).then(() => {
         showWarning("Data saved successfully!", 'Okay');
     });
