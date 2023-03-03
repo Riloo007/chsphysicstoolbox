@@ -131,6 +131,13 @@ document.addEventListener("DOMContentLoaded", function() {
     for(let x = 0; x < onchangeElements.length; x++) {
         onchangeElements[x].setAttribute('onchange', 'p2UpdateColors();');
     }
+
+    document.body.addEventListener("focus", function(event) {
+        if (event.target.tagName === "INPUT" && !event.target.readOnly) {
+          event.target.select();
+          console.log("selected");
+        }
+      }, true);
 });
 
 function p1LoadTeam(i, team) {
@@ -386,12 +393,18 @@ function p1AddPlayers(i) {
     }
 }
 
-/*document.onkeydown = function(evt) {
+document.onkeydown = function(evt) {
     evt = evt || window.event;
-    if (evt.key == "Escape" && !inEditView) {
-        toggleEditView();
+    console.log(evt.target.readOnly);
+    if(evt.target.readOnly != false){
+        console.log(evt.key);
+        if(evt.key == "-") {get('pointer0').onclick();}
+        if(evt.key == "`") {get('pointer0').onclick();}
+        if(evt.key == "1") {get('pointer1').onclick();}
+        if(evt.key == "2") {get('pointer2').onclick();}
+        if(evt.key == "3") {get('pointer3').onclick();}
     }
-};*/
+};
 
 addEventListener("fullscreenchange", (event) => {
     if(!document.fullscreenElement && !inEditView) {
@@ -463,6 +476,7 @@ function incVal(i, j, k) {
     // this i = input
     // bool j = warning styles
     //  int k = optional Value
+    get('body').focus();
     if(i.parentElement.id == "Main-List1") {x = 1;}
     if(i.parentElement.id == "Main-List2") {x = 2;}
     warningColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TWColor;

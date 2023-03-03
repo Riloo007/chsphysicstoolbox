@@ -710,17 +710,21 @@ oo $ $ "$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o$$o$
 
 TODO:
 
-1. p1team2 cursor and styles
-2. Save Button
-3. pointerAdd: add -1, 1, 2, or 3 points at a time
-4. Hide Players
-5. Copy styles to another team
-6. icon indicator
-7. More text styling (font, shadow, ...)
-8. Specific styling (input range or number)
-9. Hovering side panel shows names for menus beside icons
-10. New Icons
+☑1. p1team2 cursor and styles
+ 2. Save Button / Warning
+☑3. pointerAdd: add -1, 1, 2, or 3 points at a time / Hotkeys
+ 4. Hide Players
+ 5. Copy styles to another team
+ 6. icon indicator
+ 7. More text styling (font, shadow, ...)
+ 8. Specific styling (input range or number)
+ 9. Hovering side panel shows names for menus beside icons
+ 10. New Icons
+ 11. Cookies: Load a previous game; 'Looks like you had a game going when you left. Would you like to reopen it?'
 
+ 12. Swish gif
+ 13. Stats: save games to a quarter... Email results to _____.
+ 14. Public Teams; easy team matching between multiple schools.
 */
 
 #pointers {
