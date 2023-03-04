@@ -4,11 +4,15 @@ var startX;
 var startY;
 var dist = 0;
 var inEditView = true;
-var p3saveReminder;
 
 function pad(num) {
     num = num.toString();
     while (num.length < 2) num = "0" + num;
+    return num;
+}
+function clipHEX(num) {
+    if(num.length > 2) {num = num.substr(0, 3);}
+    if(num.length < 2) {num = '0' + num;}
     return num;
 }
 
@@ -24,6 +28,7 @@ function dropup(i) {
 function saveReminder(i) {
     if(i) {
         get('globSBtn').style.display = 'inline-flex';
+        globDataSaved = false;
     } else {
         get('globSBtn').style.display = 'none';
     }
@@ -49,6 +54,7 @@ function hideUserProfile() {
 }
 
 function fullScreen() {
+    saveReminder(false);
     var elem = document.documentElement;
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
@@ -60,6 +66,7 @@ function fullScreen() {
 }
 
 function exitfullScreen() {
+    if(!globDataSaved) {saveReminder(true);}
     if(document.fullscreenElement) {
         document.exitFullscreen();
     }
@@ -93,10 +100,10 @@ function showPanel(i) {
             ActiveTeam = get('p1teamList1').value;
             get('p2SelectList').value = ActiveTeam;
         }
-        p2LoadTeam(ActiveTeam);
         get("panel2").style.display = "";
+        p2LoadTeam(ActiveTeam);
     } else {
-        ActiveTeam != '' ? p2UpdateColors(ActiveTeam, true) : p3ShowNoTeam();
+        ActiveTeam != '' ? p2UpdateColors(ActiveTeam, false) : p3ShowNoTeam();
         get("panel3").style.display = "";
     }
 }
@@ -130,6 +137,13 @@ document.addEventListener('mousemove', function(event) {
 });
 
 
+window.addEventListener('beforeunload', function (e) {
+    if(!globDataSaved) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
 
 document.addEventListener("DOMContentLoaded", function() {
     showWarning("Loading...");
@@ -137,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let onchangeElements = get('p2_settingsList').getElementsByTagName('input');
     for(let x = 0; x < onchangeElements.length; x++) {
-        onchangeElements[x].setAttribute('onchange', 'p2UpdateColors();');
+        onchangeElements[x].setAttribute('onchange', 'p2UpdateColors(); saveReminder(true);');
     }
 
     document.body.addEventListener("focus", function(event) {
@@ -184,9 +198,9 @@ function p1LoadStyles(i, team) {
     }
 
     .${sheet} input {
-        background-color: ${colorData.IColor}${parseInt(colorData.ITransparency).toString(16)};
+        background-color: ${colorData.IColor}${clipHEX(parseInt(colorData.ITransparency).toString(16))};
         font-size: ${colorData.TSSize}px;
-        box-shadow: inset 0 0 10px ${colorData.IShadowColor}${colorData.IShadow ? parseInt(colorData.ITransparency).toString(16) : '00'};
+        box-shadow: inset 0 0 10px ${colorData.IShadowColor}${colorData.IShadow ? clipHEX(parseInt(colorData.ITransparency).toString(16)) : '00'};
         color: ${colorData.TSColor};
         margin: 2px;
     }
@@ -210,14 +224,7 @@ function p1LoadStyles(i, team) {
 
 var ActiveTeam = '';
 function p2LoadTeam(i, j) {
-    if(!j) {
-        j = {
-            value: '',
-            children: {
-                '0': ''
-            }
-        }
-    }
+    if(!j) {j = {value: '',children: {'0': ''}}}
     ActiveTeam = i;
     lst = get('p3_settingsList').getElementsByTagName('li')
     for(s = 0; s < lst.length; s++) {
@@ -253,9 +260,9 @@ function p2LoadTeam(i, j) {
     var plist = userData.Basketball.Teams[i].Players;
     get('p2TeamHeader').value = userData.Basketball.Teams[i].DName;
     get('p2Team-List').innerHTML = `<p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>`;
-    for(let x in plist) {
+    for(x = 0; x < Object.keys(plist).length; x++) {
         console.log(x);
-        get('p2Team-List').innerHTML += `<input class="c-pnu" value='${plist[x].pnumb}'><input class="c-pna" value='${plist[x].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" type='number' value='0'>`
+        get('p2Team-List').innerHTML += `<input class="c-pnu" value='${plist[pad(x)].pnumb}'><input class="c-pna" value='${plist[pad(x)].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" type='number' value='0'>`
     }
     var teamSettings = userData.Basketball.Teams[i].Settings;
     if(!!teamSettings) {
@@ -297,10 +304,11 @@ function p2LoadTeam(i, j) {
         p2LoadTeam(get('p2SelectList').value, get('p2SelectList'));
     }
     i != "" ? p2UpdateColors(i, true) : null;
+    document.getElementById('p2Display').querySelector('.overlay').style.height = get('p2Display').scrollHeight + 70;
 }
 
 function p2UpdateColors(team, sr) {
-    sr != undefined ? saveReminder(true) : null;
+    //if(sr == true && sr != undefined) {saveReminder(true);}
     if(!team) {
         team = get('p2SelectList').value;
     
@@ -334,9 +342,9 @@ function p2UpdateColors(team, sr) {
     }
 
     .${sheet} input {
-        background-color: ${colorData.IColor}${parseInt(colorData.ITransparency).toString(16)};
+        background-color: ${colorData.IColor}${clipHEX(parseInt(colorData.ITransparency).toString(16))};
         font-size: ${colorData.TSSize}px;
-        box-shadow: inset 0 0 10px ${colorData.IShadowColor}${colorData.IShadow ? parseInt(colorData.ITransparency).toString(16) : '00'};
+        box-shadow: inset 0 0 10px ${colorData.IShadowColor}${colorData.IShadow ? clipHEX(parseInt(colorData.ITransparency).toString(16)) : '00'};
         color: ${colorData.TSColor};
         margin: 2px;
     }
@@ -354,11 +362,10 @@ function p2UpdateColors(team, sr) {
         font-size: ${colorData.TTSize}px;
     }
     `
-    ////
-    console.log(newStyles);
+    //console.log(newStyles);
     style(newStyles);
-    ////
-
+    style(`.p3playerIcons div {height: ${userData.Basketball.Teams[team].Settings.TSSize}px;}`);
+    document.getElementById('p3Display').querySelector('.overlay').style.height = get('p3Display').scrollHeight;
 }
 
 /*
@@ -415,15 +422,14 @@ function p1AddPlayers(i) {
     if(i == 1) {
         var plist = userData.Basketball.Teams[get('p1teamList1').value].Players;
         get('Main-List1').innerHTML = `<p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>`;
-        for(let x in plist) {
-            console.log(x);
-            get('Main-List1').innerHTML += `<input class="c-pnu" readonly value='${plist[x].pnumb}'><input readonly class="c-pna" value='${plist[x].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" onchange="incVal(this, true, 0)" type='number' value='0'>`
+        for(x = 0; x < Object.keys(plist).length; x++) {
+            get('Main-List1').innerHTML += `<input class="c-pnu" readonly value='${plist[pad(x)].pnumb}'><input readonly class="c-pna" value='${plist[pad(x)].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" onchange="incVal(this, true, 0)" type='number' value='0'>`
         }
     } else {
         var plist = userData.Basketball.Teams[get('p1teamList2').value].Players;
         get('Main-List2').innerHTML = `<p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>`;
-        for(let x in plist) {
-            get('Main-List2').innerHTML += `<input class="c-pnu" readonly value='${plist[x].pnumb}'><input readonly class="c-pna" value='${plist[x].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" onchange="incVal(this, true, 0)" type='number' value='0'>`
+        for(x = 0; x < Object.keys(plist).length; x++) {
+            get('Main-List2').innerHTML += `<input class="c-pnu" readonly value='${plist[pad(x)].pnumb}'><input readonly class="c-pna" value='${plist[pad(x)].pname}'><input class="c-ppo" type='number' value='0'><input class="c-pfo" onchange="incVal(this, true, 0)" type='number' value='0'>`
         }
     }
 }
@@ -569,6 +575,7 @@ function AddTeam(teamName, loadOnly) {
                 TSSize: '35'
             }
         }
+        saveReminder(true);
         updateLists();
     } else {
         x = ''
@@ -584,6 +591,7 @@ function AddTeam(teamName, loadOnly) {
     get("p3_settingsList").append(newTeam);
 }
 function teamNameChanged(i) {
+    saveReminder(true);
     const oldName = i.parentElement.dataset.value;
     const newName = i.value;
     console.log("CHANGING OLD NAME: [" + oldName + "] TO NEW NAME: [" + newName + "]")
@@ -608,6 +616,7 @@ function RemoveTeam(i, force) {
     // Remove from database ...
     // ...
     if(force) {
+        saveReminder(true);
         //get('p3message').innerHTML = "Removing " + i.parentElement.children[1].dataset.value + "...";
         p3ShowNoTeam();
         tname = i.parentElement.dataset.value;
@@ -662,42 +671,73 @@ function p3LoadTeam(j) {
     get('p3TeamHeader').value = userData.Basketball.Teams[i].DName;
     get("p3TeamList").innerHTML = '';
     if(!userData.Basketball.Teams[i].Players) {userData.Basketball.Teams[i].Players = {};}
-    k = Object.keys(userData.Basketball.Teams[i].Players);
-    for(let x = 0; x < k.length; x++) {
-        console.log(userData.Basketball.Teams[i].Players[pad(x)].pname);
-        AddPlayer(userData.Basketball.Teams[i].Players[pad(x)].pnumb, userData.Basketball.Teams[i].Players[k[x]].pname, true);
+    
+    k = Object.keys(userData.Basketball.Teams[i].Players).length;
+    for(let x = 0; x < k; x++) {
+        AddPlayer(userData.Basketball.Teams[i].Players[pad(x)].pnumb, userData.Basketball.Teams[i].Players[pad(x)].pname, true);
     }
+    style(`.p3playerIcons div {height: ${userData.Basketball.Teams[ActiveTeam].Settings.TSSize}px;}`);
+    document.getElementById('p3Display').querySelector('.overlay').style.height = get('p3Display').scrollHeight;
 }
 
 function AddPlayer(i, j, loadOnly) {
     if(!i) {i = '';}
-    if(!j) {j = 'New Player'; p3saveReminder = true;}
+    if(!j) {j = 'New Player';}
     var newPlayer = document.createElement('li');
-    newPlayer.innerHTML = `<input class="c-pnu" value="${i}" onchange="playerNumberChanged(this);"><input class="c-pna" value="${j}" onchange="playerNameChanged(this);"><div onclick="RemovePlayer(this);" class="trashIcon"></div>`;
+    newPlayer.innerHTML = `
+        <input class="c-pnu" value="${i}" onchange="playerChanged(this);">
+        <input class="c-pna" value="${j}" onchange="playerChanged(this);">
+        <div class='p3playerIcons'>
+            <div onclick="playerOrder(this, true)" class="upIcon"></div>
+            <div onclick="playerOrder(this, false)" class="downIcon"></div>
+            <div onclick="RemovePlayer(this.parentElement);" class="trashIcon"></div>
+        </div>
+        `;
     get("p3TeamList").append(newPlayer);
     pnumb = i;
     pname = j;
     if(!loadOnly) {
+        saveReminder(true);
         console.log(loadOnly);
-        userData.Basketball.Teams[ActiveTeam].Players[pad(get('p3TeamList').children.length - 1)] = {pnumb, pname};
-        saveReminder();
+        userData.Basketball.Teams[ActiveTeam].Players[pad(get('p3TeamList').children.length - 1)] = {pname, pnumb};
     }
 }
 
-function playerNameChanged(i) {
+function playerChanged(i) {
     saveReminder(true);
     pnumb = i.parentElement.children[0].value;
-    pname = i.value;
-    userData.Basketball.Teams[ActiveTeam].Players[pad(Array.prototype.indexOf.call(get('p3TeamList').children, i.parentElement))] = {pnumb, pname};
-}
-function playerNumberChanged(i) {
-    pnumb = i.value;
     pname = i.parentElement.children[1].value;
     userData.Basketball.Teams[ActiveTeam].Players[pad(Array.prototype.indexOf.call(get('p3TeamList').children, i.parentElement))] = {pnumb, pname};
+}
+function playerOrder(i, dir) {
+    saveReminder(true);
+    var currentIndex = parseInt(pad(Array.prototype.indexOf.call(get('p3TeamList').children, i.parentElement.parentElement)));
+    targetIndex = currentIndex + (dir ? -1 : 1);
+    if(targetIndex < 0 || targetIndex > get('p3TeamList').children.length - 1) {return null;}
+
+    let placedTarget = false;
+    let newPlayerData = {};
+    let oldPlayerData = userData.Basketball.Teams[ActiveTeam].Players;
+    var ex = 0;
+    for(x = 0; x < targetIndex; x++) {
+        if(currentIndex == x) {ex = 1;}
+        newPlayerData[pad(x)] = oldPlayerData[pad(x + ex)];
+    }
+    newPlayerData[pad(targetIndex)] = oldPlayerData[pad(currentIndex)];
+    for(x = targetIndex + 1; x < get('p3TeamList').children.length; x++) {
+        if(currentIndex == x) {ex = -1;}
+        if(currentIndex == x + ex - (dir ? 0 : 1)) {ex = 0;}
+        newPlayerData[pad(x)] = oldPlayerData[pad(x + ex - (dir ? 0 : 1))];
+    }
+    console.log(oldPlayerData);
+    console.log(newPlayerData);
+    userData.Basketball.Teams[ActiveTeam].Players = newPlayerData;
+    reloadp3Team();
 }
 
 
 function RemovePlayer(i) {
+    saveReminder(true);
     userData.Basketball.Teams[ActiveTeam].Players = {};
     //delete userData.Basketball.Teams[p3ActiveTeam].Players[pad(Array.prototype.indexOf.call(get('p3TeamList').children, i.parentElement))];
     i.parentElement.remove();
@@ -741,6 +781,7 @@ function loadDataFromCloud() {
         console.log(userData);
         get('username').innerHTML = userData.email;
         try {
+            get('p3_settingsList').innerHTML = '';
             var teams = userData.Basketball.Teams;
             var htmlData = '<option disabled selected>Choose a team...</option>';
             for(let i in teams) {
@@ -752,8 +793,11 @@ function loadDataFromCloud() {
             get('p1teamList1').innerHTML = htmlData;
             get('p1teamList2').innerHTML = htmlData;
             get('p2SelectList').innerHTML = htmlData;
+
+            reloadp3Team();
     
             hideWarning();
+            globDataSaved = true;
           } catch {
             console.log('Teams Path not Found');
             showPanel(3);
@@ -776,7 +820,23 @@ function updateLists() {
     hideWarning();
 }
 
+function DONTsaveDataToCloud() {
+    showWarning("Are you sure you want to discard your changes?", "Yes", "Cancel", "userData = undefined; loadDataFromCloud(); saveReminder(false); exitFullScreen();", "saveReminder(true);")
+}
+function reloadp3Team() {
+    lst = get('p3_settingsList').getElementsByTagName('li')
+    for(s = 0; s < lst.length; s++) {
+        console.log('[' + lst[s].dataset.value + '] [' + ActiveTeam + ']');
+        if(lst[s].dataset.value == ActiveTeam) {
+            p3LoadTeam(lst[s].children[2]);
+            p2UpdateColors(ActiveTeam, false);
+            break;
+        }
+    }
+}
+
 function saveDataToCloud() {
+    globDataSaved = true;
     saveReminder(false);
     firebase.database().ref('accounts/' + userUID).set(userData).then(() => {
         showWarning("Data saved successfully!", 'Okay');

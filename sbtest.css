@@ -243,25 +243,23 @@ select {
     cursor: pointer;
     border-radius: inherit;
 }
-#p3TeamList > li > input.c-pna {
-    width: 77%;
-}
 #p3TeamList .trashIcon {
     float: inherit;
 }
 .sBtn {
-    width: calc(100% - var(--panel-width) - 65px);
-    margin-left: calc(var(--panel-width) + 25px);
-    bottom: 10;
+    width: calc(100% - var(--panel-width) - 75px);
+    margin-left: calc(var(--panel-width) + 35px);
+    bottom: 20;
     border-radius: 3px;
     box-shadow: 0px -2px 3px #dcdbdb;
-    background: var(--panel-color);
+    background: #ffb3b3;
     z-index: 80;
     position: fixed;
     height: 30px;
     padding: 10px;
     font-size: 25px;
     display: none;
+    outline: solid 1px #787878;
 }
 .sBtn p {
     width: calc(100% - 100px);
@@ -273,6 +271,7 @@ select {
     border-radius: 5px;
     display: inline-block;
     transition-duration: .3s;
+    margin-left: 5px;
 }
 .sBtn button:hover {
     transform: scale(1.1);
@@ -292,6 +291,7 @@ select {
     background-color: #00000000;
     border: dashed 2px #ffffff;
     padding: 3px;
+    overflow: auto;
 }
 #displayPanelContent {
     /*padding: 10px;
@@ -301,14 +301,11 @@ select {
 }
 .displayPanelContent {
     height: 100%;
-}
-
-.displayPanelContent {
-    height: calc(100% - 20px);
+    height: 100%;
     position: inherit;
     top: auto;
     left: auto;
-    display: contents;
+    display: block;
 }
 #displayPanelContent::-webkit-scrollbar, .displayPanelContent::-webkit-scrollbar {
     display: none;
@@ -410,7 +407,7 @@ select {
     transform: scale(1);
 }
 
-.gearIcon, .trashIcon, .loadIcon, .vsIcon, .expandIcon {
+.gearIcon, .trashIcon, .loadIcon, .vsIcon, .expandIcon, .upIcon, .downIcon {
     background-size: cover;
     height: var(--panel-width);
     aspect-ratio: 1;
@@ -418,6 +415,15 @@ select {
     border-radius: 5px;
     transition-duration: 0.3s;
     cursor: pointer;
+}
+.upIcon {
+    background-image: url(up.png);
+}
+.downIcon {
+    background-image: url(down.png);
+}
+.downIcon:hover, .upIcon:hover {
+    transform: scale(1.15);
 }
 .expandIcon {
     background-image: url(expand-icon.png);
@@ -448,7 +454,7 @@ select {
     transform: rotate(360deg);
 }
 .trashIcon {
-    background-image: url(trash.png);
+    background-image: url(trash1.png);
     float: right;
 }
 
@@ -494,11 +500,16 @@ button {
     cursor: pointer;
     background-color: var(--panel-color);
     border: inset 2px black;
-    border-radius: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    transition-duration: .2s;
+    margin-left: 5px;
+    font-family: 'Nunito';
 }
 button:hover {
-    border: inset 2px black;
     font-weight: bold;
+    transform: scale(1.02);
 }
 
 #Main {
@@ -529,7 +540,6 @@ button:hover {
 
 
 .Main-lists {
-  overflow: auto;
   width: calc(50vw - 75px);
   list-style-type: none;
   padding: 0;
@@ -568,11 +578,25 @@ button:hover {
     width: 10%;
   }
   .Team-lists .c-pna {
-    width: 80%;
+    width: 100%;
+  }
+  .Team-lists li {
+    width: calc(100% - 5px);
+    display: inline-flex;
   }
   .dp3 button {
     width: 100%;
   }
+
+.p3playerIcons {
+    background: var(--panel-color);
+    border-radius: 5px;
+    margin: 3;
+    
+    flex-wrap: nowrap;
+    display: flex;
+}
+
 
 #globWarningMessage {
     position: fixed;
@@ -638,6 +662,7 @@ button:hover {
     margin: 2px;
 
     /* Constants */
+    min-width: 70px;
     border-radius: 3px;
     border: 0px;
     height: max-content;
@@ -648,15 +673,28 @@ button:hover {
 .dp2 p, .dp2 p {
     text-align: center;
 }
-
+.displayPanelContent button {
+    width: 100px;
+    padding: 5px;
+    margin-bottom: 75px;
+    border-radius: 5px;
+    display: inline-block;
+    transition-duration: .3s;
+    margin-left: 5px;
+    font-family: 'Nunito';
+}
+.displayPanelContent button:hover {
+    transform: scale(1.15);
+}
 .dp2 > div.displayPanelContent, .dp1 > div.displayPanelContent {
     backdrop-filter: blur(5px);
 
     /* Constants */
+    text-align: center;
     background-color: #00000000;
 }
 
-.dp2 > div.overlay, .dp1 > div.overlay {
+.dp2 > div.overlay, .dp1 > div.overlay, .overlay {
     /*backdrop-filter: brightness(1.2) contrast(2);*/
 
     /* Constants */
@@ -684,7 +722,7 @@ td.dp1, td.dp2{
 
 
 .p2Display, .p3display {
-    overflow-y: auto;
+    overflow: auto;
     overflow-x: hidden;
 }
 .p2Display div.overlay {

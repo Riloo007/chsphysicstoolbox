@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="sBtn" id="globSBtn"><p>You have unsaved changes!</p><button onclick="saveDataToCloud();">Save</button></div>
+    <div class="sBtn" id="globSBtn"><p>You have unsaved changes!</p><button onclick="saveDataToCloud();">Save</button><button onclick="DONTsaveDataToCloud();">Discard</button></div>
 
     <div id="sidePanel" class="sidePanel">
       <span>
@@ -141,13 +141,13 @@
                <p>Color: <input id="p2BColor" type="color"></p>
                <p>Logo URL: <input id="p2BImg" type="url"></p>
                <p>Logo Size: <input id="p2BSize" type="range" min="0" max="300"></p>
-               <p>Blur: <input id="p2BBlur" type="range" max="30" min="0" value="0"></p>
+               <p>Blur: <input id="p2BBlur" type="range" max="100" min="0" value="0"></p>
 
                <h3>Buttons</h3>
                <p>Shadow: <input id="p2IShadow" type="checkbox"></p>
                <p>Shadow Color: <input id="p2IShadowColor" type="color"></p>
                <p>Back Color: <input id="p2IColor" type="color"></p>
-               <p>Transparency: <input id="p2ITransparency" type="range" min="0" max="256"></p>
+               <p>Transparency: <input id="p2ITransparency" type="range" min="0" max="255"></p>
                
                <h3>Text</h3>
                <p>Title Color: <input id="p2TTColor" type="color"></p>
@@ -165,7 +165,7 @@
       <div id="panel3">
         <!-- Team Editor -->
         <button class="bkBtn" onclick="showPanel(1);">← Back</button>
-        <div class="displayPanel dp2 p3Display">
+        <div class="displayPanel dp2 p3Display" id="p3Display">
           <div class="displayPanelContent">
             <!--  START TEAM DISPLAY  -->
 
@@ -190,7 +190,6 @@
               </ul>
               <button onclick="AddTeam('New Team');">Add Team</button>
             </div>
-            <button class="sBtn" onclick="saveDataToCloud();">SAVE</button>
           </div>
         </div>
       </div>
