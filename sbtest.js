@@ -94,6 +94,8 @@ function showPanel(i) {
         } else {
             get('p1bNoTeam').style.display = 'block';
         }
+        get('Main-List2').querySelectorAll('.c-pfo').forEach(foul => {foul.onchange();});
+        get('Main-List1').querySelectorAll('.c-pfo').forEach(foul => {foul.onchange();});
         get("panel1").style.display = "";
     } else if(i == 2) {
         if(ActiveTeam == "" && get('p1teamList1').value != get('p1teamList1').children[0].innerHTML) {
@@ -142,7 +144,94 @@ window.addEventListener('beforeunload', function (e) {
         e.preventDefault();
         e.returnValue = '';
     }
+    localStorage.cachedGamep1a = get('p1teamList1').value;
+    localStorage.cachedGamep1b = get('p1teamList2').value;
+
+    let pointsList = get('Main-List1').querySelectorAll('.c-ppo');
+    let foulsList = get('Main-List1').querySelectorAll('.c-pfo');
+    let x = 0;
+    let ptsList = {};
+    pointsList.forEach(point => {
+        ptsList[x] = point.value;
+        x++
+    });
+    x = 0;
+    let flsList = {};
+    foulsList.forEach(foul => {
+        flsList[x] = foul.value;
+        x++
+    });
+
+    localStorage.cachedGamepoints = JSON.stringify(ptsList);
+    localStorage.cachedGamefouls = JSON.stringify(flsList);
+
+    ///
+
+    pointsList = get('Main-List2').querySelectorAll('.c-ppo');
+    foulsList = get('Main-List2').querySelectorAll('.c-pfo');
+    x = 0;
+    ptsList = {};
+    pointsList.forEach(point => {
+        ptsList[x] = point.value;
+        x++
+    });
+    x = 0;
+    flsList = {};
+    foulsList.forEach(foul => {
+        flsList[x] = foul.value;
+        x++
+    });
+
+    localStorage.cachedGamepoints2 = JSON.stringify(ptsList);
+    localStorage.cachedGamefouls2 = JSON.stringify(flsList);
+
+    //localStorage.cachedGamefullHTMLdata = get('Main').innerHTML;
 });
+
+function loadCachedData() {
+    get('p1teamList1').value = localStorage.cachedGamep1a,
+    get('p1teamList2').value = localStorage.cachedGamep1b,
+    get('p1teamList1').onchange();
+    get('p1teamList2').onchange();
+
+    var pts = localStorage.getItem('cachedGamepoints');
+    var fls = localStorage.getItem('cachedGamefouls');
+
+    let pointsList = get('Main-List1').querySelectorAll('.c-ppo');
+    let foulsList = get('Main-List1').querySelectorAll('.c-pfo');
+
+    var x = 0;
+    pointsList.forEach(point => {
+        point.value = JSON.parse(pts)[x];
+        x++;
+    });
+    x = 0;
+    foulsList.forEach(foul => {
+        foul.value = JSON.parse(fls)[x];
+        foul.onchange();
+        x++;
+    });
+
+    pts = localStorage.getItem('cachedGamepoints2');
+    fls = localStorage.getItem('cachedGamefouls2');
+    pointsList = get('Main-List2').querySelectorAll('.c-ppo');
+    foulsList = get('Main-List2').querySelectorAll('.c-pfo');
+    var x = 0;
+    pointsList.forEach(point => {
+        point.value = JSON.parse(pts)[x];
+        x++;
+    });
+    x = 0;
+    foulsList.forEach(foul => {
+        foul.value = JSON.parse(fls)[x];
+        foul.onchange();
+        x++;
+    });
+
+
+
+    //get('Main').innerHTML = localStorage.cachedGamefullHTMLdata
+}
 
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -518,6 +607,7 @@ function incVal(i, j, k) {
     // bool j = warning styles
     //  int k = optional Value
     get('body').focus();
+    i.setAttribute('value', i.value);
     if(i.parentElement.id == "Main-List1") {x = 1;}
     if(i.parentElement.id == "Main-List2") {x = 2;}
     warningColor = userData.Basketball.Teams[get('p1teamList' + x).value].Settings.TWColor;
@@ -795,8 +885,11 @@ function loadDataFromCloud() {
             get('p2SelectList').innerHTML = htmlData;
 
             reloadp3Team();
-    
+
             hideWarning();
+            if(!!localStorage.cachedGame) {
+                showWarning("Would you like to load your previous game?", "Yes", "No", "loadCachedData()");
+            }
             globDataSaved = true;
           } catch {
             console.log('Teams Path not Found');
@@ -818,7 +911,10 @@ function updateLists() {
     get('p2SelectList').innerHTML = htmlData;
 
     hideWarning();
+
 }
+
+
 
 function DONTsaveDataToCloud() {
     showWarning("Are you sure you want to discard your changes?", "Yes", "Cancel", "userData = undefined; loadDataFromCloud(); saveReminder(false); exitFullScreen();", "saveReminder(true);")
