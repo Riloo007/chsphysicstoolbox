@@ -21,7 +21,27 @@
     </div>
 
     <div class="sBtn" id="globSBtn"><p>You have unsaved changes!</p><button onclick="saveDataToCloud();">Save</button><button onclick="DONTsaveDataToCloud();">Discard</button></div>
+<!---
+    <div id="sidePanel" class="sidePanel wide">
+      <div class="sp-pfp">
+        <button onclick="showUserProfile()" class="pfp"></button>
+        <p>Username</p>
+      </div>
+      <div class="sp-logo">
+        onlinescoreboard.com
+      </div>
+      <div class="sp-fs">
 
+      </div>
+
+      <span class="profile pf-Hidden">
+        <div class="ex" onclick="hideUserProfile();"></div><br>
+        <div class="pfpExpanded"></div>
+        <h2 id="username">chsphysicstoolbox</h2>
+        <button onclick="logoutuser();">Logout<div class="logoutIcon"></div></button>
+      </span>
+    </div>
+  -->
     <div id="sidePanel" class="sidePanel">
       <span>
         <div onclick="showUserProfile()" class="pfp"></div>
@@ -49,6 +69,7 @@
       </span>
 
     </div>
+
     <div id="mainPanel">
       <div id="panel1">
         <!-- Game Editor -->
@@ -154,9 +175,9 @@
                <p>Header Color: <input id="p2THColor" type="color"></p>
                <p>Scores Color: <input id="p2TSColor" type="color"></p>
                <p>Warning Color: <input id="p2TWColor" type="color"></p>
-               <p>Title Size: <input id="p2TTSize" type="range" min="5" max="100"></p>
-               <p>Header Size: <input id="p2THSize" type="range" min="0" max="60"></p>
-               <p>Scores Size: <input id="p2TSSize" type="range" min="0" max="60"></p>
+               <p>Title Size: <input id="p2TTSize" type="range" min="5" max="150"></p>
+               <p>Header Size: <input id="p2THSize" type="range" min="0" max="100"></p>
+               <p>Scores Size: <input id="p2TSSize" type="range" min="0" max="100"></p>
 
             </div>
           </div>
