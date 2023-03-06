@@ -63,6 +63,7 @@ function fullScreen() {
     } else if (elem.msRequestFullscreen) { /* IE11 */
       elem.msRequestFullscreen();
     }
+    document.querySelector('.sp-fs').children[1].innerHTML = 'Exit Fullscreen';
 }
 
 function exitfullScreen() {
@@ -70,6 +71,7 @@ function exitfullScreen() {
     if(document.fullscreenElement) {
         document.exitFullscreen();
     }
+    document.querySelector('.sp-fs').children[1].innerHTML = 'Enter Fullscreen';
 }
 
 function p3ShowNoTeam() {
@@ -127,7 +129,7 @@ function get(i) {
 document.addEventListener('mousemove', function(event) {
     if(event.clientX <= 50 && !inEditView) {
         toggleShowSidePanel(true);
-    } else if (!inEditView) {
+    } else if (event.clientX >= 160 && !inEditView) {
         toggleShowSidePanel(false);
     }
 
@@ -542,6 +544,33 @@ addEventListener("fullscreenchange", (event) => {
     }
 });
 
+var sidePanelShrunk = true  ;
+function sidePanelToggleES() {
+    sidePanelShrunk = !sidePanelShrunk;
+    if(sidePanelShrunk) {
+        sidePanelExpand();
+    } else {
+        sidePanelShrink();
+    }
+}
+
+function sidePanelExpand() {
+    style(`
+    #sidePanel {width: 160px}
+    .sp-btn p {display: inline;}
+    `)
+    document.querySelector('.sp-logo').innerHTML = 'Online Scoreboard';
+    document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(0deg)';
+}
+function sidePanelShrink() {
+    style(`
+    #sidePanel {width: 40px}
+    .sp-btn p {display: none;}
+    `)
+    document.querySelector('.sp-logo').innerHTML = 'OS';
+    document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(180deg)';
+}
+
 function toggleEditView() {
     showPanel(1);
     toggleShowSidePanel(!inEditView);
@@ -887,7 +916,7 @@ function loadDataFromCloud() {
             reloadp3Team();
 
             hideWarning();
-            if(!!localStorage.cachedGame) {
+            if(localStorage.cachedGamepoints != {}) {
                 showWarning("Would you like to load your previous game?", "Yes", "No", "loadCachedData()");
             }
             globDataSaved = true;

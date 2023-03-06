@@ -21,17 +21,36 @@
     </div>
 
     <div class="sBtn" id="globSBtn"><p>You have unsaved changes!</p><button onclick="saveDataToCloud();">Save</button><button onclick="DONTsaveDataToCloud();">Discard</button></div>
-<!---
+
     <div id="sidePanel" class="sidePanel wide">
       <div class="sp-pfp">
         <button onclick="showUserProfile()" class="pfp"></button>
         <p>Username</p>
       </div>
       <div class="sp-logo">
-        onlinescoreboard.com
+        Online Scoreboard
       </div>
-      <div class="sp-fs">
-
+      <div class="sp-fs sp-btn" onclick="toggleEditView();">
+        <div id="expandIcon" class="expandIcon"></div>
+        <p>Enter Fullscreen</p>
+      </div>
+      <div class="sp-menus">
+        <div class="sp-vs sp-btn" onclick="showPanel(1);">
+          <div id="vsIcon" class="vsIcon"></div>
+          <p>Game Display</p>
+        </div>
+        <div class="sp-cb sp-btn" onclick="showPanel(2)">
+          <div id="sp_colorBtn"><div></div><br><div></div><div></div></div>
+          <p>Customize Display</p>
+        </div>
+        <div class="sp-fs sp-btn" onclick="showPanel(3)">
+          <div id="teamsIcon" class="teamsIcon"></div>
+          <p>Team Management</p>
+        </div>
+      </div>
+      <div class="sp-btn sp-collapse" onclick="sidePanelToggleES();">
+        <div class="collapseIcon"></div>
+        <p>Collapse</p>
       </div>
 
       <span class="profile pf-Hidden">
@@ -41,7 +60,8 @@
         <button onclick="logoutuser();">Logout<div class="logoutIcon"></div></button>
       </span>
     </div>
-  -->
+ 
+  <!---
     <div id="sidePanel" class="sidePanel">
       <span>
         <div onclick="showUserProfile()" class="pfp"></div>
@@ -69,6 +89,8 @@
       </span>
 
     </div>
+
+     -->
 
     <div id="mainPanel">
       <div id="panel1">
