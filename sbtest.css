@@ -95,6 +95,7 @@ table {
     background: #00000000;
     width: calc(100% - 10px);
 }
+.sp-btn.selected {background: #FFFFFF22;}
 .sp-btn p {width: 100%;}
 .sp-btn p {margin: auto;}
 .sp-btn:hover {background: #dfdfdf4f;}
@@ -149,8 +150,7 @@ select {
 
 #mainPanel {
     grid-area: main;
-    /*width: calc(100vw - var(--panel-width) - 34px);*/
-    width: calc(100vw - 170px);
+    width: 100%;
     height: calc(100vh - 10px);
     margin: 5px;
     margin-left: 2px;
@@ -169,6 +169,7 @@ select {
     "dispPanel menu"
     "dispPanel saveButton";
     grid-template-columns: 1fr 1fr;
+    width: calc(100vw - 170px);
 }
 #panel2 button.bkBtn {
     grid-area: back;
@@ -180,7 +181,9 @@ select {
     display: inline-flex;
 }
 #panel2 div.topMenu select {
-    width: calc(100% - var(--panel-width));
+    margin-left: 10px;
+    width: 100%;
+    height: 40px;
 }
 .topMenu select.selected, #menuPanel select.selected {
     background: #bfd4de;
@@ -197,7 +200,7 @@ select {
 #panel2 div.p2_settingsPanel, #panel3 div.p3_settingsPanel {
     padding: 10px;
     overflow-y: auto;
-    height: calc(100vh - var(--panel-width) - 10px);
+    height: calc(100vh - 45px);
 }
 .p2_settingsMenu, .p3_settingsPanel{
     background-color: var(--panel-color);
@@ -221,6 +224,8 @@ select {
     top: -5px;
     width: calc(100% - 75px);
     height: calc(100% - 30px);
+    width: 100%;
+    height: 100%;
     background-color: #000000;
     background-color: var(--panel-color);
     font-family: 'Nunito', sans-serif;
@@ -231,7 +236,9 @@ select {
     font-style: italic;
 }
 
-.p2def {height: var(--panel-width);}
+.p2def {
+    height: 40px;
+}
 
 #panel3 {
     display: grid;
@@ -239,6 +246,9 @@ select {
     "back menu"
     "dispPanel menu";
     grid-template-columns: 1fr 1fr;
+}
+#panel3 .bkBtn {
+    width: calc(100% - 15px);
 }
 #panel3 div.displayPanel {
     grid-area: dispPanel;
@@ -279,7 +289,7 @@ select {
     height: 30px;
 }
 .p3_settingsList input {
-    width: calc(100% - (1 * var(--panel-width)));
+    width: calc(100% - 40px);
     font-size: 30px;
     background: #00000000;
     border: 0px;
@@ -329,7 +339,7 @@ select {
 }
 #panel3 button.bkBtn {
     grid-area: back;
-    height: var(--panel-width);
+    height: 40px;
 }
 #panel3 div.displayPanel {
     height: calc(100vh - 70px);
@@ -350,7 +360,7 @@ select {
     /*padding: 10px;
     width: calc(100% - 20px);*/
     background-color: #bbbbbb;
-    overflow: hidden;
+    overflow: auto;
 }
 .displayPanelContent {
     height: 100%;
@@ -452,8 +462,9 @@ select {
 
 .gearIcon, .trashIcon, .loadIcon, .vsIcon, .expandIcon, .upIcon, .downIcon, .teamsIcon, .collapseIcon {
     background-size: cover;
-    margin: 5px;
-    height: 20px;
+    margin-right: 10px;
+    margin-left: 5px;
+    height: 40px;
     aspect-ratio: 1;
     display: inline-block;
     border-radius: 5px;
@@ -546,7 +557,9 @@ select {
 button {
     cursor: pointer;
     background-color: var(--panel-color);
-    border: inset 2px black;
+    /*border: inset 2px black;*/
+    border: none;
+    outline: solid 1px black;
     padding: 5px;
     border-radius: 5px;
     display: inline-block;
@@ -560,7 +573,7 @@ button:hover {
 }
 
 #Main {
-    width: 100%;
+    width: 100vw;
     height: 100%;
     text-align: center;
 }
@@ -608,6 +621,9 @@ button:hover {
 .Main-lists p.c-pna {grid-area: pname;}
 .Main-lists p.c-ppo {grid-area: ppoints;}
 .Main-lists p.c-pfo {grid-area: pfouls;}
+#p2Team-List {
+    width: 100%;
+}
 
 .Team-lists {
     width: 100%;
@@ -708,8 +724,8 @@ button:hover {
     color: #FFFFFF;
     margin: 2px;
 
-    /* Constants */
-    min-width: 70px;
+    /* Constants 
+    min-width: 70px;*/
     border-radius: 3px;
     border: 0px;
     height: max-content;

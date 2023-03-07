@@ -83,6 +83,7 @@ function p3HideNoTeam() {
 function showPanel(i) {
     _hidePanels();
     if(i == 1) {
+        document.querySelector('.sp-vs').classList.add('selected');
         // If a team is actually selected
         if(get('p1teamList1').value != get('p1teamList1').children[0].innerHTML) {
             p1LoadStyles(0, get('p1teamList1').value);
@@ -100,6 +101,7 @@ function showPanel(i) {
         get('Main-List1').querySelectorAll('.c-pfo').forEach(foul => {foul.onchange();});
         get("panel1").style.display = "";
     } else if(i == 2) {
+        document.querySelector('.sp-cb').classList.add('selected');
         if(ActiveTeam == "" && get('p1teamList1').value != get('p1teamList1').children[0].innerHTML) {
             ActiveTeam = get('p1teamList1').value;
             get('p2SelectList').value = ActiveTeam;
@@ -107,6 +109,7 @@ function showPanel(i) {
         get("panel2").style.display = "";
         p2LoadTeam(ActiveTeam);
     } else {
+        document.querySelector('.sp-fs').classList.add('selected');
         ActiveTeam != '' ? p2UpdateColors(ActiveTeam, false) : p3ShowNoTeam();
         get("panel3").style.display = "";
     }
@@ -115,6 +118,9 @@ function _hidePanels() {
     get("panel1").style.display = "none";
     get("panel2").style.display = "none";
     get("panel3").style.display = "none";
+    document.querySelector('.sp-vs').classList.remove('selected');
+    document.querySelector('.sp-cb').classList.remove('selected');
+    document.querySelector('.sp-fs').classList.remove('selected');
 }
 
 function toggleShowSidePanel(i) {
@@ -266,6 +272,19 @@ function p1LoadTeam(i, team) {
     
     p1LoadStyles(i-1, team);
 }
+function recalculateHeights() {
+    var l1length = get('Main-List1').children.length;
+    var l2length = get('Main-List2').children.length;
+    var l1height = (l1length - 3) / 4 * (4 + get('Main-List1').children[4].scrollHeight);
+    var l2height = (l2length - 3) / 4 * (4 + get('Main-List2').children[4].scrollHeight);
+    var newHeight;
+    if(l1height < l2height) {
+        newHeight = get('Main-List1').children[4].scrollHeight * l2length / l1length ;
+    } else {
+        newHeight = get('Main-List2').children[4].scrollHeight * l1length / l2length ;
+    }
+    style(`#Main-List2 * {height: ${newHeight}px;}`);
+}
 
 function style(i) {
     x = i.split('}');
@@ -395,7 +414,8 @@ function p2LoadTeam(i, j) {
         p2LoadTeam(get('p2SelectList').value, get('p2SelectList'));
     }
     i != "" ? p2UpdateColors(i, true) : null;
-    document.getElementById('p2Display').querySelector('.overlay').style.height = get('p2Display').scrollHeight + 70;
+    document.getElementById('p2Display').querySelector('.overlay').style.height = 0;
+    document.getElementById('p2Display').querySelector('.overlay').style.height = get('p2Display').scrollHeight + 100;
 }
 
 function p2UpdateColors(team, sr) {
@@ -557,7 +577,9 @@ function sidePanelToggleES() {
 function sidePanelExpand() {
     style(`
     #sidePanel {width: 160px}
+    #panel2 {width: calc(100vw - 170px);}
     .sp-btn p {display: inline;}
+    .sBtn {width: calc(100% - 245px); margin-left: 200px;}
     `)
     document.querySelector('.sp-logo').innerHTML = 'Online Scoreboard';
     document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(0deg)';
@@ -565,7 +587,9 @@ function sidePanelExpand() {
 function sidePanelShrink() {
     style(`
     #sidePanel {width: 40px}
+    #panel2 {width: calc(100vw - 50px);}
     .sp-btn p {display: none;}
+    .sBtn {width: calc(100% - 115px); margin-left: 70px;}
     `)
     document.querySelector('.sp-logo').innerHTML = 'OS';
     document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(180deg)';
@@ -706,7 +730,10 @@ function AddTeam(teamName, loadOnly) {
     console.log('!! [' + teamName + x + ']');
     teamNameCorrected = teamName + x;
     newTeam.dataset.value = teamNameCorrected;
-    newTeam.innerHTML = `<input value="${teamName + x}" onchange="teamNameChanged(this);"><div class="trashIcon" onclick="RemoveTeam(this);"></div><div class="p3overlay" onclick="p3LoadTeam(this);"></div>`;
+    newTeam.innerHTML = `
+        <input value="${teamName + x}" onchange="teamNameChanged(this);">
+        <div class="trashIcon" onclick="RemoveTeam(this);"></div>
+        <div class="p3overlay" onclick="p3LoadTeam(this);"></div>`;
     get("p3_settingsList").append(newTeam);
 }
 function teamNameChanged(i) {
@@ -772,7 +799,7 @@ function p3LoadTeam(j) {
     i = j.parentElement.dataset.value;
     // Enable clicking on all teams in list
     for(x = 0; x < get('p3_settingsList').children.length; x++) {
-        get('p3_settingsList').children[x].children[2].style.pointerEvents = 'all';
+        get('p3_settingsList').children[x].querySelector('.p3overlay').style.pointerEvents = 'all';
         get('p3_settingsList').children[x].classList.remove("selected");
     }
     // Remove overlay on selected team
