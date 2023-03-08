@@ -152,6 +152,8 @@ window.addEventListener('beforeunload', function (e) {
         e.preventDefault();
         e.returnValue = '';
     }
+    sessionStorage.cachedGamep1a = get('p1teamList1').value;
+    sessionStorage.cachedGamep1b = get('p1teamList2').value;
     localStorage.cachedGamep1a = get('p1teamList1').value;
     localStorage.cachedGamep1b = get('p1teamList2').value;
 
@@ -170,6 +172,8 @@ window.addEventListener('beforeunload', function (e) {
         x++
     });
 
+    sessionStorage.cachedGamepoints = JSON.stringify(ptsList);
+    sessionStorage.cachedGamefouls = JSON.stringify(flsList);
     localStorage.cachedGamepoints = JSON.stringify(ptsList);
     localStorage.cachedGamefouls = JSON.stringify(flsList);
 
@@ -190,20 +194,22 @@ window.addEventListener('beforeunload', function (e) {
         x++
     });
 
+    sessionStorage.cachedGamepoints2 = JSON.stringify(ptsList);
+    sessionStorage.cachedGamefouls2 = JSON.stringify(flsList);
     localStorage.cachedGamepoints2 = JSON.stringify(ptsList);
     localStorage.cachedGamefouls2 = JSON.stringify(flsList);
 
     //localStorage.cachedGamefullHTMLdata = get('Main').innerHTML;
 });
 
-function loadCachedData() {
-    get('p1teamList1').value = localStorage.cachedGamep1a,
-    get('p1teamList2').value = localStorage.cachedGamep1b,
+function loadCachedData(StorageLocation) {
+    get('p1teamList1').value = StorageLocation.cachedGamep1a,
+    get('p1teamList2').value = StorageLocation.cachedGamep1b,
     get('p1teamList1').onchange();
     get('p1teamList2').onchange();
 
-    var pts = localStorage.getItem('cachedGamepoints');
-    var fls = localStorage.getItem('cachedGamefouls');
+    var pts = StorageLocation.getItem('cachedGamepoints');
+    var fls = StorageLocation.getItem('cachedGamefouls');
 
     let pointsList = get('Main-List1').querySelectorAll('.c-ppo');
     let foulsList = get('Main-List1').querySelectorAll('.c-pfo');
@@ -220,8 +226,8 @@ function loadCachedData() {
         x++;
     });
 
-    pts = localStorage.getItem('cachedGamepoints2');
-    fls = localStorage.getItem('cachedGamefouls2');
+    pts = StorageLocation.getItem('cachedGamepoints2');
+    fls = StorageLocation.getItem('cachedGamefouls2');
     pointsList = get('Main-List2').querySelectorAll('.c-ppo');
     foulsList = get('Main-List2').querySelectorAll('.c-pfo');
     var x = 0;
@@ -943,8 +949,10 @@ function loadDataFromCloud() {
             reloadp3Team();
 
             hideWarning();
-            if(localStorage.cachedGamepoints != {}) {
-                showWarning("Would you like to load your previous game?", "Yes", "No", "loadCachedData()");
+            if(!!sessionStorage.cachedGamepoints) {
+                loadCachedData(sessionStorage);
+            } else if(localStorage.cachedGamepoints != {}) {
+                showWarning("Would you like to load your previous game?", "Yes", "No", "loadCachedData(localStorage)");
             }
             globDataSaved = true;
           } catch {
