@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OnlineScoreboard</title>
+</head>
+<body>
+    <div class="TopMain">
+        <h1>OnlineScoreboard</h1>
+        <div id="topMainImageContainer">
+            <img src="promo/img1.png">
+        </div>
+    </div>
+    
+</body>
+</html>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+    * {
+        font-family: 'Nunito', sans-serif;
+    }
+    body {
+        background: linear-gradient(14deg, rgba(0,47,115,1) 0%, rgba(79,156,255,1) 100%);
+        min-height: 100vh;
+    }
+    .TopMain {
+        height: 100vh;
+        display: inline-flex;
+        vertical-align: middle;
+        position: relative;
+    }
+    .TopMain > * {
+        margin: auto;
+    }
+    .TopMain h1 {
+        font-size: 60px;
+        margin-left: 40px;
+        z-index: 10;
+        background: #ffffff7a;
+        padding: 20px;
+        border-radius: 20px;
+    }
+    #topMainImageContainer {
+        position: fixed;
+        right: 15px;
+        height: 70vh;
+        display: flex;
+        top: 20vh;
+        perspective: 1244px;
+    }
+    #topMainImageContainer img {
+        transform: rotateY(-40deg);
+    }
+</style>

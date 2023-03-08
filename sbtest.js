@@ -529,16 +529,35 @@ document.addEventListener("DOMContentLoaded", function() {
 //              Scoreboard Script
 //_______________________________________________
 
+var pointerData = {};
+
 let pointerAdd = 1;
 function cpAdd(i, j) {
-    btns = get('pointers').children;
-    Array.from(btns).forEach(btn => {
-        btn.style.outline = 'none';
-        btn.style.border = 'none';
-    });
+    get('pointer0').style.outline = 'none';
+    get('pointer0').style.border = 'none';
+    get('pointer1').style.outline = 'none';
+    get('pointer1').style.border = 'none';
+    get('pointer2').style.outline = 'none';
+    get('pointer2').style.border = 'none';
+    get('pointer3').style.outline = 'none';
+    get('pointer3').style.border = 'none';
     i.style.outline = 'solid white 1px';
     i.style.border = 'black solid 1px';
     pointerAdd = j;
+}
+function quarter(i, j) {
+    get('quarter1').style.outline = 'none';
+    get('quarter1').style.border = 'none';
+    get('quarter2').style.outline = 'none';
+    get('quarter2').style.border = 'none';
+    get('quarter3').style.outline = 'none';
+    get('quarter3').style.border = 'none';
+    get('quarter4').style.outline = 'none';
+    get('quarter4').style.border = 'none';
+    i.style.outline = 'solid white 1px';
+    i.style.border = 'black solid 1px';
+    console.log(i.innerHTML);
+    pointerData //// 
 }
 
 function p1AddPlayers(i) {
@@ -567,8 +586,16 @@ document.onkeydown = function(evt) {
         if(evt.key == "1") {get('pointer1').onclick();}
         if(evt.key == "2") {get('pointer2').onclick();}
         if(evt.key == "3") {get('pointer3').onclick();}
+
+        if(evt.key == "g") {gif();}
     }
 };
+
+function gif() {
+    /// https://www.hongkiat.com/blog/on-click-animated-gif/
+    /// Hmmmmmmmmmm
+    /// Setting the source and changing it or saving it somewhere or something.....
+}
 
 addEventListener("fullscreenchange", (event) => {
     if(!document.fullscreenElement && !inEditView) {
