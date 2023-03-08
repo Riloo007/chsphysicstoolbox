@@ -146,7 +146,9 @@ document.addEventListener('mousemove', function(event) {
     }
 });
 
-
+window.addEventListener("resize", (event) => {
+    recalculatep1Scale();
+});
 window.addEventListener('beforeunload', function (e) {
     if(!globDataSaved) {
         e.preventDefault();
@@ -251,6 +253,7 @@ function loadCachedData(StorageLocation) {
 document.addEventListener("DOMContentLoaded", function() {
     showWarning("Loading...");
     showPanel(1);
+    recalculatep1Scale();
 
     let onchangeElements = get('p2_settingsList').getElementsByTagName('input');
     for(let x = 0; x < onchangeElements.length; x++) {
@@ -281,15 +284,18 @@ function p1LoadTeam(i, team) {
 function recalculateHeights() {
     var l1length = get('Main-List1').children.length;
     var l2length = get('Main-List2').children.length;
-    var l1height = (l1length - 3) / 4 * (4 + get('Main-List1').children[4].scrollHeight);
-    var l2height = (l2length - 3) / 4 * (4 + get('Main-List2').children[4].scrollHeight);
+    var l1height = l1length * (get('Main-List1').children[4].scrollHeight + 2);
+    var l2height = l2length * (get('Main-List2').children[4].scrollHeight + 2);
     var newHeight;
-    if(l1height < l2height) {
-        newHeight = get('Main-List1').children[4].scrollHeight * l2length / l1length ;
+    if(l1height > l2height) {
+        //newHeight = get('Main-List1').children[4].scrollHeight * l2length / l1length ;
+        newHeight = l1height / l2length;
+        style(`#Main-List2 .c-pnu, #Main-List2 .c-pna, #Main-List2 .c-ppo, #Main-List2 .c-pfo {height: ${newHeight}px;}`);
     } else {
-        newHeight = get('Main-List2').children[4].scrollHeight * l1length / l2length ;
+        //newHeight = get('Main-List2').children[4].scrollHeight * l1length / l2length ;
+        newHeight = l2height / l1length;
+        style(`#Main-List1 .c-pnu, #Main-List1 .c-pna, #Main-List1 .c-ppo, #Main-List1 .c-pfo {height: ${newHeight}px;}`);
     }
-    style(`#Main-List2 * {height: ${newHeight}px;}`);
 }
 
 function style(i) {
@@ -589,6 +595,7 @@ function sidePanelExpand() {
     `)
     document.querySelector('.sp-logo').innerHTML = 'Online Scoreboard';
     document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(0deg)';
+    recalculatep1Scale()
 }
 function sidePanelShrink() {
     style(`
@@ -599,6 +606,14 @@ function sidePanelShrink() {
     `)
     document.querySelector('.sp-logo').innerHTML = 'OS';
     document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(180deg)';
+    recalculatep1Scale()
+}
+
+function recalculatep1Scale() {
+    if(inEditView) {
+        var calcScale = (window.innerWidth - (sidePanelShrunk ? 160 : 40) - 45) / window.innerWidth;
+        get('Main').style.transform = `scale(${calcScale})`;        
+    }
 }
 
 function toggleEditView() {
@@ -610,11 +625,13 @@ function toggleEditView() {
         get("displayPanelContent").classList.remove('dispView');
         get("mainPanel").classList.remove('dispView');
         exitfullScreen();
+        recalculatep1Scale();
     } else {
         get('expandIcon').style.backgroundImage = 'url(ex.png)'
         get("displayPanelContent").classList.add('dispView');
         get("mainPanel").classList.add('dispView');
         fullScreen();
+        get('Main').style.transform = `scale(1)`;
     }
 
     //get("Main-team1Header").readOnly = !inEditView;
