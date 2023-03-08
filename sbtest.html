@@ -34,6 +34,12 @@
         <div id="expandIcon" class="expandIcon"></div>
         <p>Enter Fullscreen</p>
       </div>
+
+      <div class="sp-vsSettings sp-btn" onclick="showPanel(4);">
+        <div id="vsSettingsIcon" class="vsSettingsIcon"></div>
+        <p>Settings</p>
+      </div>
+
       <div class="sp-menus">
         <div class="sp-vs sp-btn" onclick="showPanel(1);">
           <div id="vsIcon" class="vsIcon"></div>
@@ -43,9 +49,13 @@
           <div id="sp_colorBtn"><div></div><br><div></div><div></div></div>
           <p>Customize Display</p>
         </div>
-        <div class="sp-fs sp-btn" onclick="showPanel(3)">
+        <div class="sp-tm sp-btn" onclick="showPanel(3)">
           <div id="teamsIcon" class="teamsIcon"></div>
           <p>Team Management</p>
+        </div>
+        <div class="sp-anim sp-btn" onclick="showPanel(5)">
+          <div id="animIcon" class="animIcon"></div>
+          <p>Animations</p>
         </div>
       </div>
       <div class="sp-btn sp-collapse" onclick="sidePanelToggleES();">
@@ -150,11 +160,14 @@
     <button id="pointer2" onclick="cpAdd(this, 2);">+2</button>
     <button id="pointer3" onclick="cpAdd(this, 3);">+3</button>
 
+    <span id="quarters" style="display: none;">
+      <button id="quarter1" onclick="quarter(this, 1);">Q1</button>
+      <button id="quarter2" onclick="quarter(this, 2);">Q2</button>
+      <button id="quarter3" onclick="quarter(this, 3);">Q3</button>
+      <button id="quarter4" onclick="quarter(this, 4);">Q4</button>
+    </span>
     <!--
-    <button id="quarter1" onclick="quarter(this, 1);">Q1</button>
-    <button id="quarter2" onclick="quarter(this, 2);">Q2</button>
-    <button id="quarter3" onclick="quarter(this, 3);">Q3</button>
-    <button id="quarter4" onclick="quarter(this, 4);">Q4</button> -->
+     -->
   </div>
             </div>
         </div>
@@ -238,6 +251,46 @@
               <ul id="p3_settingsList">
               </ul>
               <button onclick="AddTeam('New Team');">Add Team</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="panel4">
+        <!-- Global Settings Editor -->
+        <button class="bkBtn" onclick="showPanel(1);">← Back</button>
+        <div class="p4_settingsPanel">
+          <div class="p4_settingsMenu" id="p4SettingsMenu">
+            <div class="p4_settingsList" id="p4_settingsList">
+              <div class="impMessage">
+                <p>This menu is still in development. Features may not work as expected!</p>
+              </div>
+              <h2>Settings</h2>
+               <h3>Layout</h3>
+               <p>Auto Stretch<input type="checkbox" onchange="this.checked ? p1AutoStretch = true : p1AutoStretch = false;"></p>
+               
+               <h3>Stats</h3>
+               <p>Show Quarters<input type="checkbox" onchange="this.checked ? get('quarters').style.display = 'block' : get('quarters').style.display = 'none';"></p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="panel5">
+        <!-- Animations Editor -->
+        <button class="bkBtn" onclick="showPanel(1);">← Back</button>
+        <div class="p4_settingsPanel">
+          <div class="p4_settingsMenu" id="p5SettingsMenu">
+            <div class="p4_settingsList" id="p5_settingsList">
+              <div class="impMessage">
+                <p>This menu is still in development. Features may not work as expected!</p>
+              </div>
+              <h2>Animations</h2>
+               <h3>Layout</h3>
+               <p>Auto Stretch<input type="checkbox" onchange="this.checked ? p1AutoStretch = true : p1AutoStretch = false;"></p>
+               
+               <h3>Stats</h3>
+               <p>Show Quarters<input type="checkbox" onchange="this.checked ? get('quarters').style.display = 'block' : get('quarters').style.display = 'none';"></p>
+
             </div>
           </div>
         </div>

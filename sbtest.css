@@ -46,6 +46,15 @@ table {
     border-collapse: collapse;
 }
 
+.impMessage {
+    width: calc(100% - 30px);
+    background: #ff9a9a;
+    padding: 15px;
+    border-radius: 5px;
+    background-image: url(warn.png);
+    background-size: 40px;
+}
+
 #sidePanel {
     position: relative;
 
@@ -163,6 +172,22 @@ select {
     display: none;
 }
 
+#panel4, #panel5 {
+    width: calc(100vw - 180px);
+    height: 100%;
+    border-radius: 5px;
+}
+.p4_settingsPanel {
+    height: 90%;
+    background: white;
+    padding: 15px;
+    margin: 5px;
+    border-radius: 5px;
+}
+#panel4 .bkBtn, #panel5 .bkBtn{
+    width: calc(100% - 10px);
+    height: 40px;
+}
 #panel2 {
     display: grid;
     grid-template-areas:
@@ -462,7 +487,7 @@ select {
     transform: scale(1);
 }
 
-.gearIcon, .trashIcon, .loadIcon, .vsIcon, .expandIcon, .upIcon, .downIcon, .teamsIcon, .collapseIcon {
+.gearIcon, .trashIcon, .loadIcon, .vsIcon, .vsSettingsIcon, .expandIcon, .upIcon, .downIcon, .teamsIcon, .collapseIcon, .animIcon {
     background-size: cover;
     margin-right: 10px;
     margin-left: 5px;
@@ -472,6 +497,12 @@ select {
     border-radius: 5px;
     transition-duration: 0.3s;
     cursor: pointer;
+}
+.animIcon {
+    background-image: url(anim/0001.png);
+}
+.vsSettingsIcon {
+    background-image: url(vsSettings.png);
 }
 .collapseIcon {
     background-image: url(collapse.png);
@@ -850,11 +881,11 @@ TODO:
   left: 1;
   right: 1;
   margin: auto;
-  margin-bottom: -45px;
+  margin-bottom: -90px;
   width: max-content;
   transition-duration: 0.5s;
 }
-#pointers > button {
+#pointers button {
   border-radius: 3px;
   border: 0px;
   background-color: rgb(141, 141, 141);
@@ -863,6 +894,7 @@ TODO:
   margin: 3px;
   padding: 5px;
   height: 30px;
+  width: 30px;
 }
 #pointers.shown {
     margin-bottom: 0px;

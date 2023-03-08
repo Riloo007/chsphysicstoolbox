@@ -100,6 +100,7 @@ function showPanel(i) {
         get('Main-List2').querySelectorAll('.c-pfo').forEach(foul => {foul.onchange();});
         get('Main-List1').querySelectorAll('.c-pfo').forEach(foul => {foul.onchange();});
         get("panel1").style.display = "";
+        recalculateHeights()
     } else if(i == 2) {
         document.querySelector('.sp-cb').classList.add('selected');
         if(ActiveTeam == "" && get('p1teamList1').value != get('p1teamList1').children[0].innerHTML) {
@@ -108,19 +109,30 @@ function showPanel(i) {
         }
         get("panel2").style.display = "";
         p2LoadTeam(ActiveTeam);
-    } else {
-        document.querySelector('.sp-fs').classList.add('selected');
+    } else if(i == 3) {
+        document.querySelector('.sp-tm').classList.add('selected');
         ActiveTeam != '' ? p2UpdateColors(ActiveTeam, false) : p3ShowNoTeam();
         get("panel3").style.display = "";
+    } else if(i == 4) {
+        document.querySelector('.sp-vsSettings').classList.add('selected');
+        get("panel4").style.display = "";
+    } else {
+        document.querySelector('.sp-anim').classList.add('selected');
+        get("panel5").style.display = "";
     }
 }
 function _hidePanels() {
     get("panel1").style.display = "none";
     get("panel2").style.display = "none";
     get("panel3").style.display = "none";
+    get("panel4").style.display = "none";
+    get("panel5").style.display = "none";
     document.querySelector('.sp-vs').classList.remove('selected');
     document.querySelector('.sp-cb').classList.remove('selected');
     document.querySelector('.sp-fs').classList.remove('selected');
+    document.querySelector('.sp-tm').classList.remove('selected');
+    document.querySelector('.sp-vsSettings').classList.remove('selected');
+    document.querySelector('.sp-anim').classList.remove('selected');
 }
 
 function toggleShowSidePanel(i) {
@@ -174,10 +186,17 @@ window.addEventListener('beforeunload', function (e) {
         x++
     });
 
-    sessionStorage.cachedGamepoints = JSON.stringify(ptsList);
-    sessionStorage.cachedGamefouls = JSON.stringify(flsList);
-    localStorage.cachedGamepoints = JSON.stringify(ptsList);
-    localStorage.cachedGamefouls = JSON.stringify(flsList);
+    if(Object.keys(ptsList).length > 0) {
+        sessionStorage.cachedGamepoints = JSON.stringify(ptsList);
+        sessionStorage.cachedGamefouls = JSON.stringify(flsList);
+        localStorage.cachedGamepoints = JSON.stringify(ptsList);
+        localStorage.cachedGamefouls = JSON.stringify(flsList);
+    } else {
+        delete this.sessionStorage.cachedGamepoints;
+        delete this.sessionStorage.cachedGamefouls;
+        delete this.localStorage.cachedGamepoints;
+        delete this.localStorage.cachedGamefouls;
+    }
 
     ///
 
@@ -196,10 +215,17 @@ window.addEventListener('beforeunload', function (e) {
         x++
     });
 
-    sessionStorage.cachedGamepoints2 = JSON.stringify(ptsList);
-    sessionStorage.cachedGamefouls2 = JSON.stringify(flsList);
-    localStorage.cachedGamepoints2 = JSON.stringify(ptsList);
-    localStorage.cachedGamefouls2 = JSON.stringify(flsList);
+    if(Object.keys(ptsList).length > 0) {
+        sessionStorage.cachedGamepoints2 = JSON.stringify(ptsList);
+        sessionStorage.cachedGamefouls2 = JSON.stringify(flsList);
+        localStorage.cachedGamepoints2 = JSON.stringify(ptsList);
+        localStorage.cachedGamefouls2 = JSON.stringify(flsList);
+    } else {
+        delete this.sessionStorage.cachedGamepoints2;
+        delete this.sessionStorage.cachedGamefouls2;
+        delete this.localStorage.cachedGamepoints2;
+        delete this.localStorage.cachedGamefouls2;
+    }
 
     //localStorage.cachedGamefullHTMLdata = get('Main').innerHTML;
 });
@@ -281,20 +307,24 @@ function p1LoadTeam(i, team) {
     
     p1LoadStyles(i-1, team);
 }
+
+var p1AutoStretch = false;
 function recalculateHeights() {
-    var l1length = get('Main-List1').children.length;
-    var l2length = get('Main-List2').children.length;
-    var l1height = l1length * (get('Main-List1').children[4].scrollHeight + 2);
-    var l2height = l2length * (get('Main-List2').children[4].scrollHeight + 2);
-    var newHeight;
-    if(l1height > l2height) {
-        //newHeight = get('Main-List1').children[4].scrollHeight * l2length / l1length ;
-        newHeight = l1height / l2length;
-        style(`#Main-List2 .c-pnu, #Main-List2 .c-pna, #Main-List2 .c-ppo, #Main-List2 .c-pfo {height: ${newHeight}px;}`);
-    } else {
-        //newHeight = get('Main-List2').children[4].scrollHeight * l1length / l2length ;
-        newHeight = l2height / l1length;
-        style(`#Main-List1 .c-pnu, #Main-List1 .c-pna, #Main-List1 .c-ppo, #Main-List1 .c-pfo {height: ${newHeight}px;}`);
+    if(p1AutoStretch) {
+        var l1length = get('Main-List1').children.length;
+        var l2length = get('Main-List2').children.length;
+        var l1height = l1length * (get('Main-List1').children[4].scrollHeight + 2);
+        var l2height = l2length * (get('Main-List2').children[4].scrollHeight + 2);
+        var newHeight;
+        if(l1height > l2height) {
+            //newHeight = get('Main-List1').children[4].scrollHeight * l2length / l1length ;
+            newHeight = l1height / l2length;
+            style(`#Main-List2 .c-pnu, #Main-List2 .c-pna, #Main-List2 .c-ppo, #Main-List2 .c-pfo {height: ${newHeight}px;}`);
+        } else {
+            //newHeight = get('Main-List2').children[4].scrollHeight * l1length / l2length ;
+            newHeight = l2height / l1length;
+            style(`#Main-List1 .c-pnu, #Main-List1 .c-pna, #Main-List1 .c-ppo, #Main-List1 .c-pfo {height: ${newHeight}px;}`);
+        }        
     }
 }
 
@@ -619,6 +649,7 @@ function sidePanelExpand() {
     #panel2 {width: calc(100vw - 170px);}
     .sp-btn p {display: inline;}
     .sBtn {width: calc(100% - 245px); margin-left: 200px;}
+    #panel4, #panel5 {width: calc(100vw - 180px);}
     `)
     document.querySelector('.sp-logo').innerHTML = 'Online Scoreboard';
     document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(0deg)';
@@ -630,6 +661,7 @@ function sidePanelShrink() {
     #panel2 {width: calc(100vw - 50px);}
     .sp-btn p {display: none;}
     .sBtn {width: calc(100% - 115px); margin-left: 70px;}
+    #panel4, #panel5 {width: calc(100vw - 55px);}
     `)
     document.querySelector('.sp-logo').innerHTML = 'OS';
     document.querySelector('.sp-collapse').children[0].style.transform = 'rotate(180deg)';
@@ -995,12 +1027,14 @@ function loadDataFromCloud() {
             hideWarning();
             if(!!sessionStorage.cachedGamepoints) {
                 loadCachedData(sessionStorage);
-            } else if(localStorage.cachedGamepoints != {}) {
+            } else if(!!localStorage.cachedGamepoints) {
                 showWarning("Would you like to load your previous game?", "Yes", "No", "loadCachedData(localStorage)");
             }
             globDataSaved = true;
-          } catch {
+          } catch (error) {
+            console.log(error);
             console.log('Teams Path not Found');
+            
             showPanel(3);
             showWarning("No teams found, start by creating some", "Okay")
           }
