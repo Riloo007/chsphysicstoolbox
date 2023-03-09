@@ -161,11 +161,64 @@ document.addEventListener('mousemove', function(event) {
 window.addEventListener("resize", (event) => {
     recalculatep1Scale();
 });
+
+function getScoresData(team) {
+    var loc; // Which List to read
+    var ptsList = {};
+    var flsList = {};
+    var x = 0;
+    if(get('p1teamList1').value == team) {loc = 'Main-List1';}
+    if(get('p1teamList2').value == team) {loc = 'Main-List2';}
+    if(loc == undefined) {return 'Not a valid team';}
+
+    const numbersList = get(loc).querySelectorAll('.c-pnu');
+    const pointsList = get(loc).querySelectorAll('.c-ppo');
+    const foulsList = get(loc).querySelectorAll('.c-pfo');
+    for(x = 0; x < pointsList.length; x++) {
+        ptsList[numbersList[x].value] = pointsList[x].value;
+        flsList[numbersList[x].value] = foulsList[x].value;
+    }
+
+    return {
+        pts: ptsList,
+        fls: flsList
+    }
+}
+
+function loadScoresData(team) {
+    /*
+    var loc; // Which List to read
+    var ptsList = {};
+    var flsList = {};
+    var x = 0;
+    if(get('p1teamList1').value == team) {loc = 'Main-List1';}
+    if(get('p1teamList2').value == team) {loc = 'Main-List2';}
+    if(loc == undefined) {return 'Not a valid team';}
+
+    const numbersList = get(loc).querySelectorAll('.c-pnu');
+    const pointsList = get(loc).querySelectorAll('.c-ppo');
+    const foulsList = get(loc).querySelectorAll('.c-pfo');
+    for(x = 0; x < pointsList.length; x++) {
+        ptsList[numbersList[x].value] = pointsList[x].value;
+        flsList[numbersList[x].value] = foulsList[x].value;
+    }
+
+    return {
+        pts: ptsList,
+        fls: flsList
+    }*/
+    return 'NOT IMPLEMENTED'
+}
+
 window.addEventListener('beforeunload', function (e) {
+    // Prevent Accidental Reload
     if(!globDataSaved) {
         e.preventDefault();
         e.returnValue = '';
     }
+
+    this.sessionStorage.scoresData = getScoresData();
+
     sessionStorage.cachedGamep1a = get('p1teamList1').value;
     sessionStorage.cachedGamep1b = get('p1teamList2').value;
     localStorage.cachedGamep1a = get('p1teamList1').value;
@@ -559,7 +612,8 @@ document.addEventListener("DOMContentLoaded", function() {
 //              Scoreboard Script
 //_______________________________________________
 
-var pointerData = {};
+var QuartersPointerData = {};
+var currentQuarter = 'Q1';
 
 let pointerAdd = 1;
 function cpAdd(i, j) {
@@ -587,8 +641,36 @@ function quarter(i, j) {
     i.style.outline = 'solid white 1px';
     i.style.border = 'black solid 1px';
     console.log(i.innerHTML);
-    pointerData //// 
+    
+    QuartersPointerData[currentQuarter] = getScoresData();
+    loadQuarter(QuartersPointerData['Q' + j]); // Q1, Q2, Q3, Q4
 }
+
+var pointsData = {quarters: {}};
+function loadQuarter(quarter) {
+    const t1 = getScoresData(get('p1teamList1').value);
+    const t2 = getScoresData(get('p1teamList2').value);
+    //pointsData.quarters[get('p1teamList1').value][currentQuarter] = t1;
+    //pointsData.quarters[get('p1teamList2').value][currentQuarter] = t2;
+    var newData = {
+        quarters: {
+            ...{[get('p1teamList1').value]: {
+                ...{[currentQuarter]: t1}
+            }},
+            ...{[get('p1teamList2').value]: {
+                ...{[currentQuarter]: t2}
+            }},
+        }
+    }
+    pointsData = Object.assign({}, pointsData, newData);
+
+    currentQuarter = quarter;
+    if(!!pointsData.quarters[get('p1teamList1').value]) {loadScoresData(get('p1teamList1').value);} else {resetScores(1);}
+    if(!!pointsData.quarters[get('p1teamList2').value]) {loadScoresData(get('p1teamList2').value);} else {resetScores(2);}
+}
+
+
+
 
 function p1AddPlayers(i) {
     if(i == 1) {
