@@ -74,6 +74,32 @@ function exitfullScreen() {
     document.querySelector('.sp-fs').children[1].innerHTML = 'Enter Fullscreen';
 }
 
+/*   ----------------------------------------------------------------------------------------------------------------------   */
+/*   Taken from https://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically   */
+function MergeRecursive(obj1, obj2) {
+
+    for (var p in obj2) {
+      try {
+        // Property in destination object set; update its value.
+        if ( obj2[p].constructor==Object ) {
+          obj1[p] = MergeRecursive(obj1[p], obj2[p]);
+  
+        } else {
+          obj1[p] = obj2[p];
+  
+        }
+  
+      } catch(e) {
+        // Property in destination object not set; create it and set its value.
+        obj1[p] = obj2[p];
+  
+      }
+    }
+  
+    return obj1;
+}
+/*   ----------------------------------------------------------------------------------------------------------------------   */
+
 function p3ShowNoTeam() {
     get('p3NoTeam').style.display = 'block';
 }
@@ -166,7 +192,6 @@ function getScoresData(team) {
     var loc; // Which List to read
     var ptsList = {};
     var flsList = {};
-    var x = 0;
     if(get('p1teamList1').value == team) {loc = 'Main-List1';}
     if(get('p1teamList2').value == team) {loc = 'Main-List2';}
     if(loc == undefined) {return 'Not a valid team';}
@@ -185,29 +210,24 @@ function getScoresData(team) {
     }
 }
 
-function loadScoresData(team) {
-    /*
+function loadScoresData(team, data) {
     var loc; // Which List to read
-    var ptsList = {};
-    var flsList = {};
-    var x = 0;
     if(get('p1teamList1').value == team) {loc = 'Main-List1';}
     if(get('p1teamList2').value == team) {loc = 'Main-List2';}
     if(loc == undefined) {return 'Not a valid team';}
+    if(data == undefined) {return 'Invalid Data';}
 
     const numbersList = get(loc).querySelectorAll('.c-pnu');
     const pointsList = get(loc).querySelectorAll('.c-ppo');
     const foulsList = get(loc).querySelectorAll('.c-pfo');
     for(x = 0; x < pointsList.length; x++) {
-        ptsList[numbersList[x].value] = pointsList[x].value;
-        flsList[numbersList[x].value] = foulsList[x].value;
+        // Numbers list, pts list and fouls list are all gonna be in the same order
+        // So, NumbersList[x] is the same player as pointsList[x].
+        foulsList[x].value = data.fls[numbersList[x].value];
+        pointsList[x].value = data.pts[numbersList[x].value];
     }
 
-    return {
-        pts: ptsList,
-        fls: flsList
-    }*/
-    return 'NOT IMPLEMENTED'
+    return 'Loaded data to onscreen team "' + team + '"';
 }
 
 window.addEventListener('beforeunload', function (e) {
@@ -612,8 +632,8 @@ document.addEventListener("DOMContentLoaded", function() {
 //              Scoreboard Script
 //_______________________________________________
 
-var QuartersPointerData = {};
 var currentQuarter = 'Q1';
+var QuartersPointerData = {quarters: {}};
 
 let pointerAdd = 1;
 function cpAdd(i, j) {
@@ -630,6 +650,11 @@ function cpAdd(i, j) {
     pointerAdd = j;
 }
 function quarter(i, j) {
+    for(x = 0; x < 4; x++) {
+        get('quarters').children[x].classList.remove('selected');
+        get('quartersMenu').children[x].classList.remove('selected');
+    }
+    /*
     get('quarter1').style.outline = 'none';
     get('quarter1').style.border = 'none';
     get('quarter2').style.outline = 'none';
@@ -639,34 +664,43 @@ function quarter(i, j) {
     get('quarter4').style.outline = 'none';
     get('quarter4').style.border = 'none';
     i.style.outline = 'solid white 1px';
-    i.style.border = 'black solid 1px';
+    i.style.border = 'black solid 1px';*/
+    i.classList.add('selected');
     console.log(i.innerHTML);
     
-    QuartersPointerData[currentQuarter] = getScoresData();
-    loadQuarter(QuartersPointerData['Q' + j]); // Q1, Q2, Q3, Q4
-}
+// * Save current quarter * //
 
-var pointsData = {quarters: {}};
-function loadQuarter(quarter) {
-    const t1 = getScoresData(get('p1teamList1').value);
-    const t2 = getScoresData(get('p1teamList2').value);
-    //pointsData.quarters[get('p1teamList1').value][currentQuarter] = t1;
-    //pointsData.quarters[get('p1teamList2').value][currentQuarter] = t2;
+    // Original format looks like this: 
+    // QuartersPointerData.quarters[get('p1teamList1').value][currentQuarter] = getScoresData(get('p1teamList1').value);
+    // QuartersPointerData.quarters[get('p1teamList2').value][currentQuarter] = getScoresData(get('p1teamList2').value);
+    // But this doesn't work for undefined indexes, so we have to merge it like below
+
     var newData = {
         quarters: {
             ...{[get('p1teamList1').value]: {
-                ...{[currentQuarter]: t1}
+                ...{[currentQuarter]: getScoresData(get('p1teamList1').value)}
             }},
             ...{[get('p1teamList2').value]: {
-                ...{[currentQuarter]: t2}
+                ...{[currentQuarter]: getScoresData(get('p1teamList2').value)}
             }},
         }
     }
-    pointsData = Object.assign({}, pointsData, newData);
 
-    currentQuarter = quarter;
-    if(!!pointsData.quarters[get('p1teamList1').value]) {loadScoresData(get('p1teamList1').value);} else {resetScores(1);}
-    if(!!pointsData.quarters[get('p1teamList2').value]) {loadScoresData(get('p1teamList2').value);} else {resetScores(2);}
+    MergeRecursive(QuartersPointerData, newData);
+
+// * Load next quarter * //
+
+    currentQuarter = 'Q' + j; // Q1, Q2, Q3, Q4
+
+    resetScores(1); // Reset scores in case there
+    resetScores(2); // is no data to load
+
+    if(!!QuartersPointerData.quarters[get('p1teamList1').value][currentQuarter]) {
+        loadScoresData(get('p1teamList1').value, QuartersPointerData.quarters[get('p1teamList1').value][currentQuarter]);
+    }
+    if(!!QuartersPointerData.quarters[get('p1teamList2').value][currentQuarter]) {
+        loadScoresData(get('p1teamList2').value, QuartersPointerData.quarters[get('p1teamList2').value][currentQuarter]);
+    }
 }
 
 
@@ -777,8 +811,10 @@ function toggleEditView() {
 
     //get("Main-team1Header").readOnly = !inEditView;
     //get("Main-team2Header").readOnly = !inEditView;
-    inEditView ? get("clearScores1").style.display = "" : get("clearScores1").style.display = "none";
-    inEditView ? get("clearScores2").style.display = "" : get("clearScores2").style.display = "none";
+    //inEditView ? get("clearScores1").style.display = "" : get("clearScores1").style.display = "none";
+    //inEditView ? get("clearScores2").style.display = "" : get("clearScores2").style.display = "none";
+
+    inEditView ? get("topGameSettings").style.display = "" : get("topGameSettings").style.display = "none";
 
     updateAttributes(get("Main-List1"));
     updateAttributes(get("Main-List2"));
@@ -807,16 +843,20 @@ function updateAttributes(teamList, iev) {
     }
 }
 
-function resetScores(i) {
-    textColor = userData.Basketball.Teams[get('p1teamList' + i).value].Settings.TSColor;
-    i == 1 ? teamList = get("Main-List1") : teamList = get("Main-List2");
-    for (let i = 0; i < ((teamList.childElementCount - 3) / 4); i++) {
-        let p = i * 4 + 3;
-        teamList.children[p + 2].value = '0';
-        teamList.children[p + 3].value = '0';
-        teamList.children[p + 2].style.color = textColor;
-        teamList.children[p + 3].style.color = textColor;
+function resetScores() {
+    for(i=1;i<3;i++) {
+        i == 1 ? teamList = get("Main-List1") : teamList = get("Main-List2");
+        textColor = userData.Basketball.Teams[get('p1teamList' + i).value].Settings.TSColor;
+        
+        for (let i = 0; i < ((teamList.childElementCount - 3) / 4); i++) {
+            let p = i * 4 + 3;
+            teamList.children[p + 2].value = '0';
+            teamList.children[p + 3].value = '0';
+            teamList.children[p + 2].style.color = textColor;
+            teamList.children[p + 3].style.color = textColor;
+        }
     }
+
 }
 
 function incVal(i, j, k) {

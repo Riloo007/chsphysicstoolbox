@@ -121,6 +121,15 @@
 
               <table id="Main">
                 <tbody>
+                  <div class="topGameSettings" id="topGameSettings">
+                    <button class="clearBtn" id="clearScores1" onClick="resetScores()">Clear Scores</button>
+                    <span id="quartersMenu">
+                      <button onclick="quarter(this, 1);">Q1</button>
+                      <button onclick="quarter(this, 2);">Q2</button>
+                      <button onclick="quarter(this, 3);">Q3</button>
+                      <button onclick="quarter(this, 4);">Q4</button>
+                    </span>
+                  </div>
 
                   <tr>
                     <td class="dp2">
@@ -129,7 +138,6 @@
                         <div id="Main-List1" class="Main-lists">
                           <p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>
                         </div>
-                        <button class="clearBtn" id="clearScores1" onClick="resetScores(1)">Clear Scores</button>
                       </div>
                       <div class="overlay"></div>
                       <div id="p1aNoTeam">
@@ -142,7 +150,6 @@
                         <div id="Main-List2" class="Main-lists">
                           <p class="h-pl">Player</p><p class="h-po">Points</p><p class="h-fo">Fouls</p>
                         </div>
-                        <button class="clearBtn" id="clearScores2" onClick="resetScores(2)">Clear Scores</button>
                       </div>
                       <div class="overlay"></div>
                       <div id="p1bNoTeam">
@@ -161,10 +168,10 @@
     <button id="pointer3" onclick="cpAdd(this, 3);">+3</button>
 
     <span id="quarters" style="display: none;">
-      <button id="quarter1" onclick="quarter(this, 1);">Q1</button>
-      <button id="quarter2" onclick="quarter(this, 2);">Q2</button>
-      <button id="quarter3" onclick="quarter(this, 3);">Q3</button>
-      <button id="quarter4" onclick="quarter(this, 4);">Q4</button>
+      <button onclick="quarter(this, 1);">Q1</button>
+      <button onclick="quarter(this, 2);">Q2</button>
+      <button onclick="quarter(this, 3);">Q3</button>
+      <button onclick="quarter(this, 4);">Q4</button>
     </span>
     <!--
      -->
@@ -201,6 +208,7 @@
             <div class="p2_settingsList" id="p2_settingsList">
                <h3>Backdrop</h3>
                <p>Color: <input id="p2BColor" type="color"></p>
+
                <p>Logo URL: <input id="p2BImg" type="url"></p>
                <p>Logo Size: <input id="p2BSize" type="range" min="0" max="300"></p>
                <p>Blur: <input id="p2BBlur" type="range" max="100" min="0" value="0"></p>
@@ -271,6 +279,11 @@
                <h3>Stats</h3>
                <p>Show Quarters<input type="checkbox" onchange="this.checked ? get('quarters').style.display = 'block' : get('quarters').style.display = 'none';"></p>
 
+               <div class="colorPicker">
+                <div class="colorPicker-brightness"></div>
+                <div class="colorPicker-hue"></div>
+                <div class="colorPicker-saturation"></div>
+               </div>
             </div>
           </div>
         </div>

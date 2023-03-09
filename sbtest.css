@@ -218,6 +218,50 @@ select {
 .topMenu select.selected:hover, #menuPanel select.selected:hover {
     background: #cadde5;
 }
+.topGameSettings {
+    width: calc(100% - 10px);
+    background: white;
+    padding: 5px;
+    display: inline-flex;
+    text-align: center;
+}
+.topGameSettings * {margin: auto;}
+
+.colorPicker {
+    width: 250px;
+    height: 110px;
+    background: #fafafa;
+    box-shadow: 3px 3px 20px grey;
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    vertical-align: middle;
+}
+.colorPicker * {
+    width: 250px;
+    height: 30px;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin: auto;
+}
+.colorPicker-brightness {
+    background: linear-gradient(45deg, black, transparent);
+}
+.colorPicker-hue {
+    background: linear-gradient(to right, red 0%, #ff0 17%, lime 33%, cyan 50%, blue 66%, #f0f 83%, red 100%);
+}
+.colorPicker-saturation {
+    background: linear-gradient(to right, red 0%, white 100%);
+}
+
+#quarters button {
+    outline: none;
+    border: none;
+}
+#quarters button.selected {
+    outline: black solid 1px;
+    border: white solid 1px;
+}
 
 #panel2 div.displayPanel {
     grid-area: dispPanel;
