@@ -207,7 +207,7 @@
           <div class="p2_settingsMenu" id="p2SettingsMenu">
             <div class="p2_settingsList" id="p2_settingsList">
                <h3>Backdrop</h3>
-               <p>Color: <input id="p2BColor" type="color"></p>
+               <p>Color: <input type="color" id="p2BColor"></p>
 
                <p>Logo URL: <input id="p2BImg" type="url"></p>
                <p>Logo Size: <input id="p2BSize" type="range" min="0" max="300"></p>
@@ -279,10 +279,14 @@
                <h3>Stats</h3>
                <p>Show Quarters<input type="checkbox" onchange="this.checked ? get('quarters').style.display = 'block' : get('quarters').style.display = 'none';"></p>
 
+               
                <div class="colorPicker">
-                <div class="colorPicker-brightness"></div>
-                <div class="colorPicker-hue"></div>
-                <div class="colorPicker-saturation"></div>
+                <div class="colorPicker-bars">
+                  <div class="colorPicker-brightness"><input type="range" min="0" max="100" value="0" oninput="colorPickerSlider(this)" class="acp-v colorPicker-handle"></input></div>
+                  <div class="colorPicker-hue"><input type="range" min="0" max="359" value="0" oninput="colorPickerSlider(this)" class="acp-h colorPicker-handle"></input></div>
+                  <div class="colorPicker-saturation"><input type="range" min="0" max="100" value="0" oninput="colorPickerSlider(this)" class="acp-s colorPicker-handle"></input></div>
+                </div>
+                <input class="colorPicker-preview" type="color" id="p2BColor"></input>
                </div>
             </div>
           </div>

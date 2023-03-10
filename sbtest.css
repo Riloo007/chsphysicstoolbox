@@ -52,7 +52,13 @@ table {
     padding: 15px;
     border-radius: 5px;
     background-image: url(warn.png);
-    background-size: 40px;
+    background-size: 23px;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-origin: content-box;
+}
+.impMessage p {
+    padding-left: 26px;
 }
 
 #sidePanel {
@@ -220,39 +226,106 @@ select {
 }
 .topGameSettings {
     width: calc(100% - 10px);
-    background: white;
+    background: rgba(255, 255, 255, 0.548);
     padding: 5px;
     display: inline-flex;
     text-align: center;
+    position: absolute;
+    z-index: 10;
+    border-radius: inherit;
 }
 .topGameSettings * {margin: auto;}
 
 .colorPicker {
-    width: 250px;
-    height: 110px;
+    width: 320px;
+    height: 130px;
     background: #fafafa;
     box-shadow: 3px 3px 20px grey;
     border-radius: 10px;
-    padding: 10px;
+    display: flex;
+}
+.colorPicker-bars {
     display: grid;
     vertical-align: middle;
+    padding: 10px;
+    width: 240px;
+    height: 110px;
 }
-.colorPicker * {
+.colorPicker-bars > div {
     width: 250px;
     height: 30px;
     border-radius: 20px;
     vertical-align: middle;
     margin: auto;
+    border: solid black 2px;
 }
 .colorPicker-brightness {
-    background: linear-gradient(45deg, black, transparent);
+    background: linear-gradient(to right, black 0%, white 100%);
 }
 .colorPicker-hue {
     background: linear-gradient(to right, red 0%, #ff0 17%, lime 33%, cyan 50%, blue 66%, #f0f 83%, red 100%);
 }
 .colorPicker-saturation {
-    background: linear-gradient(to right, red 0%, white 100%);
+    background: linear-gradient(to left, red 0%, gray 100%);
 }
+
+.colorPicker-preview {
+    width: 100%;
+    height: calc(100% - 20px);
+    background: black;
+    margin: 10px;
+    border-radius: 5px;
+    border: solid 2px black;
+    pointer-events: none;
+}
+.colorPicker-preview::-webkit-color-swatch {
+    border: none;
+    cursor: pointer;
+}
+
+/* For Divs
+.colorPicker-handle {
+    width: 16;
+    height: 16;
+    border-radius: 50%;
+    border: solid 7px black;
+
+    /* Variable 
+    background: #ff0000;
+}
+*/
+.colorPicker-bars input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 100%;
+    background: none;
+}
+input.colorPicker-handle::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: solid 6px black;
+    cursor: pointer;
+    transform: scale(1.05);
+}
+input.acp-h::-webkit-slider-thumb {background: #ff0000;}
+input.acp-s::-webkit-slider-thumb {background: #646464;}
+input.acp-v::-webkit-slider-thumb {background: #000000;}
+
+.colorPicker input::-moz-range-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #646464;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: solid 6px black;
+    cursor: pointer;
+}
+
 
 #quarters button {
     outline: none;
@@ -432,6 +505,7 @@ select {
     background-color: #000000;
     overflow-y: auto;
     overflow-x: hidden;
+    position: relative;
 }
 .displayPanelContent {
     height: 100%;

@@ -15,6 +15,19 @@ function clipHEX(num) {
     if(num.length < 2) {num = '0' + num;}
     return num;
 }
+function toColorHEXBrightness(number) {
+    return '#' + clipHEX(parseInt(number).toString(16)) + clipHEX(parseInt(number).toString(16)) + clipHEX(parseInt(number).toString(16));
+}
+function toColorHEXHue(number) {
+
+    return '#' + clipHEX(parseInt(number).toString(16)) + clipHEX(parseInt(number).toString(16)) + clipHEX(parseInt(number).toString(16));
+}
+function toColorHEXSaturation(number) {
+
+
+    return hsl()
+    return '#' + clipHEX(parseInt(number).toString(16)) + clipHEX(parseInt(number).toString(16)) + clipHEX(parseInt(number).toString(16));
+}
 
 function dropdown(i) {
     i.style.position = "fixed";
@@ -626,6 +639,104 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector(':root').style.setProperty('--dispContent-initial-top', displayPanelContentTop);
     document.querySelector(':root').style.setProperty('--dispContent-initial-left', displayPanelContentLeft);
 }); */
+
+/// ----- Obtained from https://css-tricks.com/converting-color-spaces-in-javascript/ --------
+function HSLToHex(h,s,l) {
+    s /= 100;
+    l /= 100;
+  
+    let c = (1 - Math.abs(2 * l - 1)) * s,
+        x = c * (1 - Math.abs((h / 60) % 2 - 1)),
+        m = l - c/2,
+        r = 0,
+        g = 0, 
+        b = 0; 
+  
+    if (0 <= h && h < 60) {
+      r = c; g = x; b = 0;
+    } else if (60 <= h && h < 120) {
+      r = x; g = c; b = 0;
+    } else if (120 <= h && h < 180) {
+      r = 0; g = c; b = x;
+    } else if (180 <= h && h < 240) {
+      r = 0; g = x; b = c;
+    } else if (240 <= h && h < 300) {
+      r = x; g = 0; b = c;
+    } else if (300 <= h && h < 360) {
+      r = c; g = 0; b = x;
+    }
+    // Having obtained RGB, convert channels to hex
+    r = Math.round((r + m) * 255).toString(16);
+    g = Math.round((g + m) * 255).toString(16);
+    b = Math.round((b + m) * 255).toString(16);
+  
+    // Prepend 0s, if necessary
+    if (r.length == 1)
+      r = "0" + r;
+    if (g.length == 1)
+      g = "0" + g;
+    if (b.length == 1)
+      b = "0" + b;
+
+    console.log(r, g, b)
+  
+    return "#" + r + g + b;
+}
+/// -------------------------------------------
+
+
+function colorPickerSlider(inputSlider) {
+    //inputSlider.style.webkitSliderBackgroundColor = '#' + clipHEX(inputSlider.value) + clipHEX(inputSlider.value) + clipHEX(inputSlider.value);
+
+    var hue;
+    var saturation;
+    var lightness;
+
+    if(inputSlider.parentElement.classList.contains('colorPicker-brightness')) {
+        hue = 0; saturation = 0; lightness = inputSlider.value;
+    } else if(inputSlider.parentElement.classList.contains('colorPicker-hue')) {
+        hue = inputSlider.value; saturation = 100; lightness = 50;
+        style(`.colorPicker-saturation {background: linear-gradient(to left, ${HSLToHex(hue, 100, 50)} 0%, gray 100%);}
+        input.acp-s::-webkit-slider-thumb {background: ${HSLToHex(hue, inputSlider.parentElement.parentElement.querySelector('.acp-s').value, 50)}}`)
+    } else if(inputSlider.parentElement.classList.contains('colorPicker-saturation')) {
+        hue = inputSlider.parentElement.parentElement.querySelector('.colorPicker-hue').children[0].value;
+        saturation = inputSlider.value; lightness = inputSlider.value;
+        lightness = 50;
+    }
+
+    //const color = 'hsl(' + hue + ',' + saturation + ',' + lightness + ')'
+    const slidercolor = HSLToHex(hue, saturation, lightness);
+    const realHue = inputSlider.parentElement.parentElement.querySelector('.colorPicker-hue').children[0].value;
+    const realSaturation = inputSlider.parentElement.parentElement.querySelector('.colorPicker-saturation').children[0].value;
+    const realBrightness = inputSlider.parentElement.parentElement.querySelector('.colorPicker-brightness').children[0].value;
+
+    var rbrightness = realBrightness - ((realSaturation) / 2)
+
+    const color = HSLToHex(realHue, realSaturation, rbrightness);
+
+    inputSlider.parentElement.parentElement.parentElement.querySelector('.colorPicker-preview').value = color;
+    inputSlider.parentElement.parentElement.parentElement.querySelector('.colorPicker-preview').style.background = color;
+    
+    try {
+        style(`
+    
+        input.${inputSlider.classList[0]}::-webkit-slider-thumb {
+            background: ${slidercolor};
+        }
+        
+        
+        `)
+    } catch {
+        style(`
+    
+        input.${inputSlider.classList[0]}::-moz-range-thumb {
+            background: ${slidercolor};
+        }
+        
+        
+        `)
+    }
+}
 
 //_______________________________________________
 //
