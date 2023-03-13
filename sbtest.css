@@ -992,8 +992,8 @@ TODO:
  14. Public Teams; easy team matching between multiple schools.
 */
 
-#pointers {
-  display: block;
+#quickMenu {
+  display: inline-flex;
   position: fixed;
   bottom: 5px;
   left: 1;
@@ -1002,11 +1002,37 @@ TODO:
   margin-bottom: -90px;
   width: max-content;
   transition-duration: 0.5s;
+
+  background: white;
+  padding: 5px;
+  bottom: 0;
+  border-radius: 10px 10px 0px 0px;
+  opacity: 0.2;
+  user-select: none;
 }
-#pointers button {
+#quickMenu.shown {
+  margin-bottom: 0px;
+}
+#quickMenu div {
+  border: solid 2px black;
+  border-radius: 5px;
+  margin-top: 8px;
+}
+#quickMenu div p {
+  background: white;
+  margin-top: -14px;
+  margin-left: 5px;
+  padding: 3px;
+  width: fit-content;
+  font-family: 'Nunito';
+  margin-bottom: -6px;
+}
+#pointers button, #quarters button {
+  border: none;
+  outline: none;
+  
   border-radius: 3px;
-  border: 0px;
-  background-color: rgb(141, 141, 141);
+  background-color: white;
   cursor: pointer;
   font-size: large;
   margin: 3px;
@@ -1014,6 +1040,23 @@ TODO:
   height: 30px;
   width: 30px;
 }
-#pointers.shown {
-    margin-bottom: 0px;
+#quickMenu div {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+#quickMenu div#Game button {
+  width: fit-content;
+  height: 30px;
+  margin: 5;
+  border: none;
+  outline: none;
+  box-shadow: black 0px 0px 5px;
+  font-size: 20;
+}
+
+#pointers button:not(#pointer1), #quarters button {
+  box-shadow: black 0px 0px 3px;
+}
+#pointer1, #quarters button:nth-of-type(1) {
+  box-shadow: black 0px 0px 5px inset;
 }

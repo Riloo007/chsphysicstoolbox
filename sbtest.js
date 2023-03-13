@@ -191,9 +191,9 @@ document.addEventListener('mousemove', function(event) {
     }
 
     if(event.clientY >= (window.innerHeight - 50) && !inEditView) {
-        get('pointers').classList.add('shown');
+        get('quickMenu').classList.add('shown');
     } else if (!inEditView) {
-        get('pointers').classList.remove('shown');
+        get('quickMenu').classList.remove('shown');
     }
 });
 
@@ -748,16 +748,11 @@ var QuartersPointerData = {quarters: {}};
 
 let pointerAdd = 1;
 function cpAdd(i, j) {
-    get('pointer0').style.outline = 'none';
-    get('pointer0').style.border = 'none';
-    get('pointer1').style.outline = 'none';
-    get('pointer1').style.border = 'none';
-    get('pointer2').style.outline = 'none';
-    get('pointer2').style.border = 'none';
-    get('pointer3').style.outline = 'none';
-    get('pointer3').style.border = 'none';
-    i.style.outline = 'solid white 1px';
-    i.style.border = 'black solid 1px';
+    get('pointer0').style.boxShadow = 'black 0px 0px 3px';
+    get('pointer1').style.boxShadow = 'black 0px 0px 3px';
+    get('pointer2').style.boxShadow = 'black 0px 0px 3px';
+    get('pointer3').style.boxShadow = 'black 0px 0px 3px';
+    i.style.boxShadow = 'inset black 0px 0px 5px';
     pointerAdd = j;
 }
 function quarter(i, j) {
@@ -955,6 +950,10 @@ function updateAttributes(teamList, iev) {
 }
 
 function resetScores() {
+    ccScoresCountdown = 0;
+    get('resetScoresQuickButton').innerHTML = "Clear Scores";
+    get('resetScoresQuickButton').setAttribute('onclick', 'confirmClearScores();');
+
     for(i=1;i<3;i++) {
         i == 1 ? teamList = get("Main-List1") : teamList = get("Main-List2");
         textColor = userData.Basketball.Teams[get('p1teamList' + i).value].Settings.TSColor;
@@ -969,6 +968,27 @@ function resetScores() {
     }
 
 }
+
+var ccScoresInterval;
+var ccScoresCountdown;
+function confirmClearScores() {
+    const btn = get('resetScoresQuickButton');
+    btn.innerHTML = "Confirm? 3";
+    btn.setAttribute('onclick', 'resetScores();');
+    ccScoresCountdown = 3;
+    ccScoresInterval = setInterval(function(){
+        console.log("Called");
+        ccScoresCountdown--;
+        if(ccScoresCountdown > 0) {
+            btn.innerHTML = "Confirm? " + ccScoresCountdown;
+        } else {
+            btn.innerHTML = "Clear Scores";
+            btn.setAttribute('onclick', 'confirmClearScores();');
+            clearInterval(ccScoresInterval);
+        }
+    }, 1000);
+}
+
 
 function incVal(i, j, k) {
     // this i = input

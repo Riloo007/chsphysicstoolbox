@@ -161,18 +161,27 @@
             </table>
 
               <!--  END MAIN DISPLAY  -->  
-  <div id="pointers">
-    <button id="pointer0" onclick="cpAdd(this, -1);">-1</button>
-    <button id="pointer1" onclick="cpAdd(this, 1);">+1</button>
-    <button id="pointer2" onclick="cpAdd(this, 2);">+2</button>
-    <button id="pointer3" onclick="cpAdd(this, 3);">+3</button>
+  <div id="quickMenu">
+    <div id="pointers">
+      <p>Points to Add</p>
+      <button id="pointer0" onclick="cpAdd(this, -1);">-1</button>
+      <button id="pointer1" onclick="cpAdd(this, 1);">1</button>
+      <button id="pointer2" onclick="cpAdd(this, 2);">2</button>
+      <button id="pointer3" onclick="cpAdd(this, 3);">3</button>
+    </div>
 
-    <span id="quarters" style="display: none;">
+    <div id="quarters" style="display: none;">
+      <p>Quarter</p>
       <button onclick="quarter(this, 1);">Q1</button>
       <button onclick="quarter(this, 2);">Q2</button>
       <button onclick="quarter(this, 3);">Q3</button>
       <button onclick="quarter(this, 4);">Q4</button>
-    </span>
+    </div>
+
+    <div id="Game">
+      <p>Game</p>
+      <button id="resetScoresQuickButton" onclick="confirmClearScores()">Clear Scores</button>
+    </div>
     <!--
      -->
   </div>
