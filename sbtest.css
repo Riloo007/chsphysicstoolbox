@@ -350,16 +350,68 @@ input.acp-v::-webkit-slider-thumb {background: #000000;}
     border-radius: 5px;
     height: calc(100% - 30px);
     padding: 5px;
+    overflow: hidden;
 }
 .p2_settingsList , .p3_settingsList{
-    height: calc(100% - var(--panel-width));
+    height: 100%;
     overflow-y: auto;
     padding: 10px;
     position: relative;
 }
-.p2_settingsList p {
-    margin-left: 15px;
+.p2_settingsList div {
+    border: solid 1px gray;
+    padding: 5px;
+    border-radius: 5px;
+
+    vertical-align: middle;
+    height: 27;
+    display: inline-flex;
+    width: calc(100% - 10px);
+    margin: 3px 0px;
 }
+.p2_settingsList div > p {
+    width: 40%;
+    font-size: 17px;
+    margin-top: 2px;
+    min-height: max-content;
+}
+.p2_settingsList input[type='color'], .p2_settingsList input[type='url'], .p2_settingsList input[type='range'] {
+    appearance: none;
+    width: 60%;
+    background: white;
+    padding: 0px;
+    height: 39;
+    margin-top: -6;
+    border: solid gray 1px;
+    padding-left: 5px;
+    border-right: none;
+    right: 0;
+    margin-right: auto;
+}
+.p2_settingsList input[type='url']:focus {
+    outline: none;
+    background: #cae6ff;
+}
+.p2_settingsList input[type='range']::-webkit-slider-runnable-track {
+    border-radius: 6px;
+    background: #cbcbcb;
+    border: solid gray 1px;
+}
+.p2_settingsList input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background-color: #424242;
+}
+/*
+.p2_settingsList input[type='range'] {
+    border: solid gray 1px;
+    border-right: none;
+    padding: 0px;
+    padding-left: 5px;
+    appearance: none;
+}*/
 
 #p3NoTeam, #p2NoTeam, #p1aNoTeam, #p1bNoTeam {
     position: absolute;

@@ -121,15 +121,6 @@
 
               <table id="Main">
                 <tbody>
-                  <div class="topGameSettings" id="topGameSettings">
-                    <button class="clearBtn" id="clearScores1" onClick="resetScores()">Clear Scores</button>
-                    <span id="quartersMenu">
-                      <button onclick="quarter(this, 1);">Q1</button>
-                      <button onclick="quarter(this, 2);">Q2</button>
-                      <button onclick="quarter(this, 3);">Q3</button>
-                      <button onclick="quarter(this, 4);">Q4</button>
-                    </span>
-                  </div>
 
                   <tr>
                     <td class="dp2">
@@ -216,27 +207,39 @@
           <div class="p2_settingsMenu" id="p2SettingsMenu">
             <div class="p2_settingsList" id="p2_settingsList">
                <h3>Backdrop</h3>
-               <p>Color: <input type="color" id="p2BColor"></p>
+               <div><p>Color:</p><input type="color" id="p2BColor"></div>
+               <div><p>Logo URL:</p><input id="p2BImg" type="url"></div>
+               <div><p>Logo Size:</p><input id="p2BSize" type="range" min="0" max="300"></div>
+               <div><p>Blur:</p><input id="p2BBlur" type="range" max="100" min="0" value="0"></div>
 
-               <p>Logo URL: <input id="p2BImg" type="url"></p>
-               <p>Logo Size: <input id="p2BSize" type="range" min="0" max="300"></p>
-               <p>Blur: <input id="p2BBlur" type="range" max="100" min="0" value="0"></p>
+               <br><br>
 
                <h3>Buttons</h3>
-               <p>Shadow: <input id="p2IShadow" type="checkbox"></p>
-               <p>Shadow Color: <input id="p2IShadowColor" type="color"></p>
-               <p>Back Color: <input id="p2IColor" type="color"></p>
-               <p>Transparency: <input id="p2ITransparency" type="range" min="0" max="255"></p>
+               <div><p>Shadow:</p><input id="p2IShadow" type="checkbox"></div>
+               <div><p>Shadow Color:</p><input id="p2IShadowColor" type="color"></div>
+               <div><p>Back Color:</p><input id="p2IColor" type="color"></div>
+               <div><p>Transparency:</p><input id="p2ITransparency" type="range" min="0" max="255"></div>
+
+               <br><br>
                
                <h3>Text</h3>
-               <p>Title Color: <input id="p2TTColor" type="color"></p>
-               <p>Header Color: <input id="p2THColor" type="color"></p>
-               <p>Scores Color: <input id="p2TSColor" type="color"></p>
-               <p>Warning Color: <input id="p2TWColor" type="color"></p>
-               <p>Title Size: <input id="p2TTSize" type="range" min="5" max="150"></p>
-               <p>Header Size: <input id="p2THSize" type="range" min="0" max="100"></p>
-               <p>Scores Size: <input id="p2TSSize" type="range" min="0" max="100"></p>
+               <div><p>Title Color:</p><input id="p2TTColor" type="color"></div>
+               <div><p>Header Color:</p><input id="p2THColor" type="color"></div>
+               <div><p>Scores Color:</p><input id="p2TSColor" type="color"></div>
+               <div><p>Warning Color:</p><input id="p2TWColor" type="color"></div>
+               <div><p>Title Size:</p><input id="p2TTSize" type="range" min="5" max="150"></div>
+               <div><p>Header Size:</p><input id="p2THSize" type="range" min="0" max="100"></div>
+               <div><p>Scores Size:</p><input id="p2TSSize" type="range" min="0" max="100"></div>
 
+               <br><br>
+
+               <h3>Post Filters (Not Implemented Yet)</h3>
+               <div><p>Blur</p><input type="range"></div>
+               <div><p>Brightness</p><input type="range"></div>
+               <div><p>Saturation</p><input type="range"></div>
+               <div><p>Contrast</p><input type="range"></div>
+
+               <br><br><br><br><br>
             </div>
           </div>
         </div>
